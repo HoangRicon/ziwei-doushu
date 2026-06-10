@@ -115,14 +115,14 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
 
       {/* 4x4 命盘网格（含 SVG 叠加层） */}
       <div
-        className="grid rounded-xl overflow-hidden relative"
+        className="grid rounded-2xl overflow-hidden relative"
         style={{
           gridTemplateColumns: 'repeat(4, 1fr)',
           gridTemplateRows: 'repeat(4, auto)',
           gap: '1px',
           background: 'var(--color-border)',
-          border: '1px solid var(--color-border)',
-          boxShadow: 'var(--shadow-md)',
+          border: '1px solid var(--color-border-gold)',
+          boxShadow: 'var(--shadow-gold)',
         }}
       >
         {ANIMATION_ORDER.map((branch, i) => {
@@ -130,7 +130,7 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
           const palace = palaceMap[branch];
           if (!palace) return null;
           return (
-            <div key={branch} style={{ gridRow: row, gridColumn: col, background: 'var(--color-bg-card)' }}>
+            <div key={branch} style={{ gridRow: row, gridColumn: col, background: 'var(--color-bg-surface)' }}>
               <PalaceCell
                 palace={palace}
                 onClick={() => handlePalaceClick(branch)}
@@ -152,7 +152,7 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5 }}
           className="flex flex-col items-center justify-center p-4 gap-3"
-          style={{ gridRow: '2 / 4', gridColumn: '2 / 4', background: 'var(--color-bg-card)' }}
+          style={{ gridRow: '2 / 4', gridColumn: '2 / 4', background: 'var(--color-bg-surface)' }}
         >
           <div className="text-5xl select-none leading-none" style={{ color: 'var(--color-accent)', opacity: 0.12, filter: 'drop-shadow(0 0 12px rgba(180,120,30,0.15))' }}>
             ☯
@@ -214,7 +214,7 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
                   const p2 = BRANCH_SVG_POS[sanFangBranches[2]]; // 三合1
                   const p3 = BRANCH_SVG_POS[sanFangBranches[3]]; // 三合2
                   const dash = "6,5";
-                  const stroke = "rgba(37,99,235,0.55)";
+                  const stroke = "rgba(59,130,246,0.50)";
                   const sw = "1.5";
                   return (
                     <>
@@ -270,10 +270,10 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
         className="mt-3 flex items-center justify-center gap-2 text-[9px] flex-wrap"
       >
         {[
-          { h: 'Hóa Lộc', c: 'text-emerald-500 border-emerald-500/30' },
-          { h: 'Hóa Quyền', c: 'text-blue-500 border-blue-500/30' },
-          { h: 'Hóa Khoa', c: 'text-yellow-500 border-yellow-500/30' },
-          { h: 'Hóa Kỵ', c: 'text-red-500 border-red-500/30' },
+          { h: 'Hóa Lộc', c: 'text-green-400 border-green-400/30' },
+          { h: 'Hóa Quyền', c: 'text-blue-400 border-blue-400/30' },
+          { h: 'Hóa Khoa', c: 'text-yellow-400 border-yellow-400/30' },
+          { h: 'Hóa Kỵ', c: 'text-red-400 border-red-400/30' },
         ].map(({ h, c }) => (
           <span key={h} className={`border px-1.5 py-0.5 rounded-full font-medium ${c}`}>{h}</span>
         ))}

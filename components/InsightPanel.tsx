@@ -7,7 +7,7 @@ import type { TimeView } from './TimeNav';
 interface Message {
   role: 'user' | 'assistant';
   content: string;
-  hidden?: boolean; // don't show user bubble for auto/topic messages
+  hidden?: boolean;
 }
 
 interface SelectedSiHua {
@@ -97,26 +97,26 @@ Khả năng tích lũy và phân tích vận bất động sản.
 **【Vận tài vận đại hạn hiện tại】**
 Hướng tài vận hiện tại và những lưu ý.
 
-**【Lời khuyên tài chính】】
+**【Lời khuyên tài chính】**
 Những lời khuyên tài chính cụ thể.`,
 
   health: `Hãy phân tích vận sức khỏe, theo cấu trúc sau để xuất:
 
-**【Chủ tinh Tật Ách Cung】】
+**【Chủ tinh Tật Ách Cung】**
 Sao trong Tật Ách Cung và ý nghĩa sức khỏe.
 
-**【Rủi ro chính】】
+**【Rủi ro chính】**
 Kết hợp lý thuyết Tử Ngọc Lưu Chú của Thầy Ni Hải Hạ, phân tích các rủi ro sức khỏe chính và các bộ phận cần được chú ý.
 
-**【Xu hướng sức khỏe đại hạn】】
+**【Xu hướng sức khỏe đại hạn】**
 Xu hướng sức khỏe hiện tại và các khoảng thời gian then chốt.
 
-**【Lời khuyên phòng ngừa】】
+**【Lời khuyên phòng ngừa】**
 Những lưu ý cụ thể và hướng dưỡng sinh.`,
 
   personality: `Hãy phân tích sâu đặc tính tính cách, theo cấu trúc sau để xuất:
 
-**【Tính cách chủ tinh Mệnh Cung】】
+**【Tính cách chủ tinh Mệnh Cung】**
 Đặc tính tính cách cốt lõi của chủ tinh Mệnh Cung, trích dẫn lời Thầy Ni.
 
 **【Tổng hợp tính cách tam phương】**
@@ -125,7 +125,7 @@ Những lưu ý cụ thể và hướng dưỡng sinh.`,
 **【Mô hình quan hệ quần chúng】**
 Cách tương tác với người khác, phong cách đối nhân xử thế.
 
-**【Thế mạnh và bài học cuộc đời】】
+**【Thế mạnh và bài học cuộc đời】**
 Thế mạnh bẩm sinh, cũng như bài học cuộc đời cần đối mặt.`,
 };
 
@@ -153,7 +153,7 @@ function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
         const sectionMatch = line.match(/^\*\*【(.+?)】\*\*$/);
         if (sectionMatch) {
           return (
-            <div key={i} className="pt-3 pb-0.5 first:pt-0">
+            <div key={i} className="pt-2 pb-0.5 first:pt-0">
               <span className="text-[11px] font-semibold tracking-wide" style={{ color: 'var(--color-accent)' }}>
                 【{sectionMatch[1]}】
               </span>
@@ -175,7 +175,7 @@ function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
       {streaming && (
         <span
           className="inline-block w-1.5 h-3 ml-0.5 animate-pulse rounded-sm align-middle"
-          style={{ background: 'var(--color-accent)', opacity: 0.6 }}
+          style={{ background: 'var(--color-accent)', opacity: 0.7 }}
         />
       )}
     </div>
@@ -187,32 +187,29 @@ export default function InsightPanel({ chart, selectedPalace, selectedSiHua }: I
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeTopic, setActiveTopic] = useState<string>('overview');
-  const messagesRef = useRef<Message[]>([]); // always-current copy for closures
+  const messagesRef = useRef<Message[]>([]);
   const loadingRef = useRef(false);
   const autoLoaded = useRef(false);
   const lastPalaceBranch = useRef<number | undefined>(undefined);
   const lastSiHuaKey = useRef<string | undefined>(undefined);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Keep refs in sync
   useEffect(() => { messagesRef.current = messages; }, [messages]);
   useEffect(() => { loadingRef.current = loading; }, [loading]);
 
-  // Auto-scroll
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // Auto-generate mệnh cách overview on mount
   useEffect(() => {
     if (autoLoaded.current) return;
     autoLoaded.current = true;
     sendMessage(TOPIC_PROMPTS.overview, true);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Inject palace analysis when palace selected
   useEffect(() => {
     if (!selectedPalace || selectedPalace.branch === lastPalaceBranch.current) return;
     lastPalaceBranch.current = selectedPalace.branch;
@@ -238,16 +235,14 @@ Giải đoán theo hệ thống Thầy Ni Hải Hạ về chủ tinh tại cung 
 Những lời khuyên cụ thể dựa trên cung này.`;
 
     sendMessage(prompt, true);
-  }, [selectedPalace]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedPalace]);
 
-  // Inject sự phân tích tứ hóa phiên hóa
   useEffect(() => {
     if (!selectedSiHua) return;
     const key = `${selectedSiHua.starName}-${selectedSiHua.siHua}-${selectedSiHua.view}`;
     if (key === lastSiHuaKey.current) return;
     lastSiHuaKey.current = key;
 
-    // Tìm cung chứa sao đó
     const palaceOfStar = chart.palaces.find(p =>
       p.stars.some(s => s.name === selectedSiHua.starName)
     );
@@ -272,7 +267,7 @@ Trong chiều thời gian ${viewLabel}, ảnh hưởng cụ thể của hóa ${s
 Những lời khuyên có thể thực hiện được cụ thể dựa trên tứ hóa này.`;
 
     sendMessage(prompt, true);
-  }, [selectedSiHua]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedSiHua]);
 
   const streamResponse = async (apiMessages: { role: 'user' | 'assistant'; content: string }[]) => {
     try {
@@ -323,7 +318,6 @@ Những lời khuyên có thể thực hiện được cụ thể dựa trên t�
     setLoading(true);
 
     const userMsg: Message = { role: 'user', content: text, hidden };
-    // Capture current messages synchronously via ref (avoids stale closure)
     const apiMessages = [...messagesRef.current, userMsg].map(m => ({
       role: m.role,
       content: m.content,
@@ -345,7 +339,32 @@ Những lời khuyên có thể thực hiện được cụ thể dựa trên t�
   };
 
   return (
-    <div className="flex flex-col h-full rounded-xl overflow-hidden" style={{ background: 'var(--color-bg-1)' }}>
+    <div
+      className="flex flex-col h-full rounded-xl overflow-hidden"
+      style={{ background: 'var(--color-bg-page)' }}
+    >
+      {/* ── Header ── */}
+      <div
+        className="flex-shrink-0 px-4 py-3 flex items-center gap-2.5"
+        style={{ borderBottom: '1px solid var(--color-border)' }}
+      >
+        <div
+          className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+          style={{ background: 'var(--color-accent-bg)', border: '1px solid var(--color-accent-bdr)' }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+            Giải Đoán AI
+          </h3>
+          <p className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+            Thầy Ni Hải Hạ · Phân tích trí tuệ
+          </p>
+        </div>
+      </div>
 
       {/* ── Topic Tabs ── */}
       <div className="flex-shrink-0 px-3 pt-3 pb-0" style={{ borderBottom: '1px solid var(--color-border)' }}>
@@ -359,7 +378,7 @@ Những lời khuyên có thể thực hiện được cụ thể dựa trên t�
                 disabled={loading}
                 className="relative px-3 py-1.5 text-xs font-medium rounded-t-lg transition-all duration-150 whitespace-nowrap disabled:opacity-40"
                 style={{
-                  background: isActive ? 'var(--color-bg-card)' : 'transparent',
+                  background: isActive ? 'var(--color-bg-elevated)' : 'transparent',
                   color: isActive ? 'var(--color-accent)' : 'var(--color-text-muted)',
                 }}
               >
@@ -379,21 +398,23 @@ Những lời khuyên có thể thực hiện được cụ thể dựa trên t�
       {/* ── Messages ── */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 min-h-0">
 
-        {/* Empty state */}
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center py-12">
-            <div className="text-3xl mb-3" style={{ color: 'var(--color-accent)', opacity: 0.3 }}>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+            <div
+              className="mb-3"
+              style={{ color: 'var(--color-accent)', opacity: 0.25 }}
+            >
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
             </div>
-            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-              Chọn một chủ đề và bắt đầu trò chuyện
+            <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+              Chọn một chủ đề<br />và bắt đầu trò chuyện
             </p>
           </div>
         )}
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <AnimatePresence initial={false}>
             {messages.map((msg, i) => {
               if (msg.role === 'user' && msg.hidden) return null;
@@ -402,46 +423,48 @@ Những lời khuyên có thể thực hiện được cụ thể dựa trên t�
                 return (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.2 }}
                     className="flex justify-end"
                   >
                     <div
-                      className="max-w-[80%] rounded-2xl rounded-br-md px-4 py-2.5"
+                      className="max-w-[75%] rounded-2xl rounded-tr-sm px-4 py-2.5"
                       style={{
-                        background: 'var(--color-accent)',
-                        color: '#fff',
+                        background: 'var(--color-accent-bg)',
+                        border: '1px solid var(--color-accent-bdr)',
+                        color: 'var(--color-text-primary)',
                       }}
                     >
-                      <p className="text-sm leading-relaxed">{msg.content}</p>
+                      <p className="text-[11px] leading-relaxed">{msg.content}</p>
                     </div>
                   </motion.div>
                 );
               }
 
-              // Assistant message
               const isLastMsg = i === messages.length - 1;
               return (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex gap-3"
+                  initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex gap-2.5"
                 >
                   {/* Star avatar */}
                   <div
-                    className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
-                    style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}
+                    className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-0.5"
+                    style={{ background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)' }}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2">
-                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                     </svg>
                   </div>
 
                   {/* Message bubble */}
                   <div
-                    className="flex-1 rounded-2xl rounded-tl-md px-4 py-3"
-                    style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}
+                    className="flex-1 rounded-2xl rounded-tl-sm px-4 py-3"
+                    style={{ background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)' }}
                   >
                     <AiContent text={msg.content} streaming={loading && isLastMsg} />
                   </div>
@@ -453,13 +476,16 @@ Những lời khuyên có thể thực hiện được cụ thể dựa trên t�
       </div>
 
       {/* ── Input ── */}
-      <div className="flex-shrink-0 px-3 pb-3 pt-2" style={{ borderTop: '1px solid var(--color-border)' }}>
+      <div
+        className="flex-shrink-0 px-3 pb-3 pt-2"
+        style={{ borderTop: '1px solid var(--color-border)' }}
+      >
         <div className="flex gap-2 items-end">
           <textarea
+            ref={inputRef}
             value={input}
             onChange={e => {
               setInput(e.target.value);
-              // Auto-grow
               e.target.style.height = 'auto';
               e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
             }}
@@ -472,13 +498,14 @@ Những lời khuyên có thể thực hiện được cụ thể dựa trên t�
             placeholder="Hỏi về bản đồ của bạn..."
             disabled={loading}
             rows={1}
-            className="flex-1 rounded-xl px-4 py-2.5 text-sm resize-none focus:outline-none transition-colors"
+            className="flex-1 rounded-xl px-4 py-2.5 text-xs resize-none focus:outline-none transition-colors"
             style={{
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-border)',
+              background: 'var(--color-bg-elevated)',
+              border: '1px solid var(--color-border-med)',
               color: 'var(--color-text-primary)',
               minHeight: '44px',
               maxHeight: '120px',
+              fontFamily: 'inherit',
             }}
           />
           <button
@@ -486,14 +513,15 @@ Những lời khuyên có thể thực hiện được cụ thể dựa trên t�
             disabled={loading || !input.trim()}
             className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             style={{ background: 'var(--color-accent)', color: '#fff' }}
+            aria-label="Gửi tin nhắn"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
             </svg>
           </button>
         </div>
       </div>
-
     </div>
   );
 }

@@ -45,6 +45,10 @@
   --color-bg-2:      #ECEAE4;   /* Tinted block */
   --color-bg-card:   #FFFFFF;   /* Card surface */
   --color-bg-inv:    #0D0D0B;   /* Inverse dark block */
+  --color-bg-surface: #FFFFFF;   /* Palace cell base */
+  --color-bg-elevated: #F4F3EF; /* Chat bubbles, elevated panels */
+  --color-bg-selected: rgba(184,146,42,0.08); /* Selected palace */
+  --color-bg-sf:     rgba(59,130,246,0.05);  /* San fang highlight */
 
   /* Text */
   --color-text-primary:   #0D0D0B;   /* Main headings */
@@ -53,6 +57,7 @@
   --color-text-muted:     #8A8A82;   /* Labels, captions */
   --color-text-inv:       #F0EDE8;   /* Text on dark */
   --color-text-inv-2:     rgba(240,237,232,0.65); /* Secondary on dark */
+  --color-text-faint:     #B0B0A8;   /* Placeholder, faint */
 
   /* Accent */
   --color-accent:     #B8922A;   /* Primary gold accent */
@@ -70,12 +75,14 @@
   --color-border:       rgba(0,0,0,0.07);
   --color-border-med:   rgba(0,0,0,0.11);
   --color-border-heavy: rgba(0,0,0,0.18);
+  --color-border-gold:  rgba(184,146,42,0.15);
 
   /* Shadows */
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
   --shadow-md: 0 4px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
   --shadow-lg: 0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-gold: 0 0 40px rgba(184,146,42,0.06), 0 4px 20px rgba(0,0,0,0.08);
 
   /* Border radius */
   --radius-xs:   4px;
@@ -99,32 +106,39 @@
 
 /* ─── Dark Mode Semantic Tokens ─────────────────────────── */
 [data-theme="dark"] {
-  --color-bg-page:    #020810;
-  --color-bg-1:       #0A1020;
-  --color-bg-2:       #141E30;
-  --color-bg-card:    rgba(255,255,255,0.04);
-  --color-bg-inv:     #f0ede8;
+  --color-bg-page:      #020810;
+  --color-bg-1:         #0A1020;
+  --color-bg-2:         #141E30;
+  --color-bg-card:      rgba(255,255,255,0.04);
+  --color-bg-inv:       #f0ede8;
+  --color-bg-surface:   rgba(255,255,255,0.04);
+  --color-bg-elevated:  rgba(255,255,255,0.07);
+  --color-bg-selected:  #1A2A3A;
+  --color-bg-sf:        rgba(59,130,246,0.08);
 
   --color-text-primary:   #E8EEF6;
-  --color-text-secondary: #DCE4F0;
+  --color-text-secondary: #C8D8E8;
   --color-text-body:      #9DB0D0;
   --color-text-muted:     #6A7A96;
   --color-text-inv:       #0D0D0B;
   --color-text-inv-2:     rgba(13,13,11,0.65);
+  --color-text-faint:     #3A4A5A;
 
-  --color-accent:     #d4a843;
-  --color-accent-dim: #e8c060;
-  --color-accent-bg:  rgba(212,168,67,0.10);
-  --color-accent-bdr: rgba(212,168,67,0.25);
+  --color-accent:       #d4a843;
+  --color-accent-dim:   #e8c060;
+  --color-accent-bg:    rgba(212,168,67,0.08);
+  --color-accent-bdr:   rgba(212,168,67,0.20);
 
   --color-border:       rgba(255,255,255,0.07);
-  --color-border-med:   rgba(255,255,255,0.12);
-  --color-border-heavy: rgba(255,255,255,0.20);
+  --color-border-med:   rgba(255,255,255,0.10);
+  --color-border-heavy: rgba(255,255,255,0.15);
+  --color-border-gold:  rgba(184,146,42,0.20);
 
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
   --shadow-md: 0 4px 20px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35);
   --shadow-lg: 0 12px 40px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-gold: 0 0 40px rgba(212,168,67,0.08), 0 4px 20px rgba(0,0,0,0.5);
 }
 
 /* ─── Layer 3: Global Base Styles ───────────────────────── */
