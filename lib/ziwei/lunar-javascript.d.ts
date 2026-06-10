@@ -1,3 +1,7 @@
+/**
+ * Khai báo kiểu cho thư viện lunar-javascript
+ */
+
 declare module 'lunar-javascript' {
   class Lunar {
     getYear(): number;

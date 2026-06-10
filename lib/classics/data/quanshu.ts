@@ -1,8 +1,8 @@
 /**
- * 《紫微斗数全书》— 核心精选
+ * 《Tử Vi Đẩu Số Toàn Thư》— Tuyển chọn cốt lõi
  *
- * 公版（明代罗洪先编）
- * 是紫微斗数最系统的古籍，强调宫位关系与四化，全本约 10 万字。
+ * Công bản (do La Hồng Tiên biên soạn đời Minh)
+ * Là cổ thư hệ thống hóa nhất của Tử Vi Đẩu Số, nhấn mạnh mối quan hệ giữa các cung và tứ hóa, toàn bộ khoảng 100.000 chữ.
  */
 
 import type { Book } from '../types';
@@ -11,8 +11,8 @@ export const ziWeiQuanShu: Book = {
   title: '紫微斗数全书',
   slug: 'quanshu',
   dynasty: '明代',
-  author: '罗洪先 编',
-  intro: '紫微斗数最系统的古籍，强调十二宫与四化的关系。是清代以降紫微学者的主要教材。',
+  author: 'La Hồng Tiên biên soạn',
+  intro: 'Cổ thư hệ thống hóa nhất của Tử Vi Đẩu Số, nhấn mạnh mối quan hệ giữa 12 cung và tứ hóa. Là tài liệu giảng dạy chính cho các nhà nghiên cứu Tử Vi từ thời Thanh trở đi.',
   wordCount: 100000,
   chapters: [
     {

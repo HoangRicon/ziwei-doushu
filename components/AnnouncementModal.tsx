@@ -85,14 +85,14 @@ export default function AnnouncementModal() {
               position: 'relative',
             }}>
               <div style={{ fontSize: '10px', letterSpacing: '0.4em', color: '#b8922a', opacity: 0.7, marginBottom: '6px' }}>
-                A LETTER TO USERS
+                THƯ GỬI NGƯỜI DÙNG
               </div>
               <h2 style={{ fontSize: '19px', fontWeight: 700, color: '#3d2f10', letterSpacing: '0.08em', margin: 0 }}>
-                致正在使用这个平台的你
+                Gửi những ai đang sử dụng nền tảng này
               </h2>
               <button
                 onClick={close}
-                aria-label="关闭"
+                aria-label="Đóng"
                 style={{
                   position: 'absolute', top: '14px', right: '16px',
                   width: '28px', height: '28px',
@@ -117,12 +117,12 @@ export default function AnnouncementModal() {
               textAlign: 'center',
             }}>
               <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: '#c45a2d', marginBottom: '4px', fontWeight: 600 }}>
-                LIMITED TIME · 限时回馈
+                ƯU ĐÃI ĐẶC BIỆT · Phản hồi đặc biệt
               </div>
               <div style={{ fontSize: '14px', color: '#8b3a1a', fontWeight: 600, lineHeight: 1.6 }}>
-                <span style={{ fontSize: '16px', color: '#c45a2d', fontWeight: 700 }}>5 月 1 日 — 5 月 8 日</span>
+                <span style={{ fontSize: '16px', color: '#c45a2d', fontWeight: 700 }}>1 tháng 5 — 8 tháng 5</span>
                 <br />
-                平台全部功能 + AI 提问 全部免费开放
+                Tất cả tính năng + Hỏi đáp AI hoàn toàn miễn phí
               </div>
             </div>
 
@@ -136,13 +136,13 @@ export default function AnnouncementModal() {
               flex: 1,
             }}>
               <p style={{ margin: '0 0 12px' }}>
-                说实话，我真的没想到会有这么大的流量。
+                Thật lòng mà nói, tôi không ngờ lại nhận được sự quan tâm lớn đến như vậy.
               </p>
               <p style={{ margin: '0 0 12px' }}>
-                最开始做这个平台，我的初心其实很简单：在 AI 时代，把倪师这套原本复杂、门槛很高的体系，尽量做得更简单、更高效、更容易理解。
+                Lúc đầu khi xây dựng nền tảng này, mục đích của tôi rất đơn giản: trong thời đại AI, làm cho hệ thống phức tạp của thầy Ni trở nên đơn giản, hiệu quả và dễ hiểu hơn.
               </p>
               <p style={{ margin: '0 0 12px' }}>
-                不一定每个人都要先学很久、看很多书，才能接触这些内容。我们希望通过这个平台，让大家用更轻松的方式，获得一些对自我、人生阶段、选择方向的参考和启发。
+                Không nhất thiết ai cũng phải học lâu, đọc nhiều sách mới có thể tiếp cận những nội dung này. Chúng tôi hy vọng thông qua nền tảng này, mọi người có thể bằng cách thư giãn hơn, nhận được một số tham khảo và cảm hứng về bản thân, giai đoạn cuộc sống, hướng đi lựa chọn.
               </p>
               <p style={{
                 margin: '0 0 12px',
@@ -153,22 +153,22 @@ export default function AnnouncementModal() {
                 fontStyle: 'italic',
                 color: '#7a5e2a',
               }}>
-                倪师曾说过一句话：人怎么可能发明出完全没有用的东西呢？
+                Thầy Ni từng nói một câu: Làm sao con người có thể phát minh ra một thứ hoàn toàn vô dụng được?
               </p>
               <p style={{ margin: '0 0 12px' }}>
-                我一直觉得，易经如此，紫微斗数也是如此。它们真正有价值的地方，不是让人被某个结果困住，而是让我们更早看见自己的性格惯性、人生课题和选择方向。看见之后，才有机会调整；理解之后，才有机会变得更好。
+                Tôi luôn cảm thấy, Kinh Dịch cũng vậy, Tử Vi Đấu Số cũng vậy. Điều có giá trị thực sự của chúng không phải là khiến người ta bị mắc kẹt bởi một kết quả nào đó, mà là giúp chúng ta sớm nhìn thấy thói quen tính cách, chủ đề cuộc đời và hướng đi lựa chọn của bản thân. Nhìn thấy rồi, mới có cơ hội điều chỉnh; Hiểu rồi, mới có cơ hội trở nên tốt hơn.
               </p>
               <p style={{ margin: '0 0 12px' }}>
-                至于那些说&ldquo;你当下在看这些，其实也是命运的一部分&rdquo;之类的话，我就不多评价了。
+                Còn những lời như "Việc bạn đang xem những thứ này vào lúc này cũng là một phần của vận mệnh", tôi không bình luận thêm.
               </p>
               <p style={{ margin: '0 0 12px' }}>
-                这几天账号被小红书抬走了，<strong style={{ color: '#c45a2d' }}>5 月 3 号开始恢复正常更新。</strong>
+                Những ngày qua tài khoản bị ảnh hưởng, <strong style={{ color: '#c45a2d' }}>Ngày 3 tháng 5 sẽ khôi phục cập nhật bình thường.</strong>
               </p>
               <p style={{ margin: '0 0 16px', color: '#3d2f10', fontWeight: 500 }}>
-                最后，真心祝愿大家都能越来越了解自己，越来越爱自己，也越来越有能力爱身边的人。
+                Cuối cùng, chân thành chúc mọi người ngày càng hiểu rõ bản thân hơn, ngày càng yêu thương bản thân hơn, và ngày càng có khả năng yêu thương những người xung quanh.
               </p>
               <p style={{ margin: 0, textAlign: 'right', fontSize: '13px', color: '#7a5e2a' }}>
-                ——谢谢大家 🙏
+                —— Cảm ơn mọi người 🙏
               </p>
             </div>
 
@@ -197,7 +197,7 @@ export default function AnnouncementModal() {
                   boxShadow: '0 4px 12px rgba(184,146,42,0.3)',
                 }}
               >
-                我知道了
+                Đã hiểu
               </button>
             </div>
           </motion.div>

@@ -18,7 +18,7 @@ export function useHistory() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) setHistory(JSON.parse(raw));
-    } catch { /* localStorage 不可用时静默失败 */ }
+    } catch { /* localStorage không khả dụng thì im lặng thất bại */ }
   }, []);
 
   const save = useCallback((form: BirthFormState) => {
@@ -26,7 +26,7 @@ export function useHistory() {
       form.name,
       `${form.year}年${form.month}月${form.day}日`,
       form.city || form.province || '',
-      form.gender === 'male' ? '男' : '女',
+      form.gender === 'male' ? 'Nam' : 'Nữ',
     ].filter(Boolean).join(' · ');
 
     const entry: HistoryEntry = {
@@ -37,7 +37,7 @@ export function useHistory() {
     };
 
     setHistory(prev => {
-      // 去重：相同出生年月日+性别+时辰视为同一条记录
+      // Loại bỏ trùng lặp: cùng ngày sinh + giới tính + thì được coi là cùng một bản ghi
       const deduped = prev.filter(e =>
         !(e.form.year === form.year &&
           e.form.month === form.month &&

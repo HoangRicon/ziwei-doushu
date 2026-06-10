@@ -1,7 +1,12 @@
 import type { BirthFormState } from '@/components/BirthForm';
 import type { BirthInfo } from './types';
 
-/** 根据北京时间 + 经度计算真太阳时时辰支 (0-11) */
+/**
+ * Tiện ích chia sẻ bản đồ Tử Vi
+ */
+
+// ─── Tính toán giờ mặt trời thực ──────────────────
+/** Tính giờ thập nhị thì (0-11) dựa trên giờ địa phương + kinh độ */
 export function calcTrueSolarBranch(clockHour: number, clockMinute: number, longitude: number): number {
   const clockMins = clockHour * 60 + clockMinute;
   const offset = (longitude - 120) * 4;

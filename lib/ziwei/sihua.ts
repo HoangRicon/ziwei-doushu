@@ -1,20 +1,13 @@
 /**
- * 四化工具模块 — 年干 / 大限宫干 / 流年干 / 流月干 四化映射
- *                + 宫干自化检测 + 来因宫追溯
- *
- * 倪海厦《天纪》体系核心：
- *   本命四化 = 出生年天干四化（静态基础）
- *   大限四化 = 大限宫**宫干**（非本命年干）的四化（十年动态）
- *   流年四化 = 当年年干的四化（一年动态）
- *   自化     = 某宫的宫干四化，其中被化星恰在本宫
- *   来因宫   = 某颗化星的"动力来源宫"——即宫干引发该化的宫位
+ * Công cụ chia sẻ bản đồ Tử Vi
+ * Bao gồm tính toán giờ mặt trời thực, chuyển đổi form → BirthInfo, URL params
  */
 
 import type { ZiweiChart, Palace, SiHua } from './types';
 import { SI_HUA_TABLE, STEMS } from './constants';
 
-// ─── 1) 由天干索引取四化四星 ───────────────────────────────────
-/** 天干索引 0-9 → { 禄, 权, 科, 忌 } 对应星名 */
+// ─── 1) Từ chỉ số Thiên Can lấy Tứ Hóa tứ sao ───────────────────────────────────
+/** Chỉ số Thiên Can 0-9 → { Lộc, Quyền, Khoa, Kỵ } tương ứng tên sao */
 export function getSiHuaByStem(stemIndex: number): Record<SiHua, string> {
   const arr = SI_HUA_TABLE[stemIndex];
   if (!arr) return { 禄: '', 权: '', 科: '', 忌: '' };
@@ -28,23 +21,23 @@ export function buildStarSiHuaMap(stemIndex: number): Record<string, SiHua> {
   return { [arr[0]]: '禄', [arr[1]]: '权', [arr[2]]: '科', [arr[3]]: '忌' };
 }
 
-// ─── 2) 公历年 → 年柱天干索引 ──────────────────────────────────
-/** 公历年份 → 年柱天干索引（0=甲, ... 9=癸） */
+// ─── 2) Từ năm dương lịch → chỉ số Thiên Can năm ──────────────────────────────────
+/** Năm dương lịch → chỉ số Thiên Can năm (0=Giáp, ... 9=Quý) */
 export function getYearStemIndex(year: number): number {
   return ((year - 4) % 10 + 10) % 10;
 }
 
-/** 公历年份 → 年柱地支索引（0=子, ... 11=亥） */
+/** Năm dương lịch → chỉ số Địa Chi năm (0=Tử, ... 11=Hợi) */
 export function getYearBranchIndex(year: number): number {
   return ((year - 4) % 12 + 12) % 12;
 }
 
-// ─── 3) 大限四化：取大限宫的宫干（非本命年干）───────────────
+// ─── 3) Tứ Hóa đại hạn: Lấy cung cung cung thiên can (không phải thiên can năm sinh)───────────────
 /**
- * 大限宫干四化
- * @param chart 命盘
- * @param dxIndex 大限索引（chart.daXians[dxIndex]）
- * @returns 该大限的四化四星
+ * Tứ Hóa cung đại hạn
+ * @param chart Bản đồ tử vi
+ * @param dxIndex Chỉ số đại hạn (chart.daXians[dxIndex])
+ * @returns Tứ hóa tứ sao của đại hạn đó
  */
 export function getDaXianSiHua(
   chart: ZiweiChart,
@@ -62,7 +55,7 @@ export function getDaXianSiHua(
   };
 }
 
-// ─── 4) 流年四化 ──────────────────────────────────────────────
+// ─── 4) Tứ Hóa lưu niên ──────────────────────────────────────────────
 export function getLiuNianSiHua(year: number): {
   stemIndex: number;
   stemName: string;
@@ -76,10 +69,10 @@ export function getLiuNianSiHua(year: number): {
   };
 }
 
-// ─── 5) 流月四化（月柱天干，由年干 + 月序推） ───────────────
+// ─── 5) Tứ Hóa lưu nguyệt (Thiên can nguyệt cung, từ năm can + thứ tự tháng suy) ───────────────
 /**
- * 流月天干（五虎遁：甲己年起丙寅、乙庚年起戊寅、丙辛年起庚寅、丁壬年起壬寅、戊癸年起甲寅）
- * month: 农历月 1-12
+ * Thiên can lưu nguyệt (Ngũ Hổ Độn: Giáp Kỷ niên khởi Bính Dần, Ất Canh niên khởi Nhâm Dần, Bính Tân niên khởi Canh Dần, Đinh Tân niên khởi Nhâm Dần, Ất Quý niên khởi Giáp Dần)
+ * month: Tháng âm lịch 1-12
  */
 export function getLiuYueStemIndex(yearStem: number, month: number): number {
   // 五虎遁：正月（寅月）天干
@@ -108,10 +101,10 @@ export function getLiuYueSiHua(yearStem: number, month: number): {
   };
 }
 
-// ─── 6) 宫干自化检测 ──────────────────────────────────────────
+// ─── 6) Kiểm tra tự hóa cung ──────────────────────────────────────────
 /**
- * 自化：该宫宫干引发的四化，被化星恰在本宫
- * e.g. 宫干为甲（廉破武阳），如果本宫主星含"廉贞"，则该宫有"自化禄"
+ * Tự hóa: Tứ hóa do cung cung gây ra, sao bị hóa vừa đúng tại cung này
+ * Ví dụ: Cung cung là Giáp (Liêm Phá Võ Dương), nếu cung này chủ tinh có "Liêm Trung", thì cung đó có "tự hóa Lộc"
  */
 export interface SelfSihua {
   siHua: SiHua;        // 禄/权/科/忌
@@ -131,16 +124,16 @@ export function detectSelfSihua(palace: Palace): SelfSihua[] {
   return found;
 }
 
-// ─── 7) 来因宫追溯 ────────────────────────────────────────────
+// ─── 7) Truy vết lai nhân cung ────────────────────────────────────────────
 /**
- * 来因宫：对某颗星某种化，追溯是哪个宫的宫干"飞"过来的
+ * Lai nhân cung: Đối với sao nào đó có hóa nào đó, truy vết là cung cung nào "bay" qua
  *
- * 倪师体系常用：化忌的来因宫——化忌由哪个宫位的"宫干"引发，那个宫位就是问题的根源宫位
+ * Hệ thống Nhu Sư thường dùng: Cung lai nhân của hóa Kỵ——hóa Kỵ do cung cung nào gây ra, cung đó chính là cung gốc của vấn đề
  *
- * @param chart 命盘
- * @param starName 被化的星名（如 "太阴"）
- * @param sihua  四化类型（如 "忌"）
- * @returns 引发该化的宫位数组（通常只有一个，但若多宫宫干相同可能多个）
+ * @param chart Bản đồ tử vi
+ * @param starName Sao bị hóa (ví dụ "太阴")
+ * @param sihua  Loại tứ hóa (ví dụ "忌")
+ * @returns Mảng cung vị gây ra hóa đó (thông thường chỉ một, nhưng nếu nhiều cung cung cùng thiên can có thể nhiều)
  */
 export function findIncomingPalaces(
   chart: ZiweiChart,
@@ -158,7 +151,7 @@ export function findIncomingPalaces(
 }
 
 /**
- * 批量计算盘面所有宫位的自化列表
+ * Tính toán hàng loạt danh sách tự hóa của tất cả cung vị trên bản đồ
  */
 export function buildAllSelfSihua(chart: ZiweiChart): Record<number, SelfSihua[]> {
   const result: Record<number, SelfSihua[]> = {};
@@ -169,11 +162,11 @@ export function buildAllSelfSihua(chart: ZiweiChart): Record<number, SelfSihua[]
   return result;
 }
 
-// ─── 8) 综合覆盖（overlay）：多个四化层叠加后的效果 ──────────
+// ─── 8) Phủ định tổng hợp (overlay): Hiệu ứng sau khi chồng lấp nhiều tầng Tứ Hóa ──────────
 /**
- * 生成某星名 → 多层四化的合成视图
- * 用于在宫位上同时显示：本命化 / 大限化 / 流年化
- * 优先级：本命 < 大限 < 流年（但都标出来）
+ * Tạo góc nhìn tổng hợp của sao nào đó → Nhiều tầng Tứ Hóa
+ * Dùng để trên cung vị đồng thời hiển thị: Bản mệnh hóa / Đại hạn hóa / Lưu niên hóa
+ * Ưu tiên: Bản mệnh < Đại hạn < Lưu niên (nhưng đều đánh dấu ra)
  */
 export interface SiHuaOverlay {
   native?: SiHua;    // 本命（年干）

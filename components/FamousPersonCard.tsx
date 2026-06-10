@@ -3,11 +3,11 @@ import { motion } from 'framer-motion';
 import type { FamousPerson } from '@/lib/ziwei/famous';
 
 const CATEGORY_COLORS: Record<string, string> = {
-  '商业': '#4ade80',
-  '文艺': '#c084fc',
-  '科技': '#60a5fa',
-  '体育': '#fb923c',
-  '历史': '#facc15',
+  'Thương nghiệp': '#4ade80',
+  'Văn nghệ': '#c084fc',
+  'Khoa học': '#60a5fa',
+  'Thể thao': '#fb923c',
+  'Lịch sử': '#facc15',
 };
 
 export default function FamousPersonCard({ person }: { person: FamousPerson }) {
@@ -25,7 +25,7 @@ export default function FamousPersonCard({ person }: { person: FamousPerson }) {
     >
       <div className="text-[10px] tracking-widest mb-3 flex items-center gap-2" style={{ color: 'var(--t-faint)' }}>
         <span style={{ color: catColor, opacity: 0.9, fontSize: '12px' }}>★</span>
-        名人命盘
+        Bản Đồ Nhân Vật Nổi Tiếng
         <span className="text-[9px] px-2 py-0.5 rounded-full ml-auto"
           style={{ color: catColor, background: catColor + '18', border: `1px solid ${catColor}40` }}>
           {person.category}
@@ -38,7 +38,7 @@ export default function FamousPersonCard({ person }: { person: FamousPerson }) {
             {person.name}
           </span>
           <span className="text-[11px]" style={{ color: 'var(--t-faint)' }}>
-            {person.year}年 · {person.gender === 'male' ? '男命' : '女命'}
+            {person.year}n · {person.gender === 'male' ? 'Nam mệnh' : 'Nữ mệnh'}
           </span>
         </div>
 
@@ -52,12 +52,12 @@ export default function FamousPersonCard({ person }: { person: FamousPerson }) {
             background: catColor + '0c',
             border: `1px solid ${catColor}25`,
           }}>
-          <span style={{ color: catColor, fontWeight: 600, marginRight: '4px' }}>命盘亮点：</span>
+          <span style={{ color: catColor, fontWeight: 600, marginRight: '4px' }}>Điểm nổi bật bản đồ:</span>
           {person.notable}
         </div>
 
         <div className="text-[10px] mt-2" style={{ color: 'var(--t-faint)', opacity: 0.6, lineHeight: 1.5 }}>
-          ⚠️ 出生时辰为公开文献估算值，仅供研究参考。下方 AI 解读基于此命盘自动生成，与本人无关。
+          ⚠️ Giờ sinh là ước tính từ tài liệu công khai, chỉ dùng để tham khảo nghiên cứu. Giải đoán AI bên dưới được tạo tự động từ bản đồ này, không liên quan đến bản thân nhân vật.
         </div>
       </div>
     </motion.div>

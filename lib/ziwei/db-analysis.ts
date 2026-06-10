@@ -1,20 +1,23 @@
 /**
- * lib/ziwei/db-analysis —— 开源占位版（论断内容库不在开源范围）
+ * lib/ziwei/db-analysis —— Phiên bản nguồn mở (nội dung bình luận không nằm trong phạm vi nguồn mở)
  *
- * 线上完整版包含 14 主星 × 13 宫位语境的详细命理论断（一句话定调 / 核心论断 /
- * 命盘依据 / 经典出处），属于核心内容、不随排盘引擎开源。此文件仅保留 SEO
- * 知识页框架所需的「类型 + 宫位/主题标签」（紫微斗数通用术语，非独有内容），
- * 论断内容库 STAR_DB 置空 —— 因此知识库详情页会生成 0 条静态路由。
+ * Phiên bản trực tuyến đầy đủ chứa 14 Sao Chính × 13 ngữ cảnh cung để bình luận chi tiết
+ * (một câu định hướng / bình luận cốt lõi / cơ sở bản đồ tử vi / nguồn cổ điển),
+ * là nội dung cốt lõi, không công khai cùng với engine排盘. File này chỉ giữ lại
+ * "Loại + nhãn cung/nội dung" cần thiết cho khung trang kiến thức SEO
+ * (Thuật ngữ chung của Tử Vi Đẩu Số, không phải nội dung độc quyền),
+ * Cơ sở dữ liệu bình luận STAR_DB để trống —— Do đó trang chi tiết kiến thức
+ * sẽ tạo 0 tuyến tĩnh.
  *
- * 排盘内核（安星算法、四化、格局识别、古籍原文）完全开放，
- * 见 lib/ziwei 下的 algorithm.ts / patterns.ts / sihua.ts 等。
+ * Lõi排盘 (thuật toán安星, Tứ Hóa, nhận diện cục, văn bản cổ điển) hoàn toàn mở,
+ * xem lib/ziwei/algorithm.ts / patterns.ts / sihua.ts.
  */
 
 export type TopicKey =
   | 'overview' | 'personality' | 'love' | 'career' | 'wealth' | 'health'
   | 'family' | 'children' | 'move' | 'friends' | 'home' | 'spirit' | 'parents';
 
-// iztro zh-CN 宫位名：命宫保留「宫」字，其余无「宫」字，「交友」在 iztro 里叫「仆役」
+// iztro zh-CN tên cung: Mệnh Cung giữ chữ "Cung", các cung khác không có "Cung", "Giao Bằng" trong iztro gọi là "Túc Y"
 export const TOPIC_PALACE_NAME: Record<TopicKey, string> = {
   overview:    '命宫',
   personality: '命宫',
@@ -32,23 +35,23 @@ export const TOPIC_PALACE_NAME: Record<TopicKey, string> = {
 };
 
 export const TOPIC_LABEL: Record<TopicKey, string> = {
-  overview:    '命格总览',
-  personality: '性格特质',
-  love:        '感情婚姻',
-  career:      '事业职业',
-  wealth:      '财富运势',
-  health:      '健康状况',
-  family:      '兄弟合伙',
-  children:    '子女缘分',
-  move:        '迁移外出',
-  friends:     '人际贵人',
-  home:        '田宅不动产',
-  spirit:      '精神福德',
-  parents:     '父母长辈',
+  overview:    'Tổng Quan Mệnh Cách',
+  personality: 'Tính Cách Đặc Trưng',
+  love:        'Tình Cảm Hôn Nhân',
+  career:      'Sự Nghiệp Công Danh',
+  wealth:      'Tài Lộc Vận Trình',
+  health:      'Sức Khỏe Tình Trạng',
+  family:      'Huynh Đệ Hợp Tác',
+  children:    'Tử Nữ Duyên Phận',
+  move:        'Di Quan Ngoại',
+  friends:     'Nhân Tài Quý Nhân',
+  home:        'Điền Trạch Bất Động Sản',
+  spirit:      'Tinh Thần Phước Đức',
+  parents:     'Phụ Mẫu Trưởng Bối',
 };
 
 /**
- * 论断内容库（14 主星 × 各宫位语境的详细断语）——核心内容，不在开源范围。
- * 此处置空；知识库 SEO 页因 `exists=false` 生成 0 条静态详情路由，但列表框架仍可运行。
+ * Cơ sở dữ liệu bình luận (14 Sao Chính × các ngữ cảnh cung) —— Nội dung cốt lõi, không nằm trong phạm vi nguồn mở.
+ * Đặt trống tại đây; Trang SEO kiến thức do `exists=false` tạo 0 tuyến chi tiết tĩnh, nhưng khung danh sách vẫn có thể chạy.
  */
 export const STAR_DB: Record<string, unknown> = {};

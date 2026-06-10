@@ -2,6 +2,7 @@
   "name": "ziwei-master",
   "version": "0.1.0",
   "private": true,
+  "description": "Ứng dụng Tử Vi Đẩu Số — Hệ thống lá số Tử Vi online",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

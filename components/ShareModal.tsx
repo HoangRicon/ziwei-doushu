@@ -40,10 +40,10 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
     try {
       const dataURL = await captureShareCard();
       if (!dataURL) {
-        alert('图片生成失败，请截图保存或刷新重试');
+        alert('Tạo ảnh thất bại, vui lòng chụp ảnh màn hình hoặc tải lại trang để thử lại');
         return;
       }
-      downloadDataURL(dataURL, `紫微命盘_${Date.now()}.png`);
+      downloadDataURL(dataURL, `BanDoTuVi_${Date.now()}.png`);
     } finally {
       setDownloading(false);
     }
@@ -82,7 +82,7 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             }}>
               <div style={{ fontSize: '14px', fontWeight: 600, color: '#3d2f10', letterSpacing: '0.12em' }}>
-                ✦ 分享命盘
+                ✦ Chia Sẻ Bản Đồ
               </div>
               <button onClick={onClose}
                 style={{
@@ -101,7 +101,7 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
             </div>
 
             <div style={{ padding: '0 20px 12px', textAlign: 'center', fontSize: '11px', color: '#a89b7c', letterSpacing: '0.05em' }}>
-              ↑ 朋友圈 / 微信 / 抖音 / 小红书 都能用
+              ↑ Dùng được cho Zalo / WeChat / TikTok / Xiaohongshu
             </div>
 
             {/* 操作区 */}
@@ -116,7 +116,7 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
                   opacity: downloading ? 0.7 : 1,
                 }}
               >
-                {downloading ? '生成中…' : '⬇ 下载分享图'}
+                {downloading ? 'Đang tạo…' : '⬇ Tải Ảnh Chia Sẻ'}
               </button>
 
               <button onClick={copyLink}
@@ -127,7 +127,7 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
                   cursor: 'pointer',
                 }}
               >
-                {copied ? '✓ 已复制链接' : '🔗 复制命盘链接'}
+                {copied ? '✓ Đã sao chép liên kết' : '🔗 Sao Chép Liên Kết Bản Đồ'}
               </button>
 
               <div style={{
@@ -135,9 +135,9 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
                 padding: '10px 12px', background: 'rgba(184,146,42,0.05)',
                 borderRadius: '8px', marginTop: '4px',
               }}>
-                <div style={{ marginBottom: '4px', fontWeight: 600, color: '#8b6a14' }}>使用提示：</div>
-                · 下载图片可发朋友圈 / 抖音 / 小红书<br />
-                · 复制链接发给微信好友，对方点开看自己的盘起点
+                <div style={{ marginBottom: '4px', fontWeight: 600, color: '#8b6a14' }}>Hướng dẫn sử dụng:</div>
+                · Tải ảnh có thể gửi Zalo / TikTok / Xiaohongshu<br />
+                · Sao chép liên kết gửi WeChat, bấm vào xem bản đồ của mình
               </div>
             </div>
           </motion.div>

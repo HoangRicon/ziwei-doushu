@@ -8,14 +8,16 @@ import { generateChart } from '@/lib/ziwei/algorithm';
 import type { BirthInfo, ZiweiChart, Palace } from '@/lib/ziwei/types';
 
 /**
- * 命盘页 —— 开源版「排盘引擎 Demo」
+ * Trang bản đồ - Demo công cụ sắp xếp bản đồ nguồn mở
  *
- * 这是一个最小可运行示例：用本仓库的排盘引擎 generateChart() 配合基础 UI
- * 组件，渲染一张完整紫微命盘 + 基础解读，并支持本命 / 大限 / 流年切换。
+ * Đây là ví dụ chạy tối thiểu: sử dụng công cụ sắp xếp bản đồ generateChart() của kho lưu trữ
+ * kết hợp với các thành phần UI cơ bản để hiển thị một bản đồ Tử Vi hoàn chỉnh + giải đoán cơ bản,
+ * đồng thời hỗ trợ chuyển đổi giữa bản đồ gốc / Đại hạn / Lưu niên.
  *
- * 说明：线上商业版的完整交互界面（重设计的新 UI、AI 流式解读、合盘、分享
- * 卡片等）不在开源范围内；但排盘内核——安星算法、四化、格局识别、古籍库——
- * 完全开放（见 lib/ziwei/*），可自由二次开发出你自己的界面。
+ * Lưu ý: Giao diện tương tác hoàn chỉnh của phiên bản thương mại trực tuyến (UI mới được thiết kế lại,
+ * giải đoán AI streaming, ghép bản đồ, thẻ chia sẻ, v.v.) không thuộc phạm vi nguồn mở;
+ * tuy nhiên nhân công sắp xếp bản đồ - thuật toán an sao, tứ hóa, nhận diện cục diện, kho tàng cổ thư -
+ * hoàn toàn mở (xem lib/ziwei/*), có thể phát triển lại giao diện của riêng bạn một cách tự do.
  */
 export default function ChartPage() {
   const [chart, setChart] = useState<ZiweiChart | null>(null);
@@ -23,22 +25,22 @@ export default function ChartPage() {
   const [view, setView] = useState<TimeView>('mingpan');
   const [liunianYear, setLiunianYear] = useState(() => new Date().getFullYear());
 
-  // ── 未起盘：展示出生信息表单 ──
+  // ── Chưa sắp xếp bản đồ: Hiển thị biểu mẫu thông tin sinh─────────
   if (!chart) {
     return (
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '48px 20px' }}>
-        <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>紫微斗数排盘</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>Sắp xếp Tử Vi Đẩu Số</h1>
         <p style={{ color: '#888', marginBottom: 32, fontSize: 14, lineHeight: 1.7 }}>
-          输入出生年月日时，开源排盘引擎即时生成命盘。
+          Nhập ngày tháng năm sinh, công cụ sắp xếp nguồn mở sẽ tạo bản đồ ngay lập tức.
           <br />
-          （本页为引擎 Demo，完整商业版界面不在开源范围；排盘内核完全开放。）
+          (Trang này là Demo công cụ, giao diện phiên bản thương mại hoàn chỉnh không thuộc phạm vi nguồn mở; nhân công sắp xếp bản đồ hoàn toàn mở.)
         </p>
         <BirthForm onSubmit={(info: BirthInfo) => setChart(generateChart(info))} />
       </main>
     );
   }
 
-  // ── 已起盘：命盘 + 解读 ──
+  // ── Đã sắp xếp bản đồ: Bản đồ + Giải đoán ──
   return (
     <main style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 16px' }}>
       <button
@@ -49,7 +51,7 @@ export default function ChartPage() {
           border: '1px solid #ccc', borderRadius: 8, background: 'transparent',
         }}
       >
-        ← 重新起盘
+        Sắp xếp lại bản đồ
       </button>
 
       <TimeNav

@@ -1,8 +1,8 @@
 /**
- * SEO 知识页 — 数据 helper
+ * SEO Trang kiến thức — Helper dữ liệu
  *
- * 14 主星 × 13 topic = 182 个独立 SEO URL
- * 每页都是 STAR_DB 中对应字段的 4 段 markers（一句话定调/核心论断/命盘依据/经典出处）
+ * 14 Sao chính × 13 topic = 182 URL SEO độc lập
+ * Mỗi trang là 4 đoạn markers tương ứng trong STAR_DB (một câu định điệu/chân lý cốt lõi/căn cứ lá số/tác phẩm kinh điển)
  */
 
 import { STAR_DB } from '@/lib/ziwei/db-analysis';
@@ -14,7 +14,7 @@ export const ALL_STARS = [
   '太阴', '贪狼', '巨门', '天相', '天梁', '七杀', '破军',
 ];
 
-// 主星名 ↔ 拼音 slug 映射（URL 用 slug，避免中文 URL 在 Vercel/CDN 上的边界问题）
+// Ánh xạ tên sao chính ↔ slug pinyin (dùng slug cho URL, tránh vấn đề URL tiếng Trung trên Vercel/CDN)
 export const STAR_TO_SLUG: Record<string, string> = {
   '紫微': 'ziwei',
   '天机': 'tianji',
@@ -131,7 +131,7 @@ export function getKnowledge(star: string, topic: TopicKey): KnowledgeData {
   };
 }
 
-/** 生成所有 14×13 组合（用于 generateStaticParams） */
+/** Tạo toàn bộ 14×13 tổ hợp (dùng cho generateStaticParams) */
 export function getAllKnowledgeRoutes() {
   const routes: { star: string; slug: string; topic: TopicKey }[] = [];
   for (const star of ALL_STARS) {
@@ -143,20 +143,20 @@ export function getAllKnowledgeRoutes() {
   return routes;
 }
 
-/** 主星属性简介（用于 SEO 页"了解 XX 星"section） */
+/** Giới thiệu ngắn gọn thuộc tính sao chính (dùng cho phần "Tìm hiểu sao XX" trong trang SEO) */
 export const STAR_BRIEF_SEO: Record<string, string> = {
-  '紫微': '紫微为帝星，主尊贵，化气为尊。落命主有领导气场、宜大平台高位。',
-  '天机': '天机为智慧星，主善变机灵，化气为善。落命主聪明机变、宜辅佐策划。',
-  '太阳': '太阳为男贵星，主名誉公务，化气为贵。落命主光明磊落、宜公职名声。',
-  '武曲': '武曲为财星，主刚毅果决，化气为财。落命主理财能力强、宜实业金融。',
-  '天同': '天同为福星，主温和享乐，化气为福。落命主性情温和、有福气。',
-  '廉贞': '廉贞为次桃花星，文武兼备，化气为囚。落命主多才多艺、感情丰富。',
-  '天府': '天府为南帝守财星，主稳重保守，化气为令。落命主品行端正、善守财库。',
-  '太阴': '太阴为月亮富贵星，主田宅富贵，化气为富。落命主感情细腻、女命最吉。',
-  '贪狼': '贪狼为桃花欲望星，多才多社交，化气为桃花。落命主多才艺、社交广。',
-  '巨门': '巨门为是非口才星，主辩论传媒，化气为暗。落命主口才好、宜律师教师。',
-  '天相': '天相为印星辅佐，主忠厚老实，化气为印。落命主品行端正、宜行政法务。',
-  '天梁': '天梁为老人星荫星，善逢凶化吉，化气为荫。落命主慈悲善良、宜法律医学。',
-  '七杀': '七杀为将星，主孤独果决冒险，化气为肃杀。落命主刚毅果决、宜军警创业。',
-  '破军': '破军为破坏创新星，主六亲缘薄，化气为耗。落命主开创变动、宜技术专长。',
+  '紫微': 'Tử Vi là sao Đế, chủ về quý trọng, hóa khí là tôn. Người có sao này trong mệnh có khí thế lãnh đạo, thích hợp vị trí cao trên nền tảng lớn.',
+  '天机': 'Thiên Cơ là sao trí tuệ, chủ về biến hóa linh mẫn, hóa khí là thiện. Người có sao này trong mệnh thông minh biến hóa, thích hợp hỗ trợ quy hoạch.',
+  '太阳': 'Thái Dương là sao quý cho nam, chủ về danh vọng công vụ, hóa khí là quý. Người có sao này trong mệnh quang minh lỗi lạc, thích hợp công vụ danh vọng.',
+  '武曲': 'Võ Cực là sao tài, chủ về cương nghị quyết đoán, hóa khí là tài. Người có sao này trong mệnh có khả năng quản lý tài chính mạnh, thích hợp thực nghiệp tài chính.',
+  '天同': 'Thiên Đồng là sao phước, chủ về ôn hòa hưởng lạc, hóa khí là phước. Người có sao này trong mệnh tính tình ôn hòa, có phước.',
+  '廉贞': 'Liêm Trinh là sao hồ đào thứ yếu, văn võ kiêm bẩm, hóa khí là tù. Người có sao này trong mệnh đa tài đa nghệ, tình cảm phong phú.',
+  '天府': 'Thiên Phủ là sao Nam Đế giữ của, chủ về ổn trọng bảo thủ, hóa khí là lệnh. Người có sao này trong mệnh hạnh kiểm ngay thẳng, giỏi giữ kho tài.',
+  '太阴': 'Thái Âm là sao mặt trăng giàu quý, chủ về điền trạch giàu sang, hóa khí là phú. Người có sao này trong mệnh tình cảm tinh tế, nữ mệnh là tốt nhất.',
+  '贪狼': 'Tham Lang là sao hồ đào dục vọng, đa tài đa giao tiếp, hóa khí là hồ đào. Người có sao này trong mệnh đa tài nghệ, giao tiếp rộng.',
+  '巨门': 'Cự Môn là sao phong phi khẩu tài, chủ về biện luận truyền thông, hóa khí là ám. Người có sao này trong mệnh khẩu tài tốt, thích hợp luật sư giáo viên.',
+  '天相': 'Thiên Tướng là sao ấn tướng phụ tá, chủ về trung hậu thật thà, hóa khí là ấn. Người có sao này trong mệnh hạnh kiểm ngay thẳng, thích hợp hành chính pháp vụ.',
+  '天梁': 'Thiên Lang là sao lão nhân ấm sao, thiện gặp hung hóa cát, hóa khí là ấm. Người có sao này trong mệnh từ bi thiện lương, thích hợp luật pháp y học.',
+  '七杀': 'Thất Sát là sao tướng, chủ về cô độc quyết đoán mạo hiểm, hóa khí là túc sát. Người có sao này trong mệnh cương nghị quyết đoán, thích hợp quân cảnh sáng tạo.',
+  '破军': 'Phá Quân là sao phá hoại sáng tạo, chủ về lục thân duyên mỏng, hóa khí là hao. Người có sao này trong mệnh sáng tạo biến động, thích hợp chuyên môn kỹ thuật.',
 };

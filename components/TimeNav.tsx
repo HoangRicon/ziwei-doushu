@@ -80,20 +80,20 @@ export default function TimeNav({
         className="flex items-center rounded-xl p-1 gap-1"
         style={{ background: 'var(--t-surface)', border: '1px solid var(--t-border)' }}
       >
-        {/* 本命 */}
+        {/* Bản Mệnh */}
         <TabButton
           active={view === 'mingpan'}
           onClick={() => onViewChange('mingpan')}
         >
-          本命
+          Bản Mệnh
         </TabButton>
 
-        {/* 大限 */}
+        {/* Đại Hạn */}
         <TabButton
           active={view === 'daxian'}
           onClick={() => onViewChange('daxian')}
         >
-          {currentDx ? `大限 ${currentDx.startAge}–${currentDx.endAge}` : '大限'}
+          {currentDx ? `Đại Hạn ${currentDx.startAge}–${currentDx.endAge}` : 'Đại Hạn'}
         </TabButton>
 
         {/* 流年 — 含年份切换 */}
@@ -113,7 +113,7 @@ export default function TimeNav({
             className="text-[10px] font-medium flex-1 text-center"
             style={{ color: view === 'liunian' ? 'var(--t-gold)' : 'var(--t-faint)' }}
           >
-            流年
+            Lưu Niên
           </button>
           {/* 年份 +/- */}
           <div className="flex items-center gap-0.5">
@@ -151,7 +151,7 @@ export default function TimeNav({
           className="flex items-center gap-2 mt-1.5 px-1 flex-wrap"
         >
           <span className="text-[9px]" style={{ color: 'var(--t-faint)' }}>
-            {view === 'daxian' ? '大限' : `${liunianYear}`}·{overlayInfo.stemName}年四化：
+            {view === 'daxian' ? 'Đại Hạn' : `${liunianYear}`}·{overlayInfo.stemName} năm tứ hóa:
           </span>
           {(['禄', '权', '科', '忌'] as const).map(sh => {
             const starName = Object.keys(overlayInfo.overlay).find(k => overlayInfo.overlay[k] === sh);

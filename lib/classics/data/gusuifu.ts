@@ -1,8 +1,8 @@
 /**
- * 《骨髓赋》— 紫微斗数核心口诀
+ * 《Cốt Tủy Phú》— Lõi cốt lõi Tử Vi Đẩu Số
  *
- * 公版（明代刊本）。是紫微斗数最权威、最浓缩的口诀，长约 1500 字。
- * 倪师在《天纪》中多次援引此赋。
+ * Công bản (bản in đời Minh). Là những câu thần chú uy nghiêm và cô đọng nhất của Tử Vi Đẩu Số, khoảng 1500 chữ.
+ * Thầy Nhi nhiều lần trích dẫn bài phú này trong 《Thiên Kỷ》.
  */
 
 import type { Book } from '../types';
@@ -11,8 +11,8 @@ export const guSuiFu: Book = {
   title: '骨髓赋',
   slug: 'gusuifu',
   dynasty: '明代',
-  author: '紫微斗数古籍传承（无确切作者）',
-  intro: '紫微斗数最浓缩的核心口诀，全文约 1500 字。倪海夏《天纪》中多次援引此赋，是紫微学者必读经典。',
+  author: 'Truyền thừa cổ thư Tử Vi Đẩu Số (không rõ tác giả chính xác)',
+  intro: 'Những câu thần chú cốt lõi và cô đọng nhất của Tử Vi Đẩu Số, toàn bộ khoảng 1500 chữ. Thầy Nhi Hải Hạc trong 《Thiên Kỷ》 nhiều lần trích dẫn bài phú này, là kinh điển mà những ai nghiên cứu Tử Vi bắt buộc phải đọc.',
   wordCount: 1500,
   chapters: [
     {

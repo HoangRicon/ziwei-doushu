@@ -1,6 +1,9 @@
 /**
- * 紫微斗数排盘算法 — 基于 iztro 开源库
+ * Thuật toán Tử Vi Đẩu Số - Dựa trên thư viện mã nguồn mở iztro
  * https://github.com/SylarLong/iztro
+ *
+ * File này chứa thuật toán排盘 (lập bản đồ tử vi) cho Tử Vi Đẩu Số,
+ * bao gồm: tính toán cung mệnh, đại hạn, vị trí sao, và các thông tin liên quan.
  */
 
 import { astro } from 'iztro';

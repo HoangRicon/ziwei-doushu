@@ -13,12 +13,12 @@ interface ChatPanelProps {
 }
 
 const PRESET_QUESTIONS = [
-  '我的整体命格如何？性格特点是什么？',
-  '我的感情婚姻运势如何？',
-  '我的事业财运如何？适合什么方向？',
-  '我现在的大限运势如何？',
-  '我的健康需要注意什么？',
-  '今年的流年运势如何？',
+  'Mệnh cách tổng quan của tôi như thế nào? Đặc điểm tính cách là gì?',
+  'Vận tình duyên hôn nhân của tôi như thế nào?',
+  'Sự nghiệp và tài vận của tôi ra sao? Phù hợp với hướng nào?',
+  'Vận hạn đại hạn hiện tại của tôi như thế nào?',
+  'Sức khỏe cần chú ý điều gì?',
+  'Vận trình lưu niên năm nay ra sao?',
 ];
 
 export default function ChatPanel({ chart }: ChatPanelProps) {
@@ -47,8 +47,8 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
         body: JSON.stringify({ chart, messages: [...messages, userMsg] }),
       });
 
-      if (!res.ok) throw new Error('请求失败');
-      if (!res.body) throw new Error('无响应流');
+      if (!res.ok) throw new Error('Yêu cầu thất bại');
+      if (!res.body) throw new Error('Không có luồng phản hồi');
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -81,7 +81,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
     } catch {
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: '解读失败，请检查API配置或稍后重试。',
+        content: 'Giải đoán thất bại, vui lòng kiểm tra cấu hình API hoặc thử lại sau.',
       }]);
     } finally {
       setLoading(false);
@@ -92,8 +92,8 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
     <div className="flex flex-col h-full rounded-xl overflow-hidden card-glass">
       {/* 标题 */}
       <div className="px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid var(--t-border)' }}>
-        <h3 className="text-xs font-medium tracking-widest" style={{ color: 'var(--t-gold)' }}>AI 命盘解读</h3>
-        <p className="text-[10px] mt-0.5" style={{ color: 'var(--t-faint)' }}>倪海夏正宗紫微斗数 · 智慧解析</p>
+        <h3 className="text-xs font-medium tracking-widest" style={{ color: 'var(--t-gold)' }}>Giải Đoán Bản Đồ AI</h3>
+        <p className="text-[10px] mt-0.5" style={{ color: 'var(--t-faint)' }}>Hệ thống Tử Vi Đấu Số chính thống của thầy Ni Hải Hạ · Phân tích trí tuệ</p>
       </div>
 
       {/* 消息列表 */}
@@ -102,8 +102,8 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
             <div className="text-4xl mb-3" style={{ color: 'var(--t-gold)', opacity: 0.15 }}>✦</div>
             <p className="text-xs leading-relaxed" style={{ color: 'var(--t-faint)' }}>
-              命盘已生成，可直接提问<br />
-              或从下方选择常见问题开始解读
+              Bản đồ đã được tạo, có thể hỏi trực tiếp<br />
+              hoặc chọn câu hỏi thường gặp bên dưới để bắt đầu giải đoán
             </p>
           </motion.div>
         )}
@@ -129,7 +129,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
                 }}
               >
                 {msg.role === 'assistant' && (
-                  <div className="text-[10px] mb-1" style={{ color: 'var(--t-faint)' }}>命理师 ·</div>
+                  <div className="text-[10px] mb-1" style={{ color: 'var(--t-faint)' }}>Nhà Mệnh Lý ·</div>
                 )}
                 <div className="whitespace-pre-wrap text-xs leading-relaxed">
                   {msg.content}
@@ -182,7 +182,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage(input)}
-            placeholder="输入问题，如：我的感情运势如何？"
+            placeholder="Nhập câu hỏi, ví dụ: Vận tình duyên của tôi như thế nào?"
             disabled={loading}
             className="flex-1 rounded-lg px-3 py-2 text-xs focus:outline-none transition-colors"
             style={{
@@ -201,7 +201,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
               color: 'var(--t-gold)',
             }}
           >
-            解读
+            Giải đoán
           </button>
         </div>
       </div>

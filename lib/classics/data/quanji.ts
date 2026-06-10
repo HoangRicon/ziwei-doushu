@@ -1,9 +1,9 @@
 /**
- * 《紫微斗数全集》— 核心精选章节
+ * 《Tử Vi Đẩu Số Toàn Tập》— Các chương then chốt được chọn lọc
  *
- * 公版（明代刊本，相传由陈抟祖师传）
- * 是紫微斗数最权威的古籍之一，全本约 8 万字。
- * 此处精选核心论述，未来可补全。
+ * Công bản (bản in đời Minh, truyền thuyết do Tổ sư Trần Đoàn truyền lại)
+ * Là một trong những cổ thư có thẩm quyền nhất của Tử Vi Đẩu Số, toàn bộ khoảng 80.000 chữ.
+ * Chương then chốt được chọn lọc ở đây, có thể bổ sung đầy đủ trong tương lai.
  */
 
 import type { Book } from '../types';
@@ -12,8 +12,8 @@ export const ziWeiQuanJi: Book = {
   title: '紫微斗数全集',
   slug: 'quanji',
   dynasty: '明代',
-  author: '相传陈抟祖师传',
-  intro: '紫微斗数最权威的古籍之一，相传由宋代陈抟祖师传授。倪海夏《天纪》体系的核心引证来源。',
+  author: 'Truyền thuyết do Tổ sư Trần Đoàn truyền lại',
+  intro: 'Một trong những cổ thư có thẩm quyền nhất của Tử Vi Đẩu Số, truyền thuyết do Tổ sư đời Tống Trần Đoàn truyền lại. Nguồn trích dẫn cốt lõi của hệ thống 《Thiên Kỷ》 của thầy Nhi Hải Hạc.',
   wordCount: 80000,
   chapters: [
     {
