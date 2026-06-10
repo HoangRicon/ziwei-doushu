@@ -12,26 +12,27 @@ function getInitialTheme(): Theme {
   if (typeof document !== 'undefined') {
     const attr = document.documentElement.getAttribute('data-theme');
     if (attr === 'light' || attr === 'dark') return attr;
+    const saved = localStorage.getItem('ziwei-theme') as Theme | null;
+    if (saved === 'light' || saved === 'dark') return saved;
   }
   return 'dark';
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const saved = localStorage.getItem('ziwei-theme') as Theme | null;
-    if (saved === 'light' || saved === 'dark') setTheme(saved);
+    if (saved === 'light' || saved === 'dark') {
+      setTheme(saved);
+    }
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
     const root = document.documentElement;
     root.setAttribute('data-theme', theme);
     localStorage.setItem('ziwei-theme', theme);
-  }, [theme, mounted]);
+  }, [theme]);
 
   const toggle = () => {
     const root = document.documentElement;
