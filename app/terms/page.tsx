@@ -3,17 +3,17 @@ export const metadata = { title: 'Điều khoản dịch vụ · Bản đồ T�
 export default function TermsPage() {
   return (
     <>
-      <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'var(--bg-0)', borderBottom: '1px solid var(--bdr)', padding: '14px 24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--tx-3)', textDecoration: 'none' }}>
+      <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'var(--color-bg-page)', borderBottom: '1px solid var(--color-border)', padding: '14px 24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--color-text-muted)', textDecoration: 'none' }}>
           <span style={{ fontSize: '16px' }}>‹</span>
           <span>Quay lại trang chủ</span>
         </a>
-        <div style={{ width: '1px', height: '20px', background: 'var(--bdr-med)' }} />
-        <span style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em' }}>Bản đồ Tử Vi</span>
+        <div style={{ width: '1px', height: '20px', background: 'var(--color-border-med)' }} />
+        <span style={{ fontSize: '12px', color: 'var(--color-accent)', letterSpacing: '0.2em' }}>Bản đồ Tử Vi</span>
       </header>
-      <main style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 80px', color: 'var(--tx-1)', lineHeight: 1.8 }}>
+      <main style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 80px', color: 'var(--color-text-secondary)', lineHeight: 1.8 }}>
         <h1 style={{ fontSize: 28, fontWeight: 600, marginBottom: 8 }}>Điều khoản dịch vụ</h1>
-        <p style={{ fontSize: 12, color: 'var(--tx-3)', marginBottom: 32 }}>Cập nhật lần cuối: Tháng 4/2026</p>
+        <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 32 }}>Cập nhật lần cuối: Tháng 4/2026</p>
 
       <h2 style={{ fontSize: 18, marginTop: 32, marginBottom: 12 }}>1. Tổng quan dịch vụ</h2>
       <p>Bản đồ Tử Vi (sau đây gọi là "Nền tảng") cung cấp dịch vụ sắp bản đồ và giải đoán Tử Vi Đẩu Số dựa trên hệ thống "Thiên Kỷ" của Nị Hải Hạ. Toàn bộ nội dung bản đồ trên nền tảng chỉ mang tính chất tham khảo, <strong>không đưa ra bất kỳ lời khuyên y tế, đầu tư, pháp lý, tâm lý hoặc quyết định quan trọng nào trong cuộc đời</strong>.</p>
@@ -51,8 +51,8 @@ export default function TermsPage() {
       <h2 style={{ fontSize: 18, marginTop: 32, marginBottom: 12 }}>7. Thông tin liên hệ</h2>
       <p>Nếu có thắc mắc, vui lòng liên hệ qua WeChat chăm sóc khách hàng / hòm thư công cộng được công bố trên nền tảng.</p>
 
-        <p style={{ marginTop: 48, fontSize: 12, color: 'var(--tx-3)' }}>
-          <a href="/privacy" style={{ color: 'var(--ac)' }}>Chính sách bảo mật</a> · <a href="/" style={{ color: 'var(--ac)' }}>Quay lại trang chủ</a>
+        <p style={{ marginTop: 48, fontSize: 12, color: 'var(--color-text-muted)' }}>
+          <a href="/privacy" style={{ color: 'var(--color-accent)' }}>Chính sách bảo mật</a> · <a href="/" style={{ color: 'var(--color-accent)' }}>Quay lại trang chủ</a>
         </p>
       </main>
     </>

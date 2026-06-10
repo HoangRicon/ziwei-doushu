@@ -9,52 +9,68 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // 2.0 设计系统色
+        // 3-layer token system — semantic aliases
         bg: {
-          0: "#FAFAF9",
-          1: "#F4F3EF",
-          2: "#ECEAE4",
-          inv: "#0D0D0B",
+          0: "var(--color-bg-page)",
+          1: "var(--color-bg-1)",
+          2: "var(--color-bg-2)",
+          card: "var(--color-bg-card)",
+          inv: "var(--color-bg-inv)",
         },
         tx: {
-          0: "#0D0D0B",
-          1: "#1A1A18",
-          2: "#4A4A45",
-          3: "#8A8A82",
-          inv: "#F0EDE8",
+          0: "var(--color-text-primary)",
+          1: "var(--color-text-secondary)",
+          2: "var(--color-text-body)",
+          3: "var(--color-text-muted)",
+          inv: "var(--color-text-inv)",
         },
-        ac: {
-          DEFAULT: "#B8922A",
-          dim: "#7A5F1A",
+        accent: {
+          DEFAULT: "var(--color-accent)",
+          dim: "var(--color-accent-dim)",
+          bg: "var(--color-accent-bg)",
+          bdr: "var(--color-accent-bdr)",
         },
-        // 四化语义色
-        lu:   "#2D7A4A",
-        quan: "#1A56A8",
-        ke:   "#8A7018",
-        ji:   "#A83228",
+        // Si Hua — data tokens (chart display only)
+        sihua: {
+          lu:   "var(--color-sihua-lu)",
+          quan: "var(--color-sihua-quan)",
+          ke:   "var(--color-sihua-ke)",
+          ji:   "var(--color-sihua-ji)",
+        },
       },
       fontFamily: {
-        sans: ["var(--font)"],
-        mono: ["var(--font-mono)"],
+        sans: ["var(--primitive-font-sans)"],
+        mono: ["var(--primitive-font-mono)"],
       },
       boxShadow: {
-        xs: "0 1px 2px rgba(0,0,0,0.05)",
-        sm: "0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
-        md: "0 4px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05)",
-        lg: "0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06)",
+        xs: "var(--shadow-xs)",
+        sm: "var(--shadow-sm)",
+        md: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
       },
       borderRadius: {
-        xs: "4px",
-        sm: "8px",
-        md: "12px",
-        lg: "16px",
-        xl: "24px",
-        pill: "999px",
+        xs:   "var(--radius-xs)",
+        sm:   "var(--radius-sm)",
+        md:   "var(--radius-md)",
+        lg:   "var(--radius-lg)",
+        xl:   "var(--radius-xl)",
+        pill: "var(--radius-pill)",
+      },
+      fontSize: {
+        xs:   ["var(--text-xs)",   { lineHeight: "1.5" }],
+        sm:   ["var(--text-sm)",   { lineHeight: "1.5" }],
+        base: ["var(--text-base)", { lineHeight: "1.6" }],
+        lg:   ["var(--text-lg)",   { lineHeight: "1.5" }],
+        xl:   ["var(--text-xl)",   { lineHeight: "1.4" }],
+        "2xl":["var(--text-2xl)",  { lineHeight: "1.3" }],
+        "3xl":["var(--text-3xl)",  { lineHeight: "1.2" }],
+        "4xl":["var(--text-4xl)",  { lineHeight: "1.15" }],
+        "5xl":["var(--text-5xl)",  { lineHeight: "1.1" }],
       },
       animation: {
-        "fade-up": "fadeUp 0.5s ease forwards",
-        "fade-in": "fadeIn 0.4s ease forwards",
-        "spin-slow": "spin 20s linear infinite",
+        "fade-up":    "fadeUp 0.5s ease forwards",
+        "fade-in":    "fadeIn 0.4s ease forwards",
+        "spin-slow":  "spin 20s linear infinite",
       },
       keyframes: {
         fadeUp: {

@@ -1,126 +1,163 @@
+/* ══════════════════════════════════════════════════════════════════
+   ZIWEI DO SHU — DESIGN SYSTEM 3-LAYER TOKEN
+   Layer 1: Primitive   — raw values (reference only)
+   Layer 2: Semantic    — component-agnostic roles
+   Layer 3: Component   — Tailwind utilities via CSS variables
+   ══════════════════════════════════════════════════════════════════ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── 2.0 Hệ thống thiết kế Token ─────────────────────────── */
+/* ─── Layer 1: Primitive Tokens ─────────────────────────── */
+/* These raw values are NEVER referenced directly in components.
+   Components must use Layer 2 (semantic) tokens instead. */
+
 :root {
-  /* Phông chữ */
-  --font: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Segoe UI', sans-serif;
-  --font-mono: 'SF Mono', 'Menlo', 'Noto Sans Mono', 'Consolas', monospace;
+  /* Font stack */
+  --primitive-font-sans: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Segoe UI', sans-serif;
+  --primitive-font-mono: 'SF Mono', 'Menlo', 'Noto Sans Mono', 'Consolas', monospace;
 
-  /* Lớp nền */
-  --bg-0: #FAFAF9;
-  --bg-1: #F4F3EF;
-  --bg-2: #ECEAE4;
-  --bg-inv: #0D0D0B;
+  /* Gold / Amber palette */
+  --primitive-gold-50:   #FEF9E7;
+  --primitive-gold-100: #FCF0C0;
+  --primitive-gold-200: #F8DF80;
+  --primitive-gold-300: #EDC840;
+  --primitive-gold-400: #D4A843;
+  --primitive-gold-500: #B8922A;
+  --primitive-gold-600: #8A6D1A;
+  --primitive-gold-700: #5C4810;
 
-  /* Lớp văn bản */
-  --tx-0: #0D0D0B;
-  --tx-1: #1A1A18;
-  --tx-2: #4A4A45;
-  --tx-3: #8A8A82;
-  --tx-inv: #F0EDE8;
-  --tx-inv2: rgba(240,237,232,0.65);
-
-  /* Màu nhấn duy nhất: Mực vàng */
-  --ac:     #B8922A;
-  --ac-dim: #7A5F1A;
-  --ac-bg:  rgba(184,146,42,0.07);
-  --ac-bdr: rgba(184,146,42,0.22);
-
-  /* Màu ngữ nghĩa tứ hóa (chỉ dùng cho dữ liệu bản đồ, không dùng cho trang trí UI) */
-  --lu:   #2D7A4A;
-  --quan: #1A56A8;
-  --ke:   #8A7018;
-  --ji:   #A83228;
-
-  /* Đường viền */
-  --bdr:      rgba(0,0,0,0.07);
-  --bdr-med:  rgba(0,0,0,0.11);
-  --bdr-heavy:rgba(0,0,0,0.18);
-
-  /* Đổ bóng */
-  --sh-xs: 0 1px 2px rgba(0,0,0,0.05);
-  --sh-sm: 0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
-  --sh-md: 0 4px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
-  --sh-lg: 0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06);
-
-  /* Nền thẻ/nội dung */
-  --bg-card: #FFFFFF;
-  --bg-page: #fbf6e8;
-
-  /* Bo góc */
-  --r-xs:  4px;
-  --r-sm:  8px;
-  --r-md:  12px;
-  --r-lg:  16px;
-  --r-xl:  24px;
-  --r-pill:999px;
+  /* Dark theme base */
+  --primitive-bg-dark:   #020810;
+  --primitive-bg-dark-1: #0A1020;
+  --primitive-bg-dark-2: #141E30;
+  --primitive-text-dark: #E8EEF6;
 }
 
-/* ─── Ghi đè Token Chế độ tối ──────────────────────────── */
+/* ─── Layer 2: Semantic Tokens ─────────────────────────── */
+/* All components should reference these tokens. */
+
+:root {
+  /* Background surfaces */
+  --color-bg-page:    #FAFAF9;   /* Page background */
+  --color-bg-1:      #F4F3EF;   /* Elevated surface */
+  --color-bg-2:      #ECEAE4;   /* Tinted block */
+  --color-bg-card:   #FFFFFF;   /* Card surface */
+  --color-bg-inv:    #0D0D0B;   /* Inverse dark block */
+
+  /* Text */
+  --color-text-primary:   #0D0D0B;   /* Main headings */
+  --color-text-secondary: #1A1A18;   /* Subheadings */
+  --color-text-body:      #4A4A45;   /* Body copy */
+  --color-text-muted:     #8A8A82;   /* Labels, captions */
+  --color-text-inv:       #F0EDE8;   /* Text on dark */
+  --color-text-inv-2:     rgba(240,237,232,0.65); /* Secondary on dark */
+
+  /* Accent */
+  --color-accent:     #B8922A;   /* Primary gold accent */
+  --color-accent-dim: #7A5F1A;  /* Dimmed accent */
+  --color-accent-bg:  rgba(184,146,42,0.07);
+  --color-accent-bdr: rgba(184,146,42,0.22);
+
+  /* Si Hua — DATA tokens (chart data only, not UI decoration) */
+  --color-sihua-lu:   #2D7A4A;  /* 化禄 green */
+  --color-sihua-quan: #1A56A8;  /* 化权 blue */
+  --color-sihua-ke:   #8A7018;  /* 化科 yellow */
+  --color-sihua-ji:   #A83228;  /* 化忌 red */
+
+  /* Borders */
+  --color-border:       rgba(0,0,0,0.07);
+  --color-border-med:   rgba(0,0,0,0.11);
+  --color-border-heavy: rgba(0,0,0,0.18);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06);
+
+  /* Border radius */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-pill: 999px;
+
+  /* Typography scale */
+  --text-xs:   12px;
+  --text-sm:   14px;
+  --text-base: 16px;
+  --text-lg:   18px;
+  --text-xl:   20px;
+  --text-2xl:  24px;
+  --text-3xl:  30px;
+  --text-4xl:  36px;
+  --text-5xl:  48px;
+}
+
+/* ─── Dark Mode Semantic Tokens ─────────────────────────── */
 [data-theme="dark"] {
-  --bg-0: #020810;
-  --bg-1: #0a1020;
-  --bg-2: #141e30;
-  --bg-inv: #f0ede8;
+  --color-bg-page:    #020810;
+  --color-bg-1:       #0A1020;
+  --color-bg-2:       #141E30;
+  --color-bg-card:    rgba(255,255,255,0.04);
+  --color-bg-inv:     #f0ede8;
 
-  --tx-0: #e8eef6;
-  --tx-1: #dce4f0;
-  --tx-2: #9db0d0;
-  --tx-3: #6a7a96;
-  --tx-inv: #0d0d0b;
-  --tx-inv2: rgba(13,13,11,0.65);
+  --color-text-primary:   #E8EEF6;
+  --color-text-secondary: #DCE4F0;
+  --color-text-body:      #9DB0D0;
+  --color-text-muted:     #6A7A96;
+  --color-text-inv:       #0D0D0B;
+  --color-text-inv-2:     rgba(13,13,11,0.65);
 
-  --ac:     #d4a843;
-  --ac-dim: #e8c060;
-  --ac-bg:  rgba(212,168,67,0.10);
-  --ac-bdr: rgba(212,168,67,0.25);
+  --color-accent:     #d4a843;
+  --color-accent-dim: #e8c060;
+  --color-accent-bg:  rgba(212,168,67,0.10);
+  --color-accent-bdr: rgba(212,168,67,0.25);
 
-  --bdr:      rgba(255,255,255,0.07);
-  --bdr-med:  rgba(255,255,255,0.12);
-  --bdr-heavy:rgba(255,255,255,0.20);
+  --color-border:       rgba(255,255,255,0.07);
+  --color-border-med:   rgba(255,255,255,0.12);
+  --color-border-heavy: rgba(255,255,255,0.20);
 
-  --sh-xs: 0 1px 2px rgba(0,0,0,0.3);
-  --sh-sm: 0 2px 8px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
-  --sh-md: 0 4px 20px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35);
-  --sh-lg: 0 12px 40px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.4);
-
-  --bg-card: rgba(255,255,255,0.04);
-  --bg-page: #020810;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.4);
 }
 
-/* ─── Toàn cục cơ bản ───────────────────────────────────── */
+/* ─── Layer 3: Global Base Styles ───────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  background: var(--bg-0);
+  background: var(--color-bg-page);
   scroll-behavior: smooth;
 }
 
 body {
-  background: var(--bg-0);
-  color: var(--tx-1);
-  font-family: var(--font);
+  background: var(--color-bg-page);
+  color: var(--color-text-secondary);
+  font-family: var(--primitive-font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
 }
 
-/* ─── Thanh cuộn ──────────────────────────────────────── */
+/* ─── Scrollbar ─────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: var(--bg-1); }
-::-webkit-scrollbar-thumb { background: var(--bdr-heavy); border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--color-bg-1); }
+::-webkit-scrollbar-thumb { background: var(--color-border-heavy); border-radius: 3px; }
 
-/* ─── Văn bản được chọn ─────────────────────────────── */
+/* ─── Selection ─────────────────────────────────────────── */
 ::selection {
   background: rgba(184,146,42,0.15);
-  color: var(--ac-dim);
+  color: var(--color-accent-dim);
 }
 
-/* ─── Lớp tiện ích ──────────────────────────────────── */
+/* ─── Utility Classes ─────────────────────────────────────── */
 
-/* Thùng chứa */
+/* Container */
 .container-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -130,39 +167,39 @@ body {
   .container-page { padding: 0 16px; }
 }
 
-/* Thẻ */
+/* Cards */
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--bdr);
-  border-radius: var(--r-md);
-  box-shadow: var(--sh-sm);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 .card-flat {
-  background: var(--bg-card);
-  border: 1px solid var(--bdr);
-  border-radius: var(--r-md);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
 }
 .card-tinted {
-  background: var(--bg-1);
-  border: 1px solid var(--bdr);
-  border-radius: var(--r-md);
+  background: var(--color-bg-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
 }
 
-/* Khối tối */
+/* Dark section */
 .section-dark {
-  background: var(--bg-inv);
-  color: var(--tx-inv);
+  background: var(--color-bg-inv);
+  color: var(--color-text-inv);
 }
 
-/* Nút bấm */
+/* Buttons */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 12px 24px;
-  border-radius: var(--r-pill);
-  background: var(--tx-0);
-  color: var(--bg-0);
+  border-radius: var(--radius-pill);
+  background: var(--color-text-primary);
+  color: var(--color-bg-page);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -179,8 +216,8 @@ body {
   align-items: center;
   gap: 6px;
   padding: 12px 28px;
-  border-radius: var(--r-pill);
-  background: var(--ac);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
   color: white;
   font-size: 14px;
   font-weight: 500;
@@ -190,7 +227,7 @@ body {
   transition: background 0.15s ease, transform 0.12s ease;
   text-decoration: none;
 }
-.btn-accent:hover { background: var(--ac-dim); }
+.btn-accent:hover { background: var(--color-accent-dim); }
 .btn-accent:active { transform: scale(0.98); }
 
 .btn-ghost {
@@ -198,24 +235,24 @@ body {
   align-items: center;
   gap: 6px;
   padding: 11px 22px;
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   background: transparent;
-  color: var(--tx-1);
+  color: var(--color-text-secondary);
   font-size: 14px;
   font-weight: 400;
-  border: 1px solid var(--bdr-heavy);
+  border: 1px solid var(--color-border-heavy);
   cursor: pointer;
   transition: background 0.15s ease;
   text-decoration: none;
 }
-.btn-ghost:hover { background: var(--bg-2); }
+.btn-ghost:hover { background: var(--color-bg-2); }
 
-/* Thùng Tab */
+/* Tabs */
 .tab-container {
   display: inline-flex;
-  background: var(--bg-1);
-  border: 1px solid var(--bdr);
-  border-radius: var(--r-sm);
+  background: var(--color-bg-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   padding: 3px;
   gap: 2px;
 }
@@ -224,7 +261,7 @@ body {
   border-radius: 6px;
   font-size: 13px;
   font-weight: 400;
-  color: var(--tx-3);
+  color: var(--color-text-muted);
   cursor: pointer;
   border: none;
   background: transparent;
@@ -232,63 +269,58 @@ body {
   white-space: nowrap;
 }
 .tab-item.active {
-  background: var(--bg-card);
-  color: var(--tx-0);
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
   font-weight: 500;
-  box-shadow: var(--sh-xs);
+  box-shadow: var(--shadow-xs);
 }
 
-/* Badge Tứ hóa */
-.badge-lu   { color: var(--lu);   background: rgba(45,122,74,0.08);   border: 1px solid rgba(45,122,74,0.20);   }
-.badge-quan { color: var(--quan); background: rgba(26,86,168,0.08);   border: 1px solid rgba(26,86,168,0.20);   }
-.badge-ke   { color: var(--ke);   background: rgba(138,112,24,0.08);  border: 1px solid rgba(138,112,24,0.20);  }
-.badge-ji   { color: var(--ji);   background: rgba(168,50,40,0.08);   border: 1px solid rgba(168,50,40,0.20);   }
-
+/* Si Hua badges */
 .sihua-badge {
   display: inline-flex;
   align-items: center;
   font-size: 10px;
-  font-family: var(--font-mono);
+  font-family: var(--primitive-font-mono);
   padding: 1px 5px;
-  border-radius: var(--r-xs);
+  border-radius: var(--radius-xs);
   font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 1.4;
 }
 
-/* Ô nhập liệu */
+/* Inputs */
 .input-base {
   width: 100%;
-  background: var(--bg-card);
-  border: 1px solid var(--bdr-med);
-  border-radius: var(--r-sm);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-med);
+  border-radius: var(--radius-sm);
   padding: 10px 14px;
   font-size: 14px;
-  color: var(--tx-1);
-  font-family: var(--font);
+  color: var(--color-text-secondary);
+  font-family: var(--primitive-font-sans);
   outline: none;
   transition: border-color 0.15s ease;
 }
-.input-base:focus { border-color: var(--tx-0); }
-.input-base::placeholder { color: var(--tx-3); }
+.input-base:focus { border-color: var(--color-text-primary); }
+.input-base::placeholder { color: var(--color-text-muted); }
 
-/* Đường phân cách */
+/* Divider */
 .divider {
   width: 100%;
   height: 1px;
-  background: var(--bdr);
+  background: var(--color-border);
 }
 
-/* Nhãn */
+/* Section label */
 .label-section {
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tx-3);
+  color: var(--color-text-muted);
   font-weight: 500;
 }
 
-/* Hiệu ứng vào */
+/* Entrance animations */
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -300,7 +332,7 @@ body {
 .animate-fade-up { animation: fade-up 0.5s ease forwards; }
 .animate-fade-in { animation: fade-in 0.4s ease forwards; }
 
-/* ─── Văn bản gradient (Tiêu đề chính 3.0) ──────────── */
+/* Gradient text */
 .grad-text {
   -webkit-background-clip: text;
   background-clip: text;
@@ -315,7 +347,7 @@ body {
   background-image: linear-gradient(160deg, #6a4206 0%, #9a6a10 40%, #6a4206 70%, #885010 100%);
 }
 
-/* ─── Bản đồ làm việc Responsive ───────────────────── */
+/* ─── Chart Workspace Layout ────────────────────────────── */
 .chart-page-root {
   min-height: 100vh;
   display: flex;
@@ -329,24 +361,24 @@ body {
   grid-template-columns: minmax(420px, 520px) 1fr;
 }
 .chart-workspace-left {
-  border-right: 1px solid var(--bdr);
+  border-right: 1px solid var(--color-border);
   overflow-y: auto;
   padding: 20px 20px 48px;
-  background: var(--bg-0);
+  background: var(--color-bg-page);
 }
 .chart-workspace-right {
   overflow-y: auto;
-  background: var(--bg-1);
+  background: var(--color-bg-1);
 }
 
 .chart-topbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--bg-0) 92%, transparent);
+  background: color-mix(in srgb, var(--color-bg-page) 92%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--bdr);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   padding: 0 24px;
@@ -360,12 +392,12 @@ body {
   flex: 1;
   min-width: 0;
 }
-.chart-topbar-back-sep { width: 1px; height: 20px; background: var(--bdr-med); }
+.chart-topbar-back-sep { width: 1px; height: 20px; background: var(--color-border-med); }
 
-/* Phiên bản điện thoại */
+/* Mobile chart layout */
 @media (max-width: 767px) {
   .chart-page-root {
-    height: auto;        /* Cho phép cuộn toàn trang */
+    height: auto;
     min-height: 100vh;
   }
   .chart-workspace {
@@ -375,7 +407,7 @@ body {
   }
   .chart-workspace-left {
     border-right: none;
-    border-bottom: 1px solid var(--bdr);
+    border-bottom: 1px solid var(--color-border);
     overflow: visible;
     padding: 12px 12px 20px;
     flex: none;
@@ -385,7 +417,6 @@ body {
     flex: none;
     padding-bottom: 24px;
   }
-
   .chart-topbar {
     padding: 0 10px;
     height: 44px;
@@ -400,11 +431,9 @@ body {
   }
   .chart-topbar-tabs::-webkit-scrollbar { display: none; }
   .chart-topbar-export { display: none !important; }
-
   .chart-topbar button,
   .chart-topbar span { white-space: nowrap; }
-
-  /* Cung bản đồ: nhỏ gọn */
+  /* Palace cells: compact */
   .palace-cell {
     min-height: 74px !important;
     padding: 6px 5px 5px !important;
@@ -416,14 +445,13 @@ body {
   }
 }
 
-/* Màn hình cực nhỏ (<360) thu hẹp thêm */
 @media (max-width: 359px) {
   .palace-cell { min-height: 68px !important; padding: 5px 4px !important; }
   .chart-workspace-left { padding: 10px 8px 16px; }
   .chart-topbar { padding: 0 8px; gap: 6px; }
 }
 
-/* ─── Kiểu in ấn ────────────────────────────────────── */
+/* ─── Print ────────────────────────────────────────────── */
 @media print {
   .no-print { display: none !important; }
   body { background: white; color: #1a1a18; }

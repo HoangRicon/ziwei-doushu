@@ -16,7 +16,7 @@ function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
         if (sectionMatch) {
           return (
             <div key={i} style={{ paddingTop: i === 0 ? 0 : '14px', paddingBottom: '4px' }}>
-              <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--ac)', letterSpacing: '0.04em' }}>
+              <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-accent)', letterSpacing: '0.04em' }}>
                 【{sectionMatch[1]}】
               </span>
             </div>
@@ -25,11 +25,11 @@ function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
         if (line.trim() === '') return <div key={i} style={{ height: '4px' }} />;
         const parts = line.split(/\*\*(.+?)\*\*/);
         return (
-          <div key={i} style={{ fontSize: '13px', lineHeight: 1.75, color: 'var(--tx-2)' }}>
+          <div key={i} style={{ fontSize: '13px', lineHeight: 1.75, color: 'var(--color-text-body)' }}>
             {parts.map((part, j) =>
               j % 2 === 0
                 ? part
-                : <strong key={j} style={{ fontWeight: 500, color: 'var(--tx-0)' }}>{part}</strong>
+                : <strong key={j} style={{ fontWeight: 500, color: 'var(--color-text-primary)' }}>{part}</strong>
             )}
           </div>
         );
@@ -37,7 +37,7 @@ function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
       {streaming && (
         <span style={{
           display: 'inline-block', width: '7px', height: '13px',
-          background: 'var(--ac)', opacity: 0.5, borderRadius: '2px',
+          background: 'var(--color-accent)', opacity: 0.5, borderRadius: '2px',
           animation: 'pulse 1s ease-in-out infinite',
           verticalAlign: 'middle', marginLeft: '2px',
         }} />
@@ -83,7 +83,7 @@ export default function HemingPage() {
 
   // Biểu mẫu đã điền đầy đủ chưa
   const isFormReady = (f: BirthFormState | null): boolean =>
-    !!(f && f.year && f.month && f.day && f.gender && (f.unknownTime || (f.clockHour !== '' && f.clockMinute !== '')));
+    !!(f && f.year && f.month && f.day && f.gender && (f.unknownTime || f.shichen !== undefined));
 
   // ─── Lối vào thống nhất: Sắp xếp bản đồ + Phân tích ghép ──────────────
   const runAnalysis = useCallback(async (q?: string) => {
@@ -157,34 +157,34 @@ export default function HemingPage() {
   };
 
   const labelStyle = {
-    fontSize: '10px', letterSpacing: '0.4em', color: 'var(--ac)', opacity: 0.7,
+    fontSize: '10px', letterSpacing: '0.4em', color: 'var(--color-accent)', opacity: 0.7,
     marginBottom: '16px', display: 'block',
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-0)' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg-page)' }}>
       {/* Thanh trên */}
       <header style={{
         position: 'sticky', top: 0, zIndex: 50,
         background: isDark ? 'rgba(2,8,16,0.88)' : 'rgba(250,245,235,0.92)',
         backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid var(--bdr)',
+        borderBottom: '1px solid var(--color-border)',
         display: 'flex', alignItems: 'center', padding: '0 24px', height: '52px', gap: '16px',
       }}>
         <button
           onClick={() => router.push('/')}
           style={{
             display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px',
-            color: 'var(--tx-3)', background: 'none', border: 'none', cursor: 'pointer',
+            color: 'var(--color-text-muted)', background: 'none', border: 'none', cursor: 'pointer',
           }}
         >
           <span style={{ fontSize: '16px' }}>‹</span>
           <span> Quay lại</span>
         </button>
-        <div style={{ width: '1px', height: '20px', background: 'var(--bdr-med)' }} />
-        <span style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em' }}>Ghép bản đồ</span>
+        <div style={{ width: '1px', height: '20px', background: 'var(--color-border-med)' }} />
+        <span style={{ fontSize: '12px', color: 'var(--color-accent)', letterSpacing: '0.2em' }}>Ghép bản đồ</span>
         <div style={{ flex: 1 }} />
-        <span style={{ fontSize: '11px', color: 'var(--tx-3)' }}>Tình cảm · Hợp tác · Cha con · Bạn bè</span>
+        <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>Tình cảm · Hợp tác · Cha con · Bạn bè</span>
       </header>
 
       {/* Nội dung chính */}
@@ -192,11 +192,11 @@ export default function HemingPage() {
 
         {/* Tiêu đề */}
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-          <div style={{ fontSize: '28px', color: 'var(--ac)', opacity: 0.15, marginBottom: '12px' }}>☯</div>
-          <h1 style={{ fontSize: '22px', fontWeight: 600, letterSpacing: '0.15em', color: 'var(--tx-0)', marginBottom: '8px' }}>
+          <div style={{ fontSize: '28px', color: 'var(--color-accent)', opacity: 0.15, marginBottom: '12px' }}>☯</div>
+          <h1 style={{ fontSize: '22px', fontWeight: 600, letterSpacing: '0.15em', color: 'var(--color-text-primary)', marginBottom: '8px' }}>
             Ghép bản đồ Tử Vi
           </h1>
-          <p style={{ fontSize: '13px', color: 'var(--tx-3)', lineHeight: 1.6 }}>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
             Nhập thông tin sinh của hai người, AI dựa trên hệ thống Nị Hải Hạ phân tích duyên khớp, tình cảm và đề xuất cách hòa thuận
           </p>
         </div>
@@ -236,21 +236,21 @@ export default function HemingPage() {
         }}>
           {/* Tiêu đề khối */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: (analysis || analyzing) ? '20px' : '24px' }}>
-            <span style={{ color: 'var(--ac)', opacity: 0.6 }}>◉</span>
-            <span style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'var(--tx-3)' }}>Phân tích ghép bản đồ · HEMING</span>
+            <span style={{ color: 'var(--color-accent)', opacity: 0.6 }}>◉</span>
+            <span style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'var(--color-text-muted)' }}>Phân tích ghép bản đồ · HEMING</span>
           </div>
 
           {/* Phân nhánh trạng thái */}
           {!analysis && !analyzing && (
             <div style={{ textAlign: 'center', padding: '32px 0' }}>
-              <div style={{ fontSize: '13px', color: 'var(--tx-3)', marginBottom: '24px', lineHeight: 1.7 }}>
+              <div style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginBottom: '24px', lineHeight: 1.7 }}>
                 Sau khi điền đầy đủ thông tin sinh của hai bên, nhấn nút bên dưới<br />
                 AI sẽ dựa trên hệ thống Nị Hải Hạ phân tích sâu duyên khớp của hai người
               </div>
               <button
                 onClick={() => runAnalysis()}
                 style={{
-                  padding: '14px 40px', borderRadius: 'var(--r-pill)', border: 'none',
+                  padding: '14px 40px', borderRadius: 'var(--radius-pill)', border: 'none',
                   background: 'linear-gradient(135deg, #9a6210, #c88020)',
                   color: '#fff8e8', fontSize: '14px', fontWeight: 600,
                   letterSpacing: '0.15em', cursor: 'pointer',
@@ -271,10 +271,10 @@ export default function HemingPage() {
           )}
 
           {analyzing && !analysis && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '40px 0', color: 'var(--tx-3)', fontSize: '13px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '40px 0', color: 'var(--color-text-muted)', fontSize: '13px' }}>
               <div style={{
                 width: '14px', height: '14px',
-                border: '2px solid var(--bdr-med)', borderTopColor: 'var(--ac)',
+                border: '2px solid var(--color-border-med)', borderTopColor: 'var(--color-accent)',
                 borderRadius: '50%', animation: 'spin 0.8s linear infinite',
               }} />
               Đang so sánh bản đồ của hai bên…
@@ -284,7 +284,7 @@ export default function HemingPage() {
           {analysis && <AiContent text={analysis} streaming={analyzing} />}
 
           {analysisError && (
-            <div style={{ padding: '12px 16px', borderRadius: '10px', border: '1px solid var(--bdr)', background: 'var(--bg-card)', fontSize: '13px', color: 'var(--tx-2)', marginTop: '12px' }}>
+            <div style={{ padding: '12px 16px', borderRadius: '10px', border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', fontSize: '13px', color: 'var(--color-text-body)', marginTop: '12px' }}>
               Phân tích tạm thời không khả dụng, vui lòng thử lại.
             </div>
           )}
@@ -293,7 +293,7 @@ export default function HemingPage() {
         {/* ═══ Hộp chat hỏi thêm về hợp bản (chỉ hiển thị sau khi phân tích xong) ═══ */}
         {analysis && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '0.2em', color: 'var(--tx-3)', marginBottom: '4px' }}>
+            <div style={{ fontSize: '11px', letterSpacing: '0.2em', color: 'var(--color-text-muted)', marginBottom: '4px' }}>
               Tiếp tục đặt câu hỏi về phép ghép bản đồ này
             </div>
 
@@ -312,15 +312,15 @@ export default function HemingPage() {
                   disabled={analyzing}
                   style={{
                     fontSize: '12px', padding: '6px 14px',
-                    borderRadius: 'var(--r-pill)',
-                    border: '1px solid var(--bdr-med)',
-                    background: 'transparent', color: 'var(--tx-2)',
+                    borderRadius: 'var(--radius-pill)',
+                    border: '1px solid var(--color-border-med)',
+                    background: 'transparent', color: 'var(--color-text-body)',
                     cursor: analyzing ? 'not-allowed' : 'pointer',
                     opacity: analyzing ? 0.5 : 1,
                     transition: 'border-color 0.15s',
                   }}
-                  onMouseEnter={e => { if (!analyzing) (e.currentTarget as HTMLElement).style.borderColor = 'var(--ac-bdr)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--bdr-med)'; }}
+                  onMouseEnter={e => { if (!analyzing) (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-accent-bdr)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border-med)'; }}
                 >
                   {q}
                 </button>
@@ -343,9 +343,9 @@ export default function HemingPage() {
                 onClick={() => runAnalysis(question || undefined)}
                 disabled={analyzing}
                 style={{
-                  padding: '10px 20px', borderRadius: 'var(--r-sm)', border: 'none',
-                  background: analyzing ? 'var(--bg-2)' : 'var(--tx-0)',
-                  color: analyzing ? 'var(--tx-3)' : 'white',
+                  padding: '10px 20px', borderRadius: 'var(--radius-sm)', border: 'none',
+                  background: analyzing ? 'var(--color-bg-2)' : 'var(--color-text-primary)',
+                  color: analyzing ? 'var(--color-text-muted)' : 'white',
                   fontSize: '13px', fontWeight: 500,
                   cursor: analyzing ? 'not-allowed' : 'pointer',
                   transition: 'all 0.15s', whiteSpace: 'nowrap',

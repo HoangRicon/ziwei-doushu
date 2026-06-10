@@ -1,22 +1,17 @@
 'use client';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { BirthInfo } from '@/lib/ziwei/types';
 import { SHICHEN } from '@/lib/ziwei/constants';
 import { useTheme } from '@/components/ThemeProvider';
-import { PROVINCES } from '@/lib/ziwei/cities';
 
 export interface BirthFormState {
   name: string;
   year: string;
   month: string;
   day: string;
-  clockHour: string;
-  clockMinute: string;
+  shichen: number;
   unknownTime: boolean;
-  province: string;
-  city: string;
-  longitude: number;
   gender: 'male' | 'female';
 }
 
@@ -30,15 +25,6 @@ interface BirthFormProps {
 }
 
 const SHICHEN_NAMES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-
-/** 根据北京时间 + 经度计算真太阳时时辰支 (0-11) */
-function calcTrueSolarBranch(clockHour: number, clockMinute: number, longitude: number): number {
-  const clockMins = clockHour * 60 + clockMinute;
-  const offset = (longitude - 120) * 4;
-  const solar = ((clockMins + offset) % 1440 + 1440) % 1440;
-  if (solar >= 1380 || solar < 60) return 0;
-  return Math.floor((solar - 60) / 120) + 1;
-}
 
 /** 检查日期是否合法 */
 function isValidDate(y: number, m: number, d: number): boolean {
@@ -56,12 +42,8 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
     year: initialData?.year ?? '',
     month: initialData?.month ?? '',
     day: initialData?.day ?? '',
-    clockHour: initialData?.clockHour ?? '8',
-    clockMinute: initialData?.clockMinute ?? '0',
+    shichen: initialData?.shichen ?? 0,
     unknownTime: initialData?.unknownTime ?? false,
-    province: initialData?.province ?? '',
-    city: initialData?.city ?? '',
-    longitude: initialData?.longitude ?? 120,
     gender: initialData?.gender ?? 'male',
   });
 
@@ -74,22 +56,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
-  const cityList = useMemo(() => {
-    const prov = PROVINCES.find(p => p.name === form.province);
-    return prov ? prov.cities : [];
-  }, [form.province]);
-
-  const branch = useMemo(() => {
-    if (form.unknownTime) return 0;
-    return calcTrueSolarBranch(
-      parseInt(form.clockHour) || 0,
-      parseInt(form.clockMinute) || 0,
-      form.longitude,
-    );
-  }, [form.clockHour, form.clockMinute, form.longitude, form.unknownTime]);
-
-  const offsetMin = Math.round((form.longitude - 120) * 4);
-  const shichenInfo = SHICHEN[branch];
+  const shichenInfo = SHICHEN[form.shichen];
 
   // ─── 校验逻辑 ───────────────────────────────────────────
   const y = parseInt(form.year) || 0;
@@ -110,34 +77,20 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
   // ─── 完成度（用于进度条） ────────────────────────────────
   const steps = [
     !!form.year && !!form.month && !!form.day && !errors.year && !errors.month && !errors.day,
-    !!form.province && !!form.city,
-    form.unknownTime || (!!form.clockHour && !!form.clockMinute),
-    true, // 性别有默认值
+    form.unknownTime || !!form.shichen,
+    true, // gender has default
   ];
   const completedSteps = steps.filter(Boolean).length;
 
   // ─── Summary chip：全部必填完成后显示 ───────────────────
-  const showSummary = steps[0] && steps[2] && !hasError;
+  const showSummary = steps[0] && steps[1] && !hasError;
   const summaryText = showSummary
     ? [
         `${d}/${m}/${y}`,
-        form.city || (form.province ? form.province : ''),
-        form.unknownTime ? 'Giờ không rõ' : `Giờ ${SHICHEN_NAMES[branch]}`,
+        form.unknownTime ? 'Giờ không rõ' : `Giờ ${SHICHEN_NAMES[form.shichen]}`,
         form.gender === 'male' ? 'Nam' : 'Nữ',
       ].filter(Boolean).join(' · ')
     : '';
-
-  const handleProvince = (prov: string) => {
-    const provData = PROVINCES.find(p => p.name === prov);
-    const firstCity = provData?.cities[0];
-    setForm({ ...form, province: prov, city: firstCity?.name || '', longitude: firstCity?.longitude ?? 120 });
-  };
-
-  const handleCity = (cityName: string) => {
-    const prov = PROVINCES.find(p => p.name === form.province);
-    const cityData = prov?.cities.find(c => c.name === cityName);
-    setForm({ ...form, city: cityName, longitude: cityData?.longitude ?? 120 });
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,7 +98,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
     setTouched({ year: true, month: true, day: true });
     if (hasError) return;
     onFormSave?.({ ...form });
-    onSubmit({ year: y, month: m, day: d, hour: branch, gender: form.gender, name: form.name || undefined, province: form.province || undefined, city: form.city || undefined, longitude: form.province ? form.longitude : undefined });
+    onSubmit({ year: y, month: m, day: d, hour: form.unknownTime ? 0 : form.shichen, gender: form.gender, name: form.name || undefined });
   };
 
   // ─── 样式变量 ────────────────────────────────────────────
@@ -288,96 +241,40 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
         </div>
       </div>
 
-      {/* ── 出生地点 ── */}
-      <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Nơi sinh (để tính giờ mặt trời thực)</label>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-          <select
-            value={form.province}
-            onChange={e => handleProvince(e.target.value)}
-            style={inputStyle}
-            onFocus={e => { e.target.style.borderColor = focusBorder; }}
-            onBlur={e => { e.target.style.borderColor = inputBorder; }}
-          >
-            <option value="">Tỉnh / Thành phố</option>
-            {PROVINCES.map(p => (
-              <option key={p.name} value={p.name}>{p.name}</option>
-            ))}
-          </select>
-          <select
-            value={form.city}
-            onChange={e => handleCity(e.target.value)}
-            disabled={!form.province}
-            style={{ ...inputStyle, opacity: form.province ? 1 : 0.45 }}
-            onFocus={e => { e.target.style.borderColor = focusBorder; }}
-            onBlur={e => { e.target.style.borderColor = inputBorder; }}
-          >
-            <option value="">{form.province ? 'Thành phố' : 'Chọn tỉnh trước'}</option>
-            {cityList.map(c => (
-              <option key={c.name} value={c.name}>{c.name}</option>
-            ))}
-          </select>
-        </div>
-        <AnimatePresence mode="wait">
-          {form.province ? (
-            <motion.p
-              key="location-info"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              style={{ fontSize: '10px', color: isDark ? 'rgba(180,210,235,0.85)' : 'rgba(100,70,10,0.5)', marginTop: '5px' }}
-            >
-              {form.city || '（Vui lòng chọn thành phố）'} · Kinh độ {form.longitude.toFixed(1)}°Đ · Chênh lệch {offsetMin > 0 ? '+' : ''}{offsetMin} phút
-            </motion.p>
-          ) : (
-            <motion.p
-              key="location-hint"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              style={{ fontSize: '10px', color: isDark ? 'rgba(165,185,210,0.7)' : 'rgba(140,100,20,0.45)', marginTop: '5px' }}
-            >
-              * Thầy Ni phán mệnh dùng giờ mặt trời thực, nên điền nơi sinh để tự động điều chỉnh giờ
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </div>
-
       {/* ── 出生时间 ── */}
       <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Giờ sinh (Giờ Bắc Kinh)</label>
+        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Giờ sinh (canh giờ)</label>
         <div style={{ borderRadius: '14px', padding: '12px', background: panelBg, border: `1px solid ${panelBorder}`, opacity: form.unknownTime ? 0.45 : 1, pointerEvents: form.unknownTime ? 'none' : 'auto', transition: 'opacity 0.2s' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
-            <select
-              value={form.clockHour}
-              onChange={e => setForm({ ...form, clockHour: e.target.value })}
-              style={inputStyle}
-            >
-              {Array.from({ length: 24 }, (_, i) => i).map(h => (
-                <option key={h} value={String(h)}>{h.toString().padStart(2, '0')} giờ</option>
-              ))}
-            </select>
-            <select
-              value={form.clockMinute}
-              onChange={e => setForm({ ...form, clockMinute: e.target.value })}
-              style={inputStyle}
-            >
-              {Array.from({ length: 60 }, (_, i) => i).map(min => (
-                <option key={min} value={String(min)}>{min.toString().padStart(2, '0')} phút</option>
-              ))}
-            </select>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
+            {SHICHEN.map((info, idx) => (
+              <motion.button
+                key={idx}
+                type="button"
+                onClick={() => setForm({ ...form, shichen: idx })}
+                whileTap={{ scale: 0.96 }}
+                style={{
+                  padding: '8px 4px',
+                  borderRadius: '10px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  letterSpacing: '0.05em',
+                  border: `1px solid ${form.shichen === idx ? focusBorder : 'transparent'}`,
+                  background: form.shichen === idx ? (isDark ? 'rgba(212,168,67,0.15)' : 'rgba(180,120,20,0.1)') : 'transparent',
+                  color: form.shichen === idx ? goldText : (isDark ? 'rgba(180,200,225,0.7)' : 'rgba(100,80,40,0.6)'),
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                }}
+              >
+                Giờ {SHICHEN_NAMES[idx]}
+                <br />
+                <span style={{ fontSize: '9px', fontWeight: 400, opacity: 0.75 }}>{info.range}</span>
+              </motion.button>
+            ))}
           </div>
-          {/* Giờ mặt trời thực */}
-          <div style={{ textAlign: 'center', padding: '4px 0' }}>
-            <span style={{ fontSize: '10px', color: isDark ? 'rgba(170,195,220,0.75)' : 'rgba(140,100,20,0.5)' }}>Giờ mặt trời thực → </span>
-            <span style={{ fontSize: '15px', color: goldText, fontWeight: 600, letterSpacing: '0.08em' }}>
-              Giờ {SHICHEN_NAMES[branch]}
+          <div style={{ textAlign: 'center', padding: '4px 0', marginTop: '6px' }}>
+            <span style={{ fontSize: '11px', color: goldText, fontWeight: 500 }}>
+              Giờ {SHICHEN_NAMES[form.shichen]} · {shichenInfo?.range}
             </span>
-            {shichenInfo && (
-              <span style={{ fontSize: '10px', color: isDark ? 'rgba(170,195,220,0.75)' : 'rgba(140,100,20,0.5)', marginLeft: '4px' }}>
-                （{shichenInfo.range}）
-              </span>
-            )}
           </div>
         </div>
         <label style={{ display: 'flex', alignItems: 'center', gap: '7px', marginTop: '8px', cursor: 'pointer' }}>

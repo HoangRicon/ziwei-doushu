@@ -78,7 +78,7 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
   // Các Chính tinh khác cùng topic
   const otherStarsForTopic = ALL_STARS.filter(s => s !== star && getKnowledge(s, topic as TopicKey).exists);
 
-  // JSON-LD
+  // JSON-Ld
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -98,45 +98,48 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
   };
 
   return (
-    <div style={{ background: 'var(--bg-page)', minHeight: '100vh' }}>
+    <div className="min-h-screen" style={{ background: 'var(--color-bg-page)' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Thanh trên */}
-      <div className="px-6 py-4 flex items-center justify-between"
-        style={{ borderBottom: '1px solid rgba(184,146,42,0.15)', background: 'var(--bg-page)' }}>
-        <Link href="/" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.3em', textDecoration: 'none' }}>
+      <div className="px-6 py-4 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md"
+        style={{ borderBottom: '1px solid var(--color-accent-bdr)', background: 'color-mix(in srgb, var(--color-bg-page) 92%, transparent)' }}>
+        <Link href="/" className="text-xs tracking-widest no-underline transition-colors hover:opacity-80"
+          style={{ color: 'var(--color-accent)' }}>
           ← Trang chủ
         </Link>
-        <div style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.2em' }}>
-          Phương pháp của Nị sư · Cơ sở tri thức
+        <div className="text-xs tracking-wider hidden sm:block" style={{ color: 'var(--color-text-muted)' }}>
+          Kiến thức Tử Vi
         </div>
-        <Link href="/chart" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em', textDecoration: 'none' }}>
+        <Link href="/chart" className="text-xs tracking-widest no-underline transition-colors hover:opacity-80"
+          style={{ color: 'var(--color-accent)' }}>
           Sắp bản đồ →
         </Link>
       </div>
 
-      <article className="max-w-3xl mx-auto px-6 py-12">
-        {/* Đường dẫn bánh mì */}
-        <nav style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.1em', marginBottom: '16px' }}>
-          <Link href="/" style={{ color: 'var(--tx-3)', textDecoration: 'none' }}>Trang chủ</Link>
-          <span style={{ margin: '0 8px' }}>/</span>
-          <Link href="/knowledge" style={{ color: 'var(--tx-3)', textDecoration: 'none' }}>Cơ sở tri thức</Link>
-          <span style={{ margin: '0 8px' }}>/</span>
-          <span>{star}</span>
-          <span style={{ margin: '0 8px' }}>·</span>
-          <span style={{ color: 'var(--ac)' }}>Cung {data.palaceName}</span>
+      <article className="max-w-3xl mx-auto px-6 py-10">
+        {/* Breadcrumb */}
+        <nav className="text-xs tracking-wider mb-6" style={{ color: 'var(--color-text-muted)' }}>
+          <Link href="/" className="no-underline hover:opacity-80" style={{ color: 'var(--color-text-muted)' }}>Trang chủ</Link>
+          <span className="mx-2">›</span>
+          <Link href="/knowledge" className="no-underline hover:opacity-80" style={{ color: 'var(--color-text-muted)' }}>Kiến thức</Link>
+          <span className="mx-2">›</span>
+          <span style={{ color: 'var(--color-text-primary)' }}>{star}</span>
+          <span className="mx-2">·</span>
+          <span style={{ color: 'var(--color-accent)' }}>Cung {data.palaceName}</span>
         </nav>
 
         {/* Tiêu đề */}
-        <header style={{ marginBottom: '36px' }}>
-          <div style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.25em', marginBottom: '8px' }}>
+        <header className="mb-10">
+          <div className="text-xs tracking-widest mb-2" style={{ color: 'var(--color-text-muted)' }}>
             {data.topicLabel} · Giải thích chi tiết hệ thống Nị Hải Hạ
           </div>
-          <h1 style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.1em', lineHeight: 1.2 }}>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-wide leading-tight"
+            style={{ color: 'var(--color-text-primary)', fontSize: 'clamp(28px, 5vw, 44px)' }}>
             {star} nhập {data.palaceName} cung
           </h1>
           {STAR_BRIEF_SEO[star] && (
-            <p style={{ fontSize: '13px', color: 'var(--tx-2)', marginTop: '14px', lineHeight: 1.8 }}>
+            <p className="text-sm mt-4 leading-relaxed" style={{ color: 'var(--color-text-body)' }}>
               {STAR_BRIEF_SEO[star]}
             </p>
           )}
@@ -145,7 +148,7 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
         {/* Nội dung 4 đoạn */}
         {data.parsed.dingdiao && (
           <Section title="Định điệu một câu" gradient>
-            <p style={{ fontSize: '17px', color: 'var(--tx-0)', lineHeight: 1.9, fontWeight: 500, letterSpacing: '0.04em' }}>
+            <p className="text-lg font-medium leading-relaxed tracking-wide" style={{ color: 'var(--color-text-primary)', letterSpacing: '0.04em' }}>
               {data.parsed.dingdiao}
             </p>
           </Section>
@@ -153,7 +156,7 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
 
         {data.parsed.lundian && (
           <Section title="Luận đoán cốt lõi">
-            <div style={{ fontSize: '15px', color: 'var(--tx-0)', lineHeight: 2, letterSpacing: '0.02em', whiteSpace: 'pre-wrap' }}>
+            <div className="text-base leading-relaxed tracking-wide whitespace-pre-wrap" style={{ color: 'var(--color-text-primary)', letterSpacing: '0.02em' }}>
               {data.parsed.lundian}
             </div>
           </Section>
@@ -161,7 +164,7 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
 
         {data.parsed.yiju && (
           <Section title="Căn cứ bản đồ">
-            <div style={{ fontSize: '14px', color: 'var(--tx-0)', lineHeight: 2, letterSpacing: '0.02em', whiteSpace: 'pre-wrap' }}>
+            <div className="text-sm leading-relaxed tracking-wide whitespace-pre-wrap" style={{ color: 'var(--color-text-primary)', letterSpacing: '0.02em' }}>
               {data.parsed.yiju}
             </div>
           </Section>
@@ -169,60 +172,44 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
 
         {data.parsed.chuchu && (
           <Section title="Nguồn cổ điển" minimal>
-            <div style={{ fontSize: '13px', color: 'var(--tx-2)', lineHeight: 2, letterSpacing: '0.02em', whiteSpace: 'pre-wrap' }}>
+            <div className="text-sm leading-relaxed tracking-wide whitespace-pre-wrap" style={{ color: 'var(--color-text-body)', letterSpacing: '0.02em' }}>
               {data.parsed.chuchu}
             </div>
           </Section>
         )}
 
         {/* CTA */}
-        <div style={{
-          margin: '40px 0 30px',
-          padding: '24px',
-          background: 'linear-gradient(135deg, rgba(212,169,72,0.15) 0%, rgba(184,146,42,0.06) 100%)',
-          borderRadius: '14px',
-          border: '1px solid rgba(184,146,42,0.3)',
-          textAlign: 'center',
-        }}>
-          <div style={{ fontSize: '14px', color: 'var(--tx-0)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: '6px' }}>
+        <div className="my-10 p-6 md:p-8 rounded-xl text-center"
+          style={{
+            background: 'linear-gradient(135deg, var(--color-accent-bg) 0%, rgba(184,146,42,0.03) 100%)',
+            border: '1px solid var(--color-accent-bdr)',
+          }}>
+          <div className="text-sm font-semibold tracking-wide mb-1.5" style={{ color: 'var(--color-text-primary)' }}>
             Muốn xem {data.topicLabel} trong bản đồ của bạn?
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--tx-2)', marginBottom: '16px' }}>
+          <div className="text-xs mb-4" style={{ color: 'var(--color-text-body)' }}>
             Nhập ngày sinh để sắp bản đồ · Giải đoán chính thống của Nị sư · AI trả lời đồng hành
           </div>
-          <Link href="/chart" style={{
-            display: 'inline-block',
-            padding: '12px 28px',
-            background: 'linear-gradient(135deg, #d4a948 0%, #b8922a 100%)',
-            color: 'white',
-            borderRadius: '999px',
-            fontSize: '14px',
-            fontWeight: 600,
-            letterSpacing: '0.15em',
-            textDecoration: 'none',
-            boxShadow: '0 4px 12px rgba(184,146,42,0.3)',
-          }}>
+          <Link href="/chart" className="btn-accent inline-block">
             Sắp xếp bản đồ ngay →
           </Link>
         </div>
 
         {/* Liên kết nội bộ: topic khác cùng Chính tinh */}
         <Section title={`Giải đoán cung khác của ${star} tinh`} minimal>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          <div className="flex flex-wrap gap-2">
             {otherTopicsForStar.map(t => {
               const d = getKnowledge(star, t);
               return (
                 <Link
                   key={t}
                   href={`/knowledge/${slug}/${t}`}
+                  className="text-xs px-3 py-2 no-underline transition-all hover:shadow-sm"
                   style={{
-                    fontSize: '12px',
-                    padding: '6px 12px',
-                    background: 'var(--bg-card)',
-                    border: '1px solid rgba(184,146,42,0.25)',
-                    borderRadius: '999px',
-                    color: 'var(--tx-2)',
-                    textDecoration: 'none',
+                    background: 'var(--color-bg-card)',
+                    border: '1px solid var(--color-accent-bdr)',
+                    borderRadius: 'var(--radius-pill)',
+                    color: 'var(--color-text-body)',
                   }}
                 >
                   {star} nhập {d.palaceName}
@@ -234,19 +221,17 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
 
         {/* Liên kết nội bộ: Chính tinh khác cùng topic */}
         <Section title={`Giải đoán Chính tinh khác nhập Cung ${data.palaceName}`} minimal>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          <div className="flex flex-wrap gap-2">
             {otherStarsForTopic.slice(0, 13).map(s => (
               <Link
                 key={s}
                 href={`/knowledge/${STAR_TO_SLUG[s]}/${topic}`}
+                className="text-xs px-3 py-2 no-underline transition-all hover:shadow-sm"
                 style={{
-                  fontSize: '12px',
-                  padding: '6px 12px',
-                  background: 'var(--bg-card)',
-                  border: '1px solid rgba(184,146,42,0.25)',
-                  borderRadius: '999px',
-                  color: 'var(--tx-2)',
-                  textDecoration: 'none',
+                  background: 'var(--color-bg-card)',
+                  border: '1px solid var(--color-accent-bdr)',
+                  borderRadius: 'var(--radius-pill)',
+                  color: 'var(--color-text-body)',
                 }}
               >
                 {s} nhập {data.palaceName}
@@ -256,26 +241,22 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
         </Section>
 
         {/* Liên kết cổ thư */}
-        <div style={{
-          marginTop: '40px',
-          padding: '16px 20px',
-          background: 'rgba(184,146,42,0.04)',
-          border: '1px dashed rgba(184,146,42,0.25)',
-          borderRadius: '10px',
-          textAlign: 'center',
-        }}>
-          <div style={{ fontSize: '11px', color: 'var(--ac-dim)', letterSpacing: '0.15em', marginBottom: '6px' }}>
+        <div className="mt-10 p-5 rounded-xl text-center border border-dashed"
+          style={{ borderColor: 'var(--color-accent-bdr)', background: 'var(--color-accent-bg)' }}>
+          <div className="text-xs tracking-widest mb-1.5" style={{ color: 'var(--color-accent)' }}>
             Muốn đọc nguyên tác?
           </div>
-          <Link href="/library" style={{ fontSize: '13px', color: 'var(--ac)', fontWeight: 500, letterSpacing: '0.1em', textDecoration: 'none' }}>
+          <Link href="/library" className="text-sm font-medium tracking-wider no-underline transition-opacity hover:opacity-80"
+            style={{ color: 'var(--color-accent)' }}>
             📜 Tra cứu kho cổ thư nguyên tác — Tử Vi Đẩu Số Toàn Tập / Toàn Thư / Tủy Cốt Phú →
           </Link>
         </div>
       </article>
 
       {/* Chân trang */}
-      <footer style={{ borderTop: '1px solid rgba(184,146,42,0.15)', padding: '20px 24px', textAlign: 'center', fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.1em' }}>
-        <div style={{ marginBottom: '6px' }}>Nghiên cứu Tử Vi · Dựa trên hệ thống chính thống Nị Hải Hạ · Chỉ để tham khảo học tập</div>
+      <footer className="border-t py-5 px-6 text-center text-xs tracking-wider"
+        style={{ borderColor: 'var(--color-accent-bdr)', color: 'var(--color-text-muted)' }}>
+        <div className="mb-1.5">Nghiên cứu Tử Vi · Dựa trên hệ thống chính thống Nị Hải Hạ · Chỉ để tham khảo học tập</div>
         <div style={{ opacity: 0.85 }}>Nền tảng này không đưa ra bất kỳ lời khuyên y tế, đầu tư, pháp lý hoặc quyết định quan trọng nào</div>
       </footer>
     </div>
@@ -284,28 +265,16 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
 
 function Section({ title, children, gradient, minimal }: { title: string; children: React.ReactNode; gradient?: boolean; minimal?: boolean }) {
   return (
-    <section style={{ marginBottom: minimal ? '24px' : '32px' }}>
-      <h2 style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '8px',
-        fontSize: '13px',
-        color: 'var(--ac)',
-        fontWeight: 600,
-        letterSpacing: '0.2em',
-        marginBottom: '12px',
-      }}>
-        <span style={{ width: '4px', height: '14px', background: 'var(--ac)', borderRadius: '2px' }} />
+    <section className="mb-6 md:mb-8">
+      <h2 className="inline-flex items-center gap-2 text-sm font-semibold tracking-widest mb-3">
+        <span className="w-1 h-3.5 rounded-sm" style={{ background: 'var(--color-accent)' }} />
         {title}
       </h2>
-      <div style={{
-        background: gradient
-          ? 'linear-gradient(135deg, rgba(212,169,72,0.12) 0%, rgba(184,146,42,0.04) 100%)'
-          : 'white',
-        border: '1px solid rgba(184,146,42,0.15)',
-        borderRadius: '10px',
-        padding: minimal ? '14px 18px' : '20px 22px',
-      }}>
+      <div className="rounded-xl p-5 md:p-6"
+        style={{
+          background: gradient ? 'linear-gradient(135deg, var(--color-accent-bg) 0%, rgba(184,146,42,0.02) 100%)' : 'var(--color-bg-card)',
+          border: '1px solid var(--color-accent-bdr)',
+        }}>
         {children}
       </div>
     </section>

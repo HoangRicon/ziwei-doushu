@@ -3,17 +3,17 @@ export const metadata = { title: 'Chính sách bảo mật · Bản đồ Tử V
 export default function PrivacyPage() {
   return (
     <>
-      <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'var(--bg-0)', borderBottom: '1px solid var(--bdr)', padding: '14px 24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--tx-3)', textDecoration: 'none' }}>
+      <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'var(--color-bg-page)', borderBottom: '1px solid var(--color-border)', padding: '14px 24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--color-text-muted)', textDecoration: 'none' }}>
           <span style={{ fontSize: '16px' }}>‹</span>
           <span>Quay lại trang chủ</span>
         </a>
-        <div style={{ width: '1px', height: '20px', background: 'var(--bdr-med)' }} />
-        <span style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em' }}>Bản đồ Tử Vi</span>
+        <div style={{ width: '1px', height: '20px', background: 'var(--color-border-med)' }} />
+        <span style={{ fontSize: '12px', color: 'var(--color-accent)', letterSpacing: '0.2em' }}>Bản đồ Tử Vi</span>
       </header>
-      <main style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 80px', color: 'var(--tx-1)', lineHeight: 1.8 }}>
+      <main style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 80px', color: 'var(--color-text-secondary)', lineHeight: 1.8 }}>
         <h1 style={{ fontSize: 28, fontWeight: 600, marginBottom: 8 }}>Chính sách bảo mật</h1>
-        <p style={{ fontSize: 12, color: 'var(--tx-3)', marginBottom: 32 }}>Cập nhật lần cuối: Tháng 4/2026</p>
+        <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 32 }}>Cập nhật lần cuối: Tháng 4/2026</p>
 
       <h2 style={{ fontSize: 18, marginTop: 32, marginBottom: 12 }}>1. Thông tin chúng tôi thu thập</h2>
       <p>Để cung cấp dịch vụ sắp bản đồ và giải đoán Tử Vi, chúng tôi có thể thu thập các thông tin sau:</p>
@@ -62,8 +62,8 @@ export default function PrivacyPage() {
       <h2 style={{ fontSize: 18, marginTop: 32, marginBottom: 12 }}>8. Thay đổi chính sách</h2>
       <p>Chính sách này có thể được cập nhật định kỳ. Thay đổi quan trọng sẽ được thông báo bằng cách nổi bật. Tiếp tục sử dụng có nghĩa là bạn đồng ý với phiên bản đã cập nhật.</p>
 
-        <p style={{ marginTop: 48, fontSize: 12, color: 'var(--tx-3)' }}>
-          <a href="/terms" style={{ color: 'var(--ac)' }}>Điều khoản dịch vụ</a> · <a href="/" style={{ color: 'var(--ac)' }}>Quay lại trang chủ</a>
+        <p style={{ marginTop: 48, fontSize: 12, color: 'var(--color-text-muted)' }}>
+          <a href="/terms" style={{ color: 'var(--color-accent)' }}>Điều khoản dịch vụ</a> · <a href="/" style={{ color: 'var(--color-accent)' }}>Quay lại trang chủ</a>
         </p>
       </main>
     </>

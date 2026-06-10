@@ -25,7 +25,6 @@ export function useHistory() {
     const label = [
       form.name,
       `${form.year}年${form.month}月${form.day}日`,
-      form.city || form.province || '',
       form.gender === 'male' ? 'Nam' : 'Nữ',
     ].filter(Boolean).join(' · ');
 
@@ -37,14 +36,12 @@ export function useHistory() {
     };
 
     setHistory(prev => {
-      // Loại bỏ trùng lặp: cùng ngày sinh + giới tính + thì được coi là cùng một bản ghi
       const deduped = prev.filter(e =>
         !(e.form.year === form.year &&
           e.form.month === form.month &&
           e.form.day === form.day &&
           e.form.gender === form.gender &&
-          e.form.clockHour === form.clockHour &&
-          e.form.clockMinute === form.clockMinute)
+          e.form.shichen === form.shichen)
       );
       const updated = [entry, ...deduped].slice(0, MAX_ENTRIES);
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(updated)); } catch {}

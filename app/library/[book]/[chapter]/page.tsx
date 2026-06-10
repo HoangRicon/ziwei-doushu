@@ -5,6 +5,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ALL_BOOKS, getChapter } from '@/lib/classics';
+import ReadingProgress from './ReadingProgress';
 
 export async function generateStaticParams() {
   return ALL_BOOKS.flatMap(b =>
@@ -32,101 +33,88 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
   const nextIdx = chapterIdx + 1;
 
   return (
-    <div style={{ background: 'var(--bg-page)', minHeight: '100vh' }}>
-      <div className="px-6 py-4 flex items-center justify-between"
-        style={{ borderBottom: '1px solid rgba(184,146,42,0.15)', background: 'var(--bg-page)' }}>
-        <Link href={`/library/${book.slug}`} style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.3em', textDecoration: 'none' }}>
+    <div className="min-h-screen" style={{ background: 'var(--color-bg-page)' }}>
+      <ReadingProgress />
+
+      {/* Thanh trên */}
+      <div className="px-6 py-4 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md"
+        style={{ borderBottom: '1px solid var(--color-accent-bdr)', background: 'color-mix(in srgb, var(--color-bg-page) 92%, transparent)' }}>
+        <Link href={`/library/${book.slug}`} className="text-xs tracking-widest no-underline transition-colors hover:opacity-80"
+          style={{ color: 'var(--color-accent)' }}>
           ← Mục lục《{book.title}》
         </Link>
-        <div style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.15em' }}>
+        <div className="text-xs tracking-wider hidden sm:block" style={{ color: 'var(--color-text-muted)' }}>
           {chapter.title}
         </div>
-        <Link href="/library" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em', textDecoration: 'none' }}>
+        <Link href="/library" className="text-xs tracking-widest no-underline transition-colors hover:opacity-80"
+          style={{ color: 'var(--color-accent)' }}>
           Kho cổ thư →
         </Link>
       </div>
 
-      <article className="max-w-3xl mx-auto px-6 py-12">
+      {/* Breadcrumb */}
+      <div className="max-w-2xl mx-auto px-6 pt-6">
+        <nav className="text-xs tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
+          <Link href="/library" className="no-underline hover:opacity-80" style={{ color: 'var(--color-text-muted)' }}>Thư viện</Link>
+          <span className="mx-2">›</span>
+          <Link href={`/library/${book.slug}`} className="no-underline hover:opacity-80" style={{ color: 'var(--color-text-muted)' }}>{book.title}</Link>
+          <span className="mx-2">›</span>
+          <span style={{ color: 'var(--color-text-primary)' }}>{chapter.title}</span>
+        </nav>
+      </div>
+
+      <article className="max-w-2xl mx-auto px-6 py-10">
         {/* Tiêu đề */}
         <div className="text-center mb-10">
-          <div style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.25em', marginBottom: '8px' }}>
+          <div className="text-xs tracking-widest mb-2" style={{ color: 'var(--color-text-muted)' }}>
             《{book.title}》· {book.dynasty}
           </div>
-          <h1 style={{ fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.15em', marginBottom: '8px' }}>
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 tracking-wide"
+            style={{ color: 'var(--color-text-primary)', fontSize: 'clamp(24px, 3.5vw, 36px)' }}>
             {chapter.title}
           </h1>
           {chapter.subtitle && (
-            <div style={{ fontSize: '13px', color: 'var(--tx-2)', letterSpacing: '0.1em' }}>
+            <div className="text-sm tracking-wide" style={{ color: 'var(--color-text-body)' }}>
               {chapter.subtitle}
             </div>
           )}
         </div>
 
         {/* Đoạn văn */}
-        <div style={{ background: 'var(--bg-card)', borderRadius: '14px', border: '1px solid rgba(184,146,42,0.2)', padding: '32px 28px' }}>
-          {chapter.paragraphs.map((p, i) => (
+        <div className="card p-8 md:p-10" style={{ borderColor: 'var(--color-accent-bdr)' }}>
+          {chapter.paragraphs.map((p) => (
             <div
               key={p.id}
               id={p.id}
+              className="pb-6 mb-6 border-b border-dashed last:pb-0 last:mb-0 last:border-b-0"
               style={{
-                marginBottom: i === chapter.paragraphs.length - 1 ? 0 : '20px',
-                paddingBottom: i === chapter.paragraphs.length - 1 ? 0 : '20px',
-                borderBottom: i === chapter.paragraphs.length - 1 ? 'none' : '1px dashed rgba(184,146,42,0.15)',
-                scrollMarginTop: '80px',
+                borderColor: 'var(--color-accent-bdr)',
+                scrollMarginTop: '100px',
               }}
             >
-              <div style={{
-                display: 'flex',
-                alignItems: 'baseline',
-                gap: '12px',
-              }}>
-                <span style={{
-                  fontSize: '11px',
-                  color: 'var(--ac)',
-                  fontWeight: 600,
-                  letterSpacing: '0.1em',
-                  minWidth: '24px',
-                }}>
+              <div className="flex items-baseline gap-3">
+                <span className="text-xs font-semibold tracking-wider min-w-6" style={{ color: 'var(--color-accent)' }}>
                   {String(p.idx).padStart(2, '0')}
                 </span>
-                <p style={{
-                  flex: 1,
-                  fontSize: '16px',
-                  color: 'var(--tx-0)',
-                  lineHeight: 2,
-                  letterSpacing: '0.04em',
-                  fontFamily: '"PingFang SC", "Hiragino Sans GB", serif',
-                }}>
+                <p className="flex-1 text-base leading-[1.85] tracking-wide"
+                  style={{
+                    color: 'var(--color-text-primary)',
+                    fontFamily: '"PingFang SC", "Hiragino Sans GB", serif',
+                  }}>
                   {p.text}
                 </p>
               </div>
               {p.translation && (
-                <div style={{
-                  marginTop: '8px',
-                  marginLeft: '36px',
-                  padding: '8px 12px',
-                  background: 'rgba(184,146,42,0.05)',
-                  borderRadius: '6px',
-                  fontSize: '13px',
-                  color: 'var(--tx-2)',
-                  lineHeight: 1.8,
-                }}>
-                  <span style={{ fontSize: '10px', color: 'var(--ac)', marginRight: '6px' }}>Bạch thoại</span>
+                <div className="mt-2 ml-9 p-3 rounded-lg text-sm leading-relaxed"
+                  style={{ background: 'var(--color-accent-bg)', color: 'var(--color-text-body)' }}>
+                  <span className="text-xs font-semibold mr-1.5" style={{ color: 'var(--color-accent)' }}>Bạch thoại</span>
                   {p.translation}
                 </div>
               )}
               {p.niNote && (
-                <div style={{
-                  marginTop: '8px',
-                  marginLeft: '36px',
-                  padding: '8px 12px',
-                  background: 'rgba(196,90,45,0.05)',
-                  borderRadius: '6px',
-                  fontSize: '13px',
-                  color: 'var(--tx-2)',
-                  lineHeight: 1.8,
-                }}>
-                  <span style={{ fontSize: '10px', color: 'var(--ji)', marginRight: '6px' }}>Chú của Nị sư</span>
+                <div className="mt-2 ml-9 p-3 rounded-lg text-sm leading-relaxed"
+                  style={{ background: 'rgba(196,90,45,0.05)', color: 'var(--color-text-body)' }}>
+                  <span className="text-xs font-semibold mr-1.5" style={{ color: '#A83228' }}>Chú của Nị sư</span>
                   {p.niNote}
                 </div>
               )}
@@ -135,42 +123,31 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
         </div>
 
         {/* Điều hướng chương */}
-        <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
+        <div className="mt-8 flex flex-col sm:flex-row gap-4">
           {prevIdx >= 0 ? (
             <Link
               href={`/library/${book.slug}/${prevIdx}`}
-              style={{
-                flex: 1,
-                padding: '14px 18px',
-                background: 'var(--bg-card)',
-                border: '1px solid rgba(184,146,42,0.2)',
-                borderRadius: '10px',
-                textDecoration: 'none',
-                color: 'var(--tx-0)',
-              }}
+              className="card flex-1 p-4 no-underline transition-all hover:shadow-md group"
+              style={{ borderColor: 'var(--color-accent-bdr)' }}
             >
-              <div style={{ fontSize: '10px', color: 'var(--tx-3)', letterSpacing: '0.2em', marginBottom: '2px' }}>← Chương trước</div>
-              <div style={{ fontSize: '13px', fontWeight: 500 }}>{book.chapters[prevIdx].title}</div>
+              <div className="text-xs tracking-wider mb-1" style={{ color: 'var(--color-text-muted)' }}>← Chương trước</div>
+              <div className="text-sm font-medium group-hover:opacity-80" style={{ color: 'var(--color-text-primary)' }}>
+                {book.chapters[prevIdx].title}
+              </div>
             </Link>
-          ) : <div style={{ flex: 1 }} />}
+          ) : <div className="flex-1" />}
           {nextIdx < book.chapters.length ? (
             <Link
               href={`/library/${book.slug}/${nextIdx}`}
-              style={{
-                flex: 1,
-                padding: '14px 18px',
-                background: 'var(--bg-card)',
-                border: '1px solid rgba(184,146,42,0.2)',
-                borderRadius: '10px',
-                textDecoration: 'none',
-                color: 'var(--tx-0)',
-                textAlign: 'right',
-              }}
+              className="card flex-1 p-4 no-underline transition-all hover:shadow-md group text-right"
+              style={{ borderColor: 'var(--color-accent-bdr)' }}
             >
-              <div style={{ fontSize: '10px', color: 'var(--tx-3)', letterSpacing: '0.2em', marginBottom: '2px' }}>Chương sau →</div>
-              <div style={{ fontSize: '13px', fontWeight: 500 }}>{book.chapters[nextIdx].title}</div>
+              <div className="text-xs tracking-wider mb-1" style={{ color: 'var(--color-text-muted)' }}>Chương sau →</div>
+              <div className="text-sm font-medium group-hover:opacity-80" style={{ color: 'var(--color-text-primary)' }}>
+                {book.chapters[nextIdx].title}
+              </div>
             </Link>
-          ) : <div style={{ flex: 1 }} />}
+          ) : <div className="flex-1" />}
         </div>
       </article>
     </div>

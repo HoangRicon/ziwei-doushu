@@ -1,0 +1,15 @@
+schema: spec-driven
+context: |
+  Project: Ziwei Dou Shu (Tử Vi Đẩu Số) — Vietnamese-language Ziwei astrology web app
+  Stack: Next.js 14 App Router, React 19, TypeScript, Tailwind CSS 3.4 + CSS Variables, Framer Motion 11
+  Components: 18+ reusable components, 10+ pages
+  Target: Full UI overhaul — redesign all pages, components, and the design system
+  Language: Vietnamese UI
+rules:
+  proposal:
+    - Include rollback plan
+  specs:
+    - Use Given/When/Then format for scenarios
+  design:
+    - Include mobile-first approach
+    - All colors must meet WCAG 2.1 AA contrast (≥4.5:1)

@@ -81,7 +81,7 @@ export default function PalaceCell({
           ? 'rgba(37,99,235,0.09)'
           : isMingGong
           ? 'rgba(212,168,67,0.04)'
-          : 'var(--t-bg)',
+          : 'var(--color-bg-card)',
         boxShadow: isCurrentDaXian
           ? 'inset 3px 0 0 rgba(147,51,234,0.5)'
           : isSelected
@@ -97,7 +97,7 @@ export default function PalaceCell({
           'absolute top-1 right-1 text-[9px] font-mono tabular-nums',
           isCurrentDaXian ? 'text-purple-400' : ''
         )}
-          style={!isCurrentDaXian ? { color: 'var(--t-faint)', opacity: 0.75 } : undefined}
+          style={!isCurrentDaXian ? { color: 'var(--color-text-muted)', opacity: 0.75 } : undefined}
         >
           {daXianAge[0]}–{daXianAge[1]}
         </div>
@@ -108,7 +108,7 @@ export default function PalaceCell({
         <span className={clsx('text-[10px] font-medium tracking-wide',
           isMingGong ? 'text-amber-500' : isShenGong ? 'text-sky-500' : ''
         )}
-          style={!isMingGong && !isShenGong ? { color: 'var(--t-faint)' } : undefined}
+          style={!isMingGong && !isShenGong ? { color: 'var(--color-text-muted)' } : undefined}
         >
           {name}
         </span>
@@ -121,12 +121,12 @@ export default function PalaceCell({
       </div>
 
       {/* 干支 */}
-      <div className="text-[9px] font-mono mb-1" style={{ color: 'var(--t-faint)', opacity: 0.75 }}>{ganzhi}</div>
+      <div className="text-[9px] font-mono mb-1" style={{ color: 'var(--color-text-muted)', opacity: 0.75 }}>{ganzhi}</div>
 
       {/* 主星 */}
       <div className="flex flex-col gap-0.5 flex-1">
         {majorStars.length === 0 && (
-          <span className="text-[10px] italic" style={{ color: 'var(--t-faint)', opacity: 0.6 }}>Không cung</span>
+          <span className="text-[10px] italic" style={{ color: 'var(--color-text-muted)', opacity: 0.6 }}>Không cung</span>
         )}
         {majorStars.map((star) => {
           const overlaySiHua = overlayStarSiHua?.[star.name];

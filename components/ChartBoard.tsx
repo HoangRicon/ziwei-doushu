@@ -104,10 +104,10 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-3"
       >
-        <div className="text-[10px] tracking-[0.5em] uppercase mb-1" style={{ color: 'var(--t-faint)' }}>
+        <div className="text-[10px] tracking-[0.5em] uppercase mb-1" style={{ color: 'var(--color-text-muted)' }}>
           Tử Vi Đấu Số
         </div>
-        <h2 className="text-sm tracking-[0.25em] font-medium" style={{ color: 'var(--t-gold)' }}>
+        <h2 className="text-sm tracking-[0.25em] font-medium" style={{ color: 'var(--color-accent)' }}>
           {chart.birthInfo.name ? `${chart.birthInfo.name} · ` : ''}Bản đồ Tử Vi
         </h2>
       </motion.div>
@@ -119,9 +119,9 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
           gridTemplateColumns: 'repeat(4, 1fr)',
           gridTemplateRows: 'repeat(4, auto)',
           gap: '1px',
-          background: 'var(--t-border)',
-          border: '1px solid var(--t-border)',
-          boxShadow: '0 4px 32px rgba(0,0,0,0.15)',
+          background: 'var(--color-border)',
+          border: '1px solid var(--color-border)',
+          boxShadow: 'var(--shadow-md)',
         }}
       >
         {ANIMATION_ORDER.map((branch, i) => {
@@ -129,7 +129,7 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
           const palace = palaceMap[branch];
           if (!palace) return null;
           return (
-            <div key={branch} style={{ gridRow: row, gridColumn: col, background: 'var(--t-bg)' }}>
+            <div key={branch} style={{ gridRow: row, gridColumn: col, background: 'var(--color-bg-card)' }}>
               <PalaceCell
                 palace={palace}
                 onClick={() => handlePalaceClick(branch)}
@@ -151,18 +151,18 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5 }}
           className="flex flex-col items-center justify-center p-4 gap-3"
-          style={{ gridRow: '2 / 4', gridColumn: '2 / 4', background: 'var(--t-bg)' }}
+          style={{ gridRow: '2 / 4', gridColumn: '2 / 4', background: 'var(--color-bg-card)' }}
         >
-          <div className="text-5xl select-none leading-none" style={{ color: 'var(--t-gold)', opacity: 0.12, filter: 'drop-shadow(0 0 12px rgba(180,120,30,0.15))' }}>
+          <div className="text-5xl select-none leading-none" style={{ color: 'var(--color-accent)', opacity: 0.12, filter: 'drop-shadow(0 0 12px rgba(180,120,30,0.15))' }}>
             ☯
           </div>
 
           <div className="text-center space-y-1">
-            <div className="text-[9px] tracking-[0.3em] font-medium" style={{ color: 'var(--t-gold)' }}>Tử Vi Đấu Số</div>
-            <div className="text-[10px] space-y-0.5" style={{ color: 'var(--t-faint)' }}>
-              <div>Mệnh Cung <span style={{ color: 'var(--t-gold)', opacity: 0.7 }}>{BRANCHES[chart.mingGongBranch]}</span></div>
+            <div className="text-[9px] tracking-[0.3em] font-medium" style={{ color: 'var(--color-accent)' }}>Tử Vi Đấu Số</div>
+            <div className="text-[10px] space-y-0.5" style={{ color: 'var(--color-text-muted)' }}>
+              <div>Mệnh Cung <span style={{ color: 'var(--color-accent)', opacity: 0.7 }}>{BRANCHES[chart.mingGongBranch]}</span></div>
               <div>Thân Cung <span className="text-sky-500/70">{BRANCHES[chart.shenGongBranch]}</span></div>
-              <div className="text-[9px]" style={{ color: 'var(--t-gold)', opacity: 0.75 }}>{chart.wuxingJuName}</div>
+              <div className="text-[9px]" style={{ color: 'var(--color-accent)', opacity: 0.75 }}>{chart.wuxingJuName}</div>
             </div>
           </div>
 
@@ -178,7 +178,7 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
             );
           })()}
 
-          <div className="text-[8px] text-center leading-relaxed font-mono" style={{ color: 'var(--t-faint)', opacity: 0.75 }}>
+          <div className="text-[8px] text-center leading-relaxed font-mono" style={{ color: 'var(--color-text-muted)', opacity: 0.75 }}>
             {chart.lunarInfo.lunarYear}·{chart.lunarInfo.isLeapMonth ? '闰' : ''}
             {chart.lunarInfo.lunarMonth}·{chart.lunarInfo.lunarDay}
           </div>
@@ -276,7 +276,7 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
         ].map(({ h, c }) => (
           <span key={h} className={`border px-1.5 py-0.5 rounded-full font-medium ${c}`}>{h}</span>
         ))}
-        <span className="px-1.5 py-0.5 rounded-full" style={{ color: 'var(--t-faint)', border: '1px solid var(--t-border)' }}>
+        <span className="px-1.5 py-0.5 rounded-full" style={{ color: 'var(--color-text-muted)', border: '1px solid var(--color-border)' }}>
           Bấm vào cung xem tam phương tứ chính
         </span>
       </motion.div>

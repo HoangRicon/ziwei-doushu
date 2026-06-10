@@ -10,9 +10,6 @@ export interface BirthInfo {
   hour: number;      // Chỉ số thập nhị thì (0=Tử, 1=Sửu, ... 11=Hợi)
   gender: 'male' | 'female';
   name?: string;
-  province?: string;   // Tỉnh sinh
-  city?: string;       // Thành phố sinh
-  longitude?: number;  // Kinh độ nơi sinh (để tính chính tý thời gian)
 }
 
 export interface LunarInfo {

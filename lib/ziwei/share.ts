@@ -5,50 +5,14 @@ import type { BirthInfo } from './types';
  * Tiện ích chia sẻ bản đồ Tử Vi
  */
 
-// ─── Tính toán giờ mặt trời thực ──────────────────
-/** Tính giờ thập nhị thì (0-11) dựa trên giờ địa phương + kinh độ */
-export function calcTrueSolarBranch(clockHour: number, clockMinute: number, longitude: number): number {
-  const clockMins = clockHour * 60 + clockMinute;
-  const offset = (longitude - 120) * 4;
-  const solar = ((clockMins + offset) % 1440 + 1440) % 1440;
-  if (solar >= 1380 || solar < 60) return 0;
-  return Math.floor((solar - 60) / 120) + 1;
-}
-
-/** BirthFormState → BirthInfo
- *
- * 子时规则（倪海厦体系/三合派标准）：
- * · 23:00-23:59 = 晚子时，**按次日**排盘（日期 +1）
- * · 00:00-00:59 = 早子时，按本日排盘
- * 这与「时辰支同为子(0)」并不冲突——子时分早晚两段，需要在日期上区分。
- */
 export function formToBirthInfo(form: BirthFormState): BirthInfo {
-  let y = parseInt(form.year) || 0;
-  let m = parseInt(form.month) || 0;
-  let d = parseInt(form.day) || 0;
-
-  // 晚子时（23:00-23:59）按次日处理：用 Date 对象自动处理月末/年末进位
-  if (!form.unknownTime) {
-    const clockHour = parseInt(form.clockHour) || 0;
-    if (clockHour === 23 && y > 0 && m > 0 && d > 0) {
-      const next = new Date(y, m - 1, d + 1);
-      y = next.getFullYear();
-      m = next.getMonth() + 1;
-      d = next.getDate();
-    }
-  }
-
-  const hour = form.unknownTime
-    ? 0
-    : calcTrueSolarBranch(parseInt(form.clockHour) || 0, parseInt(form.clockMinute) || 0, form.longitude);
   return {
-    year: y, month: m, day: d,
-    hour,
+    year: parseInt(form.year) || 0,
+    month: parseInt(form.month) || 0,
+    day: parseInt(form.day) || 0,
+    hour: form.unknownTime ? 0 : form.shichen,
     gender: form.gender,
     name: form.name || undefined,
-    province: form.province || undefined,
-    city: form.city || undefined,
-    longitude: form.province ? form.longitude : undefined,
   };
 }
 
@@ -59,16 +23,9 @@ export function formToSearchParams(form: BirthFormState): URLSearchParams {
   p.set('y', form.year);
   p.set('m', form.month);
   p.set('d', form.day);
-  if (form.unknownTime) {
-    p.set('u', '1');
-  } else {
-    p.set('h', form.clockHour);
-    p.set('mi', form.clockMinute);
-  }
-  if (form.province) p.set('p', form.province);
-  if (form.city) p.set('c', form.city);
-  if (form.longitude && form.longitude !== 120) p.set('lo', String(form.longitude));
+  p.set('h', String(form.shichen));
   p.set('g', form.gender === 'male' ? 'm' : 'f');
+  if (form.unknownTime) p.set('u', '1');
   return p;
 }
 
@@ -83,12 +40,8 @@ export function searchParamsToForm(params: URLSearchParams): Partial<BirthFormSt
     year,
     month,
     day,
+    shichen: parseInt(params.get('h') || '0'),
     unknownTime: params.get('u') === '1',
-    clockHour: params.get('h') || '8',
-    clockMinute: params.get('mi') || '0',
-    province: params.get('p') || '',
-    city: params.get('c') || '',
-    longitude: parseFloat(params.get('lo') || '120'),
     gender: params.get('g') === 'f' ? 'female' : 'male',
   };
 }

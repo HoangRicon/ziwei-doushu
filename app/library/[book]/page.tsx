@@ -26,72 +26,78 @@ export default async function BookPage({ params }: { params: Promise<{ book: str
   if (!book) notFound();
 
   return (
-    <div style={{ background: 'var(--bg-page)', minHeight: '100vh' }}>
+    <div className="min-h-screen" style={{ background: 'var(--color-bg-page)' }}>
+      {/* Thanh trên */}
       <div className="px-6 py-4 flex items-center justify-between"
-        style={{ borderBottom: '1px solid rgba(184,146,42,0.15)', background: 'var(--bg-page)' }}>
-        <Link href="/library" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.3em', textDecoration: 'none' }}>
+        style={{ borderBottom: '1px solid var(--color-accent-bdr)', background: 'var(--color-bg-page)' }}>
+        <Link href="/library" className="text-xs tracking-widest no-underline transition-colors hover:opacity-80"
+          style={{ color: 'var(--color-accent)' }}>
           ← Kho cổ thư
         </Link>
-        <div style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.2em' }}>
+        <div className="text-xs tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
           《{book.title}》
         </div>
-        <Link href="/" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em', textDecoration: 'none' }}>
+        <Link href="/" className="text-xs tracking-widest no-underline transition-colors hover:opacity-80"
+          style={{ color: 'var(--color-accent)' }}>
           Trang chủ →
         </Link>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-12">
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        {/* Breadcrumb */}
+        <nav className="text-xs tracking-wider mb-8" style={{ color: 'var(--color-text-muted)' }}>
+          <Link href="/library" className="no-underline hover:opacity-80" style={{ color: 'var(--color-text-muted)' }}>Thư viện</Link>
+          <span className="mx-2">›</span>
+          <span style={{ color: 'var(--color-text-primary)' }}>《{book.title}》</span>
+        </nav>
+
         {/* Thông tin tên sách */}
         <div className="text-center mb-12">
-          <div style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.3em', marginBottom: '8px' }}>
+          <div className="text-xs tracking-widest mb-2" style={{ color: 'var(--color-text-muted)' }}>
             {book.dynasty} · {book.author}
           </div>
-          <h1 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.15em', marginBottom: '14px' }}>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 tracking-wide"
+            style={{ color: 'var(--color-text-primary)', fontSize: 'clamp(28px, 4vw, 42px)' }}>
             《{book.title}》
           </h1>
-          <p style={{ fontSize: '13px', color: 'var(--tx-2)', lineHeight: 1.8, maxWidth: '500px', margin: '0 auto' }}>
+          <p className="text-sm leading-relaxed max-w-lg mx-auto" style={{ color: 'var(--color-text-body)' }}>
             {book.intro}
           </p>
         </div>
 
         {/* Mục lục chương */}
-        <div style={{ background: 'var(--bg-card)', borderRadius: '14px', border: '1px solid rgba(184,146,42,0.2)', overflow: 'hidden' }}>
-          <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(184,146,42,0.15)', fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.3em' }}>
+        <div className="card overflow-hidden" style={{ borderColor: 'var(--color-accent-bdr)' }}>
+          <div className="px-5 py-3.5 text-xs tracking-widest border-b"
+            style={{ borderColor: 'var(--color-accent-bdr)', color: 'var(--color-text-muted)', background: 'var(--color-accent-bg)' }}>
             MỤC LỤC · CHAPTERS
           </div>
           {book.chapters.map((chapter, i) => (
             <Link
               key={i}
               href={`/library/${book.slug}/${i}`}
+              className="flex items-baseline gap-4 px-5 py-3.5 no-underline transition-colors hover:bg-stone-50 border-b border-dashed last:border-b-0"
               style={{
-                display: 'flex',
-                alignItems: 'baseline',
-                gap: '14px',
-                padding: '14px 20px',
-                borderBottom: i === book.chapters.length - 1 ? 'none' : '1px dashed rgba(184,146,42,0.15)',
-                textDecoration: 'none',
+                borderColor: 'var(--color-accent-bdr)',
                 color: 'inherit',
-                transition: 'background 0.15s',
               }}
-              className="hover:bg-amber-50"
             >
-              <div style={{ fontSize: '12px', color: 'var(--ac)', fontWeight: 600, minWidth: '40px', letterSpacing: '0.1em' }}>
+              <div className="text-sm font-semibold min-w-10 tracking-wider" style={{ color: 'var(--color-accent)' }}>
                 {String(i + 1).padStart(2, '0')}
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '15px', color: 'var(--tx-0)', fontWeight: 500, letterSpacing: '0.08em', marginBottom: '2px' }}>
+              <div className="flex-1">
+                <div className="text-base font-medium mb-0.5 tracking-wide" style={{ color: 'var(--color-text-primary)' }}>
                   {chapter.title}
                 </div>
                 {chapter.subtitle && (
-                  <div style={{ fontSize: '11px', color: 'var(--tx-3)' }}>
+                  <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                     {chapter.subtitle}
                   </div>
                 )}
               </div>
-              <div style={{ fontSize: '10px', color: 'var(--tx-3)', letterSpacing: '0.1em' }}>
+              <div className="text-xs tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
                 {chapter.paragraphs.length} đoạn
               </div>
-              <div style={{ fontSize: '12px', color: 'var(--ac)' }}>→</div>
+              <div className="text-sm" style={{ color: 'var(--color-accent)' }}>→</div>
             </Link>
           ))}
         </div>

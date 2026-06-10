@@ -2,6 +2,8 @@
  * Cơ sở dữ liệu tỉnh/thành phố Trung Quốc cho Tử Vi Đẩu Số
  * Chứa danh sách các tỉnh và thành phố với kinh độ để tính toán chính tý thời gian
  */
+
+export interface CityInfo {
   name: string;
   longitude: number; // degrees East
 }

@@ -23,44 +23,28 @@ export default function LibrarySearch() {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      gap: '8px',
-      padding: '6px',
-      background: 'var(--bg-card)',
-      border: '1px solid rgba(184,146,42,0.3)',
-      borderRadius: '12px',
-      boxShadow: '0 4px 16px rgba(184,146,42,0.08)',
-    }}>
+    <div className="flex gap-2 p-1.5 rounded-xl transition-all"
+      style={{
+        background: 'var(--color-bg-card)',
+        border: '1px solid var(--color-accent-bdr)',
+        boxShadow: 'var(--shadow-sm)',
+      }}>
       <input
         value={q}
         onChange={e => setQ(e.target.value)}
         onKeyDown={e => e.key === 'Enter' && submit()}
         placeholder="Tìm kiếm nguyên tác cổ thư, ví dụ: Thập sát triều đấu / Song lộc triều viên / Hóa kỵ"
-        style={{
-          flex: 1,
-          padding: '10px 14px',
-          border: 'none',
-          outline: 'none',
-          fontSize: '14px',
-          color: 'var(--tx-0)',
-          background: 'transparent',
-        }}
+        className="flex-1 px-4 py-2.5 text-sm outline-none bg-transparent"
+        style={{ color: 'var(--color-text-primary)' }}
       />
       <button
         onClick={submit}
         disabled={isPending || !q.trim()}
+        className="px-5 py-2.5 rounded-lg text-sm font-semibold tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         style={{
-          padding: '10px 22px',
-          borderRadius: '8px',
-          border: 'none',
-          background: 'linear-gradient(135deg, #d4a948 0%, #b8922a 100%)',
+          background: 'var(--color-accent)',
           color: 'white',
-          fontSize: '13px',
-          fontWeight: 600,
-          letterSpacing: '0.15em',
           cursor: q.trim() ? 'pointer' : 'not-allowed',
-          opacity: q.trim() ? 1 : 0.5,
         }}
       >
         {isPending ? '…' : 'Tìm kiếm'}

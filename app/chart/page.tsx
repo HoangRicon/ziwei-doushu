@@ -28,12 +28,14 @@ export default function ChartPage() {
   // ── Chưa sắp xếp bản đồ: Hiển thị biểu mẫu thông tin sinh─────────
   if (!chart) {
     return (
-      <main style={{ maxWidth: 720, margin: '0 auto', padding: '48px 20px' }}>
-        <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>Sắp xếp Tử Vi Đẩu Số</h1>
-        <p style={{ color: '#888', marginBottom: 32, fontSize: 14, lineHeight: 1.7 }}>
+      <main className="max-w-2xl mx-auto px-5 pt-12">
+        <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+          Sắp xếp Tử Vi Đẩu Số
+        </h1>
+        <p className="text-sm leading-relaxed mb-8" style={{ color: 'var(--color-text-muted)' }}>
           Nhập ngày tháng năm sinh, công cụ sắp xếp nguồn mở sẽ tạo bản đồ ngay lập tức.
           <br />
-          (Trang này là Demo công cụ, giao diện phiên bản thương mại hoàn chỉnh không thuộc phạm vi nguồn mở; nhân công sắp xếp bản đồ hoàn toàn mở.)
+          <span className="text-xs opacity-70">(Trang này là Demo công cụ, giao diện phiên bản thương mại hoàn chỉnh không thuộc phạm vi nguồn mở; nhân công sắp xếp bản đồ hoàn toàn mở.)</span>
         </p>
         <BirthForm onSubmit={(info: BirthInfo) => setChart(generateChart(info))} />
       </main>
@@ -42,14 +44,19 @@ export default function ChartPage() {
 
   // ── Đã sắp xếp bản đồ: Bản đồ + Giải đoán ──
   return (
-    <main style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 16px' }}>
+    <main className="max-w-7xl mx-auto px-4 py-6">
+      {/* Header */}
+      <div className="mb-4">
+        <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+          Bản đồ Tử Vi
+        </h1>
+      </div>
+
       <button
         type="button"
         onClick={() => { setChart(null); setSelectedPalace(null); }}
-        style={{
-          marginBottom: 16, padding: '6px 14px', cursor: 'pointer',
-          border: '1px solid #ccc', borderRadius: 8, background: 'transparent',
-        }}
+        className="mb-4 px-3 py-1.5 rounded-lg border text-sm cursor-pointer transition-colors duration-150 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+        style={{ borderColor: 'var(--color-border)' }}
       >
         Sắp xếp lại bản đồ
       </button>
@@ -63,11 +70,7 @@ export default function ChartPage() {
       />
 
       <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 380px)',
-          gap: 20, marginTop: 16, alignItems: 'start',
-        }}
+        className="grid gap-5 mt-4 lg:grid-cols-[1fr_380px] grid-cols-1"
       >
         <ChartBoard chart={chart} onPalaceSelect={setSelectedPalace} />
         <InsightPanel chart={chart} selectedPalace={selectedPalace} />
