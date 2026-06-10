@@ -9,7 +9,7 @@
 import { astro } from 'iztro';
 import { Solar } from 'lunar-javascript';
 import type { BirthInfo, LunarInfo, Star, Palace, DaXian, DaXianSiHua, ZiweiChart } from './types';
-import { BRANCHES, STEMS } from './constants';
+import { BRANCHES, STEMS, JU_NAMES } from './constants';
 // 飞星派工具仅供导出，不再在排盘时调用（倪师《天纪 03》：四化星永远固定不动）
 // import { detectSelfSihua, getSiHuaByStem } from './sihua';
 
@@ -140,8 +140,9 @@ export function generateChart(birthInfo: BirthInfo): ZiweiChart {
   // ── 关键宫支 ──
   const mingGongBranch = BRANCHES.indexOf(astrolabe.earthlyBranchOfSoulPalace as string);
   const shenGongBranch = BRANCHES.indexOf(astrolabe.earthlyBranchOfBodyPalace as string);
-  const wuxingJuName   = astrolabe.fiveElementsClass as string;
-  const wuxingJu       = parseWuxingJu(wuxingJuName);
+  const wuxingJuNameCN = astrolabe.fiveElementsClass as string;
+  const wuxingJu       = parseWuxingJu(wuxingJuNameCN);
+  const wuxingJuName   = JU_NAMES[wuxingJu] ?? wuxingJuNameCN;
 
   // ── 紫微星位置 ──
   const ziweiPalace = palaces.find(p => p.stars.some(s => s.name === '紫微' && s.type === 'major'));

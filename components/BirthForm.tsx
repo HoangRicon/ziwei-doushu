@@ -20,13 +20,13 @@ interface BirthFormProps {
   loading?: boolean;
   initialData?: Partial<BirthFormState>;
   onFormSave?: (data: BirthFormState) => void;
-  /** 隐藏内部「立即起盘」按钮（合盘等场景由父级统一触发） */
+  /** Hide internal "Lập bàn ngay" button (in combined chart scenarios, parent controls submission) */
   hideSubmit?: boolean;
 }
 
-const SHICHEN_NAMES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+const SHICHEN_NAMES = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
 
-/** 检查日期是否合法 */
+/** Validate date */
 function isValidDate(y: number, m: number, d: number): boolean {
   if (!y || !m || !d) return false;
   const date = new Date(y, m - 1, d);
@@ -50,7 +50,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
-  // 表单状态变化时实时同步给父级（合盘等场景下父级靠这个收集双方数据）
+  // Sync form state to parent in real-time (parent uses this to collect data from both sides in combined chart)
   useEffect(() => {
     onFormSave?.({ ...form });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,7 +58,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
 
   const shichenInfo = SHICHEN[form.shichen];
 
-  // ─── 校验逻辑 ───────────────────────────────────────────
+  // ─── Validation logic ───────────────────────────────────────
   const y = parseInt(form.year) || 0;
   const m = parseInt(form.month) || 0;
   const d = parseInt(form.day) || 0;
@@ -74,7 +74,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
   };
   const hasError = Object.values(errors).some(Boolean);
 
-  // ─── 完成度（用于进度条） ────────────────────────────────
+  // ─── Completion (for progress bar) ───────────────────────────
   const steps = [
     !!form.year && !!form.month && !!form.day && !errors.year && !errors.month && !errors.day,
     form.unknownTime || !!form.shichen,
@@ -82,7 +82,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
   ];
   const completedSteps = steps.filter(Boolean).length;
 
-  // ─── Summary chip：全部必填完成后显示 ───────────────────
+  // ─── Summary chip: shown when all required fields are filled ──
   const showSummary = steps[0] && steps[1] && !hasError;
   const summaryText = showSummary
     ? [
@@ -101,14 +101,14 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
     onSubmit({ year: y, month: m, day: d, hour: form.unknownTime ? 0 : form.shichen, gender: form.gender, name: form.name || undefined });
   };
 
-  // ─── 样式变量 ────────────────────────────────────────────
+  // ─── Style vars ────────────────────────────────────────────
   const bg = isDark ? 'rgba(8,16,40,0.85)' : 'rgba(255,255,255,0.92)';
   const border = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(200,160,60,0.2)';
-  // 暗色模式标签提亮：从 rgba(74,112,144,1) → rgba(180,200,225,0.9)
+  // Label color brighten in dark mode: rgba(74,112,144,1) → rgba(180,200,225,0.9)
   const labelClr = isDark ? 'rgba(180,200,225,0.9)' : 'rgba(120,80,10,0.55)';
   const inputBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,252,240,0.8)';
   const inputBorder = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(200,160,60,0.25)';
-  // 输入文字提亮：从 #c8d8f0 → #e8eef8
+  // Input text brighten: #c8d8f0 → #e8eef8
   const inputClr = isDark ? '#e8eef8' : '#2a1a00';
   const focusBorder = isDark ? 'rgba(212,168,67,0.5)' : 'rgba(180,120,20,0.5)';
   const errorClr = isDark ? '#f87171' : '#dc2626';
@@ -161,12 +161,12 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
       transition={{ duration: 0.5 }}
       style={{ background: bg, border: `1px solid ${border}`, borderRadius: '24px', padding: '28px', backdropFilter: 'blur(20px)' }}
     >
-      {/* 标题 */}
+      {/* ── Title ── */}
       <h3 style={{ color: goldText, fontSize: '12px', letterSpacing: '0.4em', textAlign: 'center', marginBottom: '20px', fontWeight: 500 }}>
         ── Nhập Thông Tin Sinh Trắc ──
       </h3>
 
-      {/* ── 进度条 ── */}
+      {/* ── Progress bar ── */}
       <div style={{ display: 'flex', gap: '4px', marginBottom: '20px' }}>
         {steps.map((done, i) => (
           <motion.div
@@ -178,7 +178,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
         ))}
       </div>
 
-      {/* ── 姓名 ── */}
+      {/* ── Name ── */}
       <div style={{ marginBottom: '16px' }}>
         <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Họ tên (tùy chọn)</label>
         <input
@@ -192,7 +192,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
         />
       </div>
 
-      {/* ── 出生日期 ── */}
+      {/* ── Birth date ── */}
       <div style={{ marginBottom: '16px' }}>
         <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Ngày sinh (Dương lịch)</label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
@@ -241,7 +241,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
         </div>
       </div>
 
-      {/* ── 出生时间 ── */}
+      {/* ── Birth time ── */}
       <div style={{ marginBottom: '16px' }}>
         <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Giờ sinh (canh giờ)</label>
         <div style={{ borderRadius: '14px', padding: '12px', background: panelBg, border: `1px solid ${panelBorder}`, opacity: form.unknownTime ? 0.45 : 1, pointerEvents: form.unknownTime ? 'none' : 'auto', transition: 'opacity 0.2s' }}>
@@ -290,7 +290,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
         </label>
       </div>
 
-      {/* ── 性别 ── */}
+      {/* ── Gender ── */}
       <div style={{ marginBottom: '20px' }}>
         <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Giới tính</label>
         <div style={{ display: 'flex', gap: '10px' }}>
@@ -324,7 +324,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
         </div>
       </div>
 
-      {/* ── 确认信息 Summary Chip ── */}
+      {/* ── Summary chip ── */}
       <AnimatePresence>
         {showSummary && (
           <motion.div
@@ -351,7 +351,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
         )}
       </AnimatePresence>
 
-      {/* ── 提交按钮 ── */}
+      {/* ── Submit button ── */}
       {!hideSubmit && <motion.button
         type="submit"
         disabled={loading}

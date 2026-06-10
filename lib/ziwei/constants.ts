@@ -40,7 +40,7 @@ export const ELEMENT_TO_JU: Record<string, number> = {
 
 // Tên Số Cục
 export const JU_NAMES: Record<number, string> = {
-  2: '水二局', 3: '木三局', 4: '金四局', 5: '土五局', 6: '火六局'
+  2: 'Thủy Nhị Cục', 3: 'Mộc Tam Cục', 4: 'Kim Tứ Cục', 5: 'Thổ Ngũ Cục', 6: 'Hỏa Lục Cục'
 };
 
 // Bảng Tứ Hóa (Năm Thiên Can → [Hóa Lộc, Hóa Quyền, Hóa Khoa, Hóa Kỵ])
@@ -138,7 +138,7 @@ export const STAR_DESCRIPTIONS: Record<string, { keywords: string; nature: strin
   '贪狼': { keywords: 'Dục Vọng·Đào Hoa·Đa Tài', nature: 'Trung Tính', element: 'Mộc' },
   '巨门': { keywords: 'Khẩu Thị·Thị Phi·Thiện Biện', nature: 'Hung Trung Hóa Cát', element: 'Thủy' },
   '天相': { keywords: 'Phụ Tác·Hành Chính·Ấn Thụ', nature: 'Cát Tinh', element: 'Thủy' },
-  '天梁': { keywords: 'Ầm Hộ·Y Học·Trưởng Th长辈', nature: 'Cát Tinh', element: 'Thổ' },
+  '天梁': { keywords: 'Ầm Hộ·Y Học·Trưởng Bối', nature: 'Cát Tinh', element: 'Thổ' },
   '七杀': { keywords: 'Tướng Tinh·Quyết Quyết·Cô Khắc', nature: 'Hung Tinh', element: 'Kim' },
   '破军': { keywords: 'Khai Sáng·Biến Động·Phá Hủy', nature: 'Hung Tinh', element: 'Thủy' },
 };

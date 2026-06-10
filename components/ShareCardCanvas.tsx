@@ -8,6 +8,7 @@
  */
 
 import type { ZiweiChart } from '@/lib/ziwei/types';
+import { vnStar, vnPalace, vnBranch, vnSiHua } from '@/lib/ziwei/starNames';
 
 const BRANCH_NAMES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
 
@@ -40,7 +41,7 @@ interface ShareCardProps {
 export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardProps) {
   const mingPalace = chart.palaces.find(p => p.branch === chart.mingGongBranch);
   const mingMajorStars = mingPalace?.stars.filter(s => s.type === 'major').map(s => s.name) ?? [];
-  const mingStarStr = mingMajorStars.length > 0 ? mingMajorStars.join('·') : '空宫';
+  const mingStarStr = mingMajorStars.length > 0 ? mingMajorStars.map(vnStar).join('·') : 'Không Cung';
   const mingBranchName = BRANCH_NAMES[chart.mingGongBranch] || '';
   const shenBranchName = BRANCH_NAMES[chart.shenGongBranch] || '';
   const dx = chart.daXians?.[chart.currentDaXianIndex];
@@ -89,7 +90,7 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
             background: 'linear-gradient(135deg, #d4a948 0%, #b8922a 100%)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             color: 'white', fontSize: '15px', fontWeight: 700,
-          }}>紫</div>
+          }}>☯</div>
           <div>
             <div style={{ fontSize: '15px', color: '#3d2f10', fontWeight: 600, letterSpacing: '0.12em', lineHeight: 1.2 }}>Bản Đồ Tử Vi</div>
             <div style={{ fontSize: '9px', color: '#a89b7c', letterSpacing: '0.18em', marginTop: '2px' }}>Chính thống của thầy Ni · ZI WEI</div>
@@ -152,10 +153,10 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
                   alignItems: 'center',
                 }}>
                   <span style={{ fontWeight: cell.isMing ? 700 : 400 }}>
-                    {cell.palace?.name || ''}
-                    {cell.isShen ? '·身' : ''}
+                    {vnPalace(cell.palace?.name || '')}
+                    {cell.isShen ? '·Thân' : ''}
                   </span>
-                  <span style={{ fontSize: '7px', opacity: 0.7 }}>{BRANCH_NAMES[cell.branch]}</span>
+                  <span style={{ fontSize: '7px', opacity: 0.7 }}>{vnBranch(BRANCH_NAMES[cell.branch])}</span>
                 </div>
                 {/* 主星 */}
                 <div style={{
@@ -174,7 +175,7 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
                       letterSpacing: '0.02em',
                       lineHeight: 1.1,
                     }}>
-                      {s.name}{s.siHua ? <span style={{ fontSize: '8px', color: '#c45a2d', marginLeft: '1px' }}>{s.siHua}</span> : ''}
+                      {vnStar(s.name)}{s.siHua ? <span style={{ fontSize: '8px', color: '#c45a2d', marginLeft: '1px' }}>{vnSiHua(s.siHua)}</span> : ''}
                     </div>
                   )                  ) : (
                     <div style={{ fontSize: '9px', color: '#a89b7c', fontStyle: 'italic' }}>Không cung</div>
@@ -197,9 +198,9 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
             borderRadius: '4px',
           }}>
             <div style={{ fontSize: '8px', color: '#a89b7c', letterSpacing: '0.2em', marginBottom: '4px' }}>ZI WEI</div>
-            <div style={{ fontSize: '14px', color: '#3d2f10', fontWeight: 600, letterSpacing: '0.1em' }}>紫微斗数</div>
-            <div style={{ fontSize: '10px', color: '#6b5d3f', marginTop: '6px' }}>Mệnh Cung · {mingBranchName}</div>
-            <div style={{ fontSize: '10px', color: '#6b5d3f', marginTop: '6px' }}>Thân Cung · {shenBranchName}</div>
+            <div style={{ fontSize: '14px', color: '#3d2f10', fontWeight: 600, letterSpacing: '0.1em' }}>Tử Vi Đẩu Số</div>
+            <div style={{ fontSize: '10px', color: '#6b5d3f', marginTop: '6px' }}>Mệnh Cung · {vnBranch(mingBranchName)}</div>
+            <div style={{ fontSize: '10px', color: '#6b5d3f', marginTop: '6px' }}>Thân Cung · {vnBranch(shenBranchName)}</div>
             <div style={{ fontSize: '10px', color: '#6b5d3f', marginTop: '4px', fontWeight: 600 }}>{chart.wuxingJuName}</div>
           </div>
         </div>
@@ -208,7 +209,7 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           {/* Chủ tinh Mệnh Cung */}
           <div>
-            <div style={{ fontSize: '10px', color: '#a89b7c', letterSpacing: '0.25em', marginBottom: '2px' }}>MỆNH CUNG · {mingBranchName}</div>
+            <div style={{ fontSize: '10px', color: '#a89b7c', letterSpacing: '0.25em', marginBottom: '2px' }}>MỆNH CUNG · {vnBranch(mingBranchName)}</div>
             <div style={{
               fontSize: '52px',
               fontWeight: 800,
@@ -244,7 +245,7 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
                 letterSpacing: '0.05em',
               }}>
                 <span style={{ color: '#a89b7c' }}>Đại Hạn Hiện Tại </span>
-                <span style={{ fontWeight: 600 }}>{dx.startAge}–{dx.endAge} tuổi · {dx.palaceName}</span>
+                <span style={{ fontWeight: 600 }}>{dx.startAge}–{dx.endAge} tuổi · {vnPalace(dx.palaceName)}</span>
               </div>
             )}
             <div style={{

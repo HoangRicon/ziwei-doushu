@@ -16,7 +16,7 @@ export function formToBirthInfo(form: BirthFormState): BirthInfo {
   };
 }
 
-/** BirthFormState → URLSearchParams（用于分享链接） */
+/** BirthFormState → URLSearchParams (dùng cho liên kết chia sẻ) */
 export function formToSearchParams(form: BirthFormState): URLSearchParams {
   const p = new URLSearchParams();
   if (form.name) p.set('n', form.name);
@@ -29,7 +29,7 @@ export function formToSearchParams(form: BirthFormState): URLSearchParams {
   return p;
 }
 
-/** URLSearchParams → Partial<BirthFormState>，不完整时返回 null */
+/** URLSearchParams → Partial<BirthFormState>, trả về null khi không đầy đủ */
 export function searchParamsToForm(params: URLSearchParams): Partial<BirthFormState> | null {
   const year = params.get('y');
   const month = params.get('m');

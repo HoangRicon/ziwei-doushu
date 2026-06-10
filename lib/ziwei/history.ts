@@ -24,7 +24,7 @@ export function useHistory() {
   const save = useCallback((form: BirthFormState) => {
     const label = [
       form.name,
-      `${form.year}年${form.month}月${form.day}日`,
+      `${form.year}/${form.month}/${form.day}`,
       form.gender === 'male' ? 'Nam' : 'Nữ',
     ].filter(Boolean).join(' · ');
 

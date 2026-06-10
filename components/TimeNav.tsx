@@ -1,6 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { STEMS, SI_HUA_TABLE } from '@/lib/ziwei/constants';
+import { vnStar, vnBranch, vnSiHua, vnStem } from '@/lib/ziwei/starNames';
 import type { ZiweiChart } from '@/lib/ziwei/types';
 
 export type TimeView = 'mingpan' | 'daxian' | 'liunian';
@@ -151,14 +152,14 @@ export default function TimeNav({
           className="flex items-center gap-2 mt-1.5 px-1 flex-wrap"
         >
           <span className="text-[9px]" style={{ color: 'var(--color-text-muted)' }}>
-            {view === 'daxian' ? 'Đại Hạn' : `${liunianYear}`}·{overlayInfo.stemName} năm tứ hóa:
+            {view === 'daxian' ? 'Đại Hạn' : `${liunianYear}`}·{vnStem(overlayInfo.stemName)} năm tứ hóa:
           </span>
           {(['禄', '权', '科', '忌'] as const).map(sh => {
             const starName = Object.keys(overlayInfo.overlay).find(k => overlayInfo.overlay[k] === sh);
             if (!starName) return null;
             return (
               <span key={sh} className="text-[9px] font-medium" style={{ color: SIHUA_COLORS[sh] }}>
-                {starName}化{sh}
+                {vnStar(starName)}化{vnSiHua(sh)}
               </span>
             );
           })}
