@@ -20,13 +20,13 @@ interface BirthFormProps {
   loading?: boolean;
   initialData?: Partial<BirthFormState>;
   onFormSave?: (data: BirthFormState) => void;
-  /** Hide internal "Lập bàn ngay" button (in combined chart scenarios, parent controls submission) */
+  /** Ẩn nút "Sắp lá số" (trong trường hợp chart ghép, component cha kiểm soát việc submit) */
   hideSubmit?: boolean;
 }
 
 const SHICHEN_NAMES = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
 
-/** Validate date */
+/** Kiểm tra tính hợp lệ của ngày tháng */
 function isValidDate(y: number, m: number, d: number): boolean {
   if (!y || !m || !d) return false;
   const date = new Date(y, m - 1, d);
@@ -36,6 +36,17 @@ function isValidDate(y: number, m: number, d: number): boolean {
 export default function BirthForm({ onSubmit, loading, initialData, onFormSave, hideSubmit }: BirthFormProps) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+
+  // Màu sắc theo chế độ
+  const isDarkMode = theme === 'dark';
+  const textPrimary = isDarkMode ? '#F0EBE0' : '#1A1510';
+  const textMuted = isDarkMode ? '#6A6258' : '#8A8078';
+  const accent = isDarkMode ? '#D4A843' : '#9A7A1A';
+  const accentLight = isDarkMode ? '#F0C060' : '#C8A030';
+  const borderColor = isDarkMode ? 'rgba(255,255,255,0.12)' : 'rgba(26,21,16,0.14)';
+  const inputBg = isDarkMode ? 'rgba(255,255,255,0.04)' : '#FFFFFF';
+  const cardBg = isDarkMode ? 'rgba(255,255,255,0.03)' : 'rgba(255,252,240,0.6)';
+  const errorColor = '#ef4444';
 
   const [form, setForm] = useState<BirthFormState>({
     name: initialData?.name ?? '',
@@ -50,10 +61,10 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
-  // Sync form state to parent in real-time (parent uses this to collect data from both sides in combined chart)
+  // Đồng bộ trạng thái form với component cha
   useEffect(() => {
     onFormSave?.({ ...form });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   const shichenInfo = SHICHEN[form.shichen];
@@ -74,7 +85,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
   };
   const hasError = Object.values(errors).some(Boolean);
 
-  // ─── Completion (for progress bar) ───────────────────────────
+  // ─── Completion (cho thanh tiến độ) ───────────────────────────
   const steps = [
     !!form.year && !!form.month && !!form.day && !errors.year && !errors.month && !errors.day,
     form.unknownTime || !!form.shichen,
@@ -82,7 +93,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
   ];
   const completedSteps = steps.filter(Boolean).length;
 
-  // ─── Summary chip: shown when all required fields are filled ──
+  // ─── Hiển thị tóm tắt khi đã điền đủ ──
   const showSummary = steps[0] && steps[1] && !hasError;
   const summaryText = showSummary
     ? [
@@ -101,37 +112,23 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
     onSubmit({ year: y, month: m, day: d, hour: form.unknownTime ? 0 : form.shichen, gender: form.gender, name: form.name || undefined });
   };
 
-  // ─── Style vars ────────────────────────────────────────────
-  const bg = isDark ? 'rgba(8,16,40,0.85)' : 'rgba(255,255,255,0.92)';
-  const border = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(200,160,60,0.2)';
-  // Label color brighten in dark mode: rgba(74,112,144,1) → rgba(180,200,225,0.9)
-  const labelClr = isDark ? 'rgba(180,200,225,0.9)' : 'rgba(120,80,10,0.55)';
-  const inputBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,252,240,0.8)';
-  const inputBorder = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(200,160,60,0.25)';
-  // Input text brighten: #c8d8f0 → #e8eef8
-  const inputClr = isDark ? '#e8eef8' : '#2a1a00';
-  const focusBorder = isDark ? 'rgba(212,168,67,0.5)' : 'rgba(180,120,20,0.5)';
-  const errorClr = isDark ? '#f87171' : '#dc2626';
-  const panelBg = isDark ? 'rgba(255,255,255,0.03)' : 'rgba(255,250,235,0.7)';
-  const panelBorder = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(200,160,60,0.2)';
-  const goldText = isDark ? '#d4a843' : '#7a5008';
-  const summaryBg = isDark ? 'rgba(37,99,235,0.12)' : 'rgba(37,99,235,0.07)';
-  const summaryBorder = isDark ? 'rgba(37,99,235,0.35)' : 'rgba(37,99,235,0.25)';
-  const summaryClr = isDark ? 'rgba(147,197,253,0.9)' : 'rgba(37,99,235,0.85)';
-
-  const inputStyle = {
+  const inputStyle: React.CSSProperties = {
     background: inputBg,
-    border: `1px solid ${inputBorder}`,
-    color: inputClr,
-    borderRadius: '14px',
-    padding: '10px 14px',
-    fontSize: '13px',
+    border: `1.5px solid ${borderColor}`,
+    color: textPrimary,
+    borderRadius: 'var(--radius-lg)',
+    padding: '14px 18px',
+    fontSize: '17px',
     width: '100%',
     outline: 'none',
-    transition: 'border-color 0.2s',
-  } as React.CSSProperties;
+    transition: 'border-color var(--transition-fast), box-shadow var(--transition-fast)',
+    fontFamily: 'var(--primitive-font-sans)',
+  };
 
-  const errorInputStyle = { ...inputStyle, borderColor: errorClr };
+  const inputFocusStyle: React.CSSProperties = {
+    borderColor: accent,
+    boxShadow: `0 0 0 3px ${isDarkMode ? 'rgba(212,168,67,0.15)' : 'rgba(154,122,26,0.10)'}`,
+  };
 
   function FieldError({ msg }: { msg: string }) {
     return (
@@ -142,9 +139,9 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
             animate={{ opacity: 1, y: 0, height: 'auto' }}
             exit={{ opacity: 0, y: -4, height: 0 }}
             transition={{ duration: 0.18 }}
-            style={{ color: errorClr, fontSize: '11px', marginTop: '4px' }}
+            style={{ color: errorColor, fontSize: '15px', marginTop: '6px' }}
           >
-            ✕ {msg}
+            {msg}
           </motion.p>
         )}
       </AnimatePresence>
@@ -159,48 +156,79 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      style={{ background: bg, border: `1px solid ${border}`, borderRadius: '24px', padding: '28px', backdropFilter: 'blur(20px)' }}
+      style={{
+        background: cardBg,
+        border: `1px solid ${borderColor}`,
+        borderRadius: 'var(--radius-xl)',
+        padding: '32px',
+        backdropFilter: 'blur(20px)',
+      }}
     >
-      {/* ── Title ── */}
-      <h3 style={{ color: goldText, fontSize: '12px', letterSpacing: '0.4em', textAlign: 'center', marginBottom: '20px', fontWeight: 500 }}>
-        ── Nhập Thông Tin Sinh Trắc ──
-      </h3>
+      {/* ── Tiêu đề ── */}
+      <div className="text-center mb-8">
+        <h3 className="heading-3 mb-2" style={{ color: accent }}>Nhập thông tin sinh</h3>
+        <p className="body" style={{ color: textMuted, fontSize: '17px', lineHeight: 1.75 }}>
+          Lá số sẽ được sắp dựa trên ngày tháng năm sinh theo múi giờ Việt Nam.
+        </p>
+      </div>
 
-      {/* ── Progress bar ── */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '20px' }}>
+      {/* ── Thanh tiến độ ── */}
+      <div style={{ display: 'flex', gap: '6px', marginBottom: '24px' }}>
         {steps.map((done, i) => (
           <motion.div
             key={i}
-            animate={{ background: done ? (isDark ? '#d4a843' : '#b07820') : (isDark ? 'rgba(255,255,255,0.08)' : 'rgba(200,160,60,0.15)') }}
+            animate={{
+              background: done
+                ? (isDarkMode ? '#d4a843' : '#9A7A1A')
+                : (isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(26,21,16,0.08)'),
+            }}
             transition={{ duration: 0.3 }}
-            style={{ flex: 1, height: '2px', borderRadius: '2px' }}
+            style={{ flex: 1, height: '3px', borderRadius: '3px' }}
           />
         ))}
       </div>
 
-      {/* ── Name ── */}
-      <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Họ tên (tùy chọn)</label>
+      {/* ── Họ tên ── */}
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{
+          display: 'block',
+          fontSize: '16px',
+          fontWeight: 500,
+          color: textPrimary,
+          marginBottom: '8px',
+        }}>
+          Họ tên (tùy chọn)
+        </label>
         <input
           type="text"
-          placeholder="Nhập họ tên"
+          placeholder="Nhập họ tên của bạn"
           value={form.name}
           onChange={e => setForm({ ...form, name: e.target.value })}
           style={inputStyle}
-          onFocus={e => { e.target.style.borderColor = focusBorder; }}
-          onBlur={e => { e.target.style.borderColor = inputBorder; }}
+          onFocus={e => { Object.assign(e.target.style, inputFocusStyle); }}
+          onBlur={e => { e.target.style.borderColor = borderColor; e.target.style.boxShadow = 'none'; }}
         />
       </div>
 
-      {/* ── Birth date ── */}
-      <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Ngày sinh (Dương lịch)</label>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+      {/* ── Ngày sinh ── */}
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{
+          display: 'block',
+          fontSize: '16px',
+          fontWeight: 500,
+          color: textPrimary,
+          marginBottom: '8px',
+        }}>
+          Ngày sinh (Dương lịch)
+        </label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
           <div>
             <select
               value={form.year}
               onChange={e => { setForm({ ...form, year: e.target.value }); setTouched(t => ({ ...t, year: true })); }}
-              style={showErr('year') && errors.year ? errorInputStyle : inputStyle}
+              style={showErr('year') && errors.year ? { ...inputStyle, borderColor: errorColor } : inputStyle}
+              onFocus={e => { Object.assign(e.target.style, inputFocusStyle); }}
+              onBlur={e => { e.target.style.borderColor = showErr('year') && errors.year ? errorColor : borderColor; e.target.style.boxShadow = 'none'; }}
               required
             >
               <option value="">Năm</option>
@@ -214,7 +242,9 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
             <select
               value={form.month}
               onChange={e => { setForm({ ...form, month: e.target.value }); setTouched(t => ({ ...t, month: true })); }}
-              style={showErr('month') && errors.month ? errorInputStyle : inputStyle}
+              style={showErr('month') && errors.month ? { ...inputStyle, borderColor: errorColor } : inputStyle}
+              onFocus={e => { Object.assign(e.target.style, inputFocusStyle); }}
+              onBlur={e => { e.target.style.borderColor = showErr('month') && errors.month ? errorColor : borderColor; e.target.style.boxShadow = 'none'; }}
               required
             >
               <option value="">Tháng</option>
@@ -228,7 +258,9 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
             <select
               value={form.day}
               onChange={e => { setForm({ ...form, day: e.target.value }); setTouched(t => ({ ...t, day: true })); }}
-              style={showErr('day') && errors.day ? errorInputStyle : inputStyle}
+              style={showErr('day') && errors.day ? { ...inputStyle, borderColor: errorColor } : inputStyle}
+              onFocus={e => { Object.assign(e.target.style, inputFocusStyle); }}
+              onBlur={e => { e.target.style.borderColor = showErr('day') && errors.day ? errorColor : borderColor; e.target.style.boxShadow = 'none'; }}
               required
             >
               <option value="">Ngày</option>
@@ -241,11 +273,27 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
         </div>
       </div>
 
-      {/* ── Birth time ── */}
-      <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Giờ sinh (canh giờ)</label>
-        <div style={{ borderRadius: '14px', padding: '12px', background: panelBg, border: `1px solid ${panelBorder}`, opacity: form.unknownTime ? 0.45 : 1, pointerEvents: form.unknownTime ? 'none' : 'auto', transition: 'opacity 0.2s' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
+      {/* ── Giờ sinh ── */}
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{
+          display: 'block',
+          fontSize: '16px',
+          fontWeight: 500,
+          color: textPrimary,
+          marginBottom: '8px',
+        }}>
+          Giờ sinh (Canh giờ)
+        </label>
+        <div style={{
+          borderRadius: 'var(--radius-lg)',
+          padding: '16px',
+          background: isDarkMode ? 'rgba(255,255,255,0.02)' : 'rgba(255,250,235,0.5)',
+          border: `1px solid ${borderColor}`,
+          opacity: form.unknownTime ? 0.5 : 1,
+          pointerEvents: form.unknownTime ? 'none' : 'auto',
+          transition: 'opacity var(--transition-base)',
+        }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
             {SHICHEN.map((info, idx) => (
               <motion.button
                 key={idx}
@@ -253,51 +301,66 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
                 onClick={() => setForm({ ...form, shichen: idx })}
                 whileTap={{ scale: 0.96 }}
                 style={{
-                  padding: '8px 4px',
-                  borderRadius: '10px',
-                  fontSize: '12px',
+                  padding: '12px 6px',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: '16px',
                   fontWeight: 600,
-                  letterSpacing: '0.05em',
-                  border: `1px solid ${form.shichen === idx ? focusBorder : 'transparent'}`,
-                  background: form.shichen === idx ? (isDark ? 'rgba(212,168,67,0.15)' : 'rgba(180,120,20,0.1)') : 'transparent',
-                  color: form.shichen === idx ? goldText : (isDark ? 'rgba(180,200,225,0.7)' : 'rgba(100,80,40,0.6)'),
+                  border: `1.5px solid ${form.shichen === idx ? accent : 'transparent'}`,
+                  background: form.shichen === idx
+                    ? (isDarkMode ? 'rgba(212,168,67,0.12)' : 'rgba(154,122,26,0.08)')
+                    : 'transparent',
+                  color: form.shichen === idx ? accent : textMuted,
                   cursor: 'pointer',
-                  transition: 'all 0.15s',
+                  transition: 'all var(--transition-fast)',
                 }}
               >
                 Giờ {SHICHEN_NAMES[idx]}
                 <br />
-                <span style={{ fontSize: '9px', fontWeight: 400, opacity: 0.75 }}>{info.range}</span>
+                <span style={{ fontSize: '12px', fontWeight: 400, opacity: 0.7 }}>{info.range}</span>
               </motion.button>
             ))}
           </div>
-          <div style={{ textAlign: 'center', padding: '4px 0', marginTop: '6px' }}>
-            <span style={{ fontSize: '11px', color: goldText, fontWeight: 500 }}>
+          <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
+            <span style={{ fontSize: '15px', color: accent, fontWeight: 500 }}>
               Giờ {SHICHEN_NAMES[form.shichen]} · {shichenInfo?.range}
             </span>
           </div>
         </div>
-        <label style={{ display: 'flex', alignItems: 'center', gap: '7px', marginTop: '8px', cursor: 'pointer' }}>
+        <label style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          marginTop: '10px',
+          cursor: 'pointer',
+        }}>
           <input
             type="checkbox"
             checked={form.unknownTime}
             onChange={e => setForm({ ...form, unknownTime: e.target.checked })}
-            style={{ width: '14px', height: '14px', borderRadius: '4px', cursor: 'pointer' }}
+            style={{ width: '18px', height: '18px', borderRadius: '4px', cursor: 'pointer', accentColor: accent }}
           />
-          <span style={{ fontSize: '10px', color: isDark ? 'rgba(165,185,210,0.7)' : 'rgba(140,100,20,0.45)' }}>
-            Không biết giờ sinh, dùng giờ Tý (23:00–01:00) để lập bàn
+          <span style={{ fontSize: '15px', color: textMuted }}>
+            Không biết giờ sinh, dùng giờ Tý (23:00–01:00) để sắp lá số
           </span>
         </label>
       </div>
 
-      {/* ── Gender ── */}
-      <div style={{ marginBottom: '20px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>Giới tính</label>
-        <div style={{ display: 'flex', gap: '10px' }}>
+      {/* ── Giới tính ── */}
+      <div style={{ marginBottom: '24px' }}>
+        <label style={{
+          display: 'block',
+          fontSize: '16px',
+          fontWeight: 500,
+          color: textPrimary,
+          marginBottom: '8px',
+        }}>
+          Giới tính
+        </label>
+        <div style={{ display: 'flex', gap: '12px' }}>
           {(['male', 'female'] as const).map(g => {
             const active = form.gender === g;
             const isMale = g === 'male';
-            const accent = isMale ? '37,99,235' : '225,29,72';
+            const genderColor = isMale ? (isDarkMode ? '#60a5fa' : '#2563eb') : (isDarkMode ? '#f472b6' : '#db2777');
             return (
               <motion.button
                 key={g}
@@ -306,44 +369,46 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
                 whileTap={{ scale: 0.97 }}
                 style={{
                   flex: 1,
-                  padding: '11px',
-                  borderRadius: '14px',
-                  fontSize: '13px',
+                  padding: '14px',
+                  borderRadius: 'var(--radius-lg)',
+                  fontSize: '17px',
                   fontWeight: 500,
-                  border: `1px solid ${active ? `rgba(${accent},0.6)` : inputBorder}`,
-                  background: active ? `rgba(${accent},0.08)` : inputBg,
-                  color: active ? `rgba(${accent},0.9)` : (isDark ? 'rgba(190,205,225,0.7)' : 'rgba(100,80,40,0.4)'),
-                  transition: 'all 0.2s',
+                  border: `1.5px solid ${active ? genderColor : borderColor}`,
+                  background: active
+                    ? (isDarkMode ? `${genderColor}15` : `${genderColor}10`)
+                    : inputBg,
+                  color: active ? genderColor : textMuted,
+                  transition: 'all var(--transition-fast)',
                   cursor: 'pointer',
                 }}
               >
-                {isMale ? '♂ Nam' : '♀ Nữ'}
+                {isMale ? 'Nam' : 'Nữ'}
               </motion.button>
             );
           })}
         </div>
       </div>
 
-      {/* ── Summary chip ── */}
+      {/* ── Tóm tắt thông tin ── */}
       <AnimatePresence>
         {showSummary && (
           <motion.div
             initial={{ opacity: 0, y: -8, height: 0, marginBottom: 0 }}
-            animate={{ opacity: 1, y: 0, height: 'auto', marginBottom: 12 }}
+            animate={{ opacity: 1, y: 0, height: 'auto', marginBottom: 16 }}
             exit={{ opacity: 0, y: -8, height: 0, marginBottom: 0 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
           >
             <div style={{
-              background: summaryBg,
-              border: `1px solid ${summaryBorder}`,
-              borderRadius: '12px',
-              padding: '9px 14px',
+              background: isDarkMode ? 'rgba(212,168,67,0.08)' : 'rgba(154,122,26,0.06)',
+              border: `1px solid ${isDarkMode ? 'rgba(212,168,67,0.20)' : 'rgba(154,122,26,0.15)'}`,
+              borderRadius: 'var(--radius-lg)',
+              padding: '12px 16px',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
+              gap: '10px',
             }}>
-              <span style={{ fontSize: '12px', color: summaryClr }}>✓</span>
-              <span style={{ fontSize: '11px', color: summaryClr, letterSpacing: '0.03em', flex: 1 }}>
+              <span style={{ fontSize: '16px', color: accent }}>✓</span>
+              <span style={{ fontSize: '15px', color: textPrimary, flex: 1 }}>
                 {summaryText}
               </span>
             </div>
@@ -351,42 +416,51 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
         )}
       </AnimatePresence>
 
-      {/* ── Submit button ── */}
-      {!hideSubmit && <motion.button
-        type="submit"
-        disabled={loading}
-        whileHover={loading ? {} : { scale: 1.01 }}
-        whileTap={loading ? {} : { scale: 0.98 }}
-        style={{
-          width: '100%',
-          padding: '14px',
-          borderRadius: '16px',
-          fontSize: '13px',
-          fontWeight: 600,
-          letterSpacing: '0.15em',
-          border: 'none',
-          cursor: loading ? 'not-allowed' : 'pointer',
-          background: loading
-            ? (isDark ? 'rgba(212,168,67,0.15)' : 'rgba(180,120,20,0.15)')
-            : (isDark
-              ? 'linear-gradient(135deg, rgba(180,130,40,0.9), rgba(240,200,80,0.9))'
-              : 'linear-gradient(135deg, #9a6210, #c88020)'),
-          color: loading ? (isDark ? 'rgba(212,168,67,0.4)' : 'rgba(120,80,10,0.4)') : (isDark ? '#08080a' : '#fff8e8'),
-          boxShadow: loading ? 'none' : (isDark ? '0 4px 20px rgba(212,168,67,0.2)' : '0 4px 16px rgba(140,100,20,0.25)'),
-          transition: 'all 0.2s',
-        }}
-      >
-        {loading ? (
-          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-            <motion.span
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-              style={{ display: 'inline-block', width: '12px', height: '12px', border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%' }}
-            />
-            Đang lập bàn Tử Vi…
-          </span>
-        ) : 'Lập bàn ngay · Giải mã vận mệnh'}
-      </motion.button>}
+      {/* ── Nút Sắp lá số ── */}
+      {!hideSubmit && (
+        <motion.button
+          type="submit"
+          disabled={loading}
+          whileHover={loading ? {} : { scale: 1.01 }}
+          whileTap={loading ? {} : { scale: 0.98 }}
+          style={{
+            width: '100%',
+            padding: '16px 32px',
+            borderRadius: 'var(--radius-pill)',
+            fontSize: '17px',
+            fontWeight: 600,
+            letterSpacing: '0.02em',
+            border: 'none',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            background: loading
+              ? (isDarkMode ? 'rgba(212,168,67,0.15)' : 'rgba(154,122,26,0.15)')
+              : `linear-gradient(135deg, ${accent}, ${accentLight})`,
+            color: loading
+              ? (isDarkMode ? 'rgba(212,168,67,0.4)' : 'rgba(154,122,26,0.4)')
+              : '#FFFFFF',
+            boxShadow: loading ? 'none' : `0 4px 20px ${isDarkMode ? 'rgba(212,168,67,0.25)' : 'rgba(154,122,26,0.30)'}`,
+            transition: 'all var(--transition-fast)',
+          }}
+        >
+          {loading ? (
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                style={{
+                  display: 'inline-block',
+                  width: '18px',
+                  height: '18px',
+                  border: '2px solid currentColor',
+                  borderTopColor: 'transparent',
+                  borderRadius: '50%',
+                }}
+              />
+              Đang sắp lá số...
+            </span>
+          ) : 'Sắp lá số'}
+        </motion.button>
+      )}
     </motion.form>
   );
 }

@@ -2,7 +2,7 @@
  * Thuật toán Tử Vi Đẩu Số - Dựa trên thư viện mã nguồn mở iztro
  * https://github.com/SylarLong/iztro
  *
- * File này chứa thuật toán排盘 (lập bản đồ tử vi) cho Tử Vi Đẩu Số,
+ * File này chứa thuật toán lập bản đồ tử vi cho Tử Vi Đẩu Số,
  * bao gồm: tính toán cung mệnh, đại hạn, vị trí sao, và các thông tin liên quan.
  */
 
@@ -10,10 +10,10 @@ import { astro } from 'iztro';
 import { Solar } from 'lunar-javascript';
 import type { BirthInfo, LunarInfo, Star, Palace, DaXian, DaXianSiHua, ZiweiChart } from './types';
 import { BRANCHES, STEMS, JU_NAMES } from './constants';
-// 飞星派工具仅供导出，不再在排盘时调用（倪师《天纪 03》：四化星永远固定不动）
+// Cong cu phat tinh bay chi la export, khong con goi khi lap ban do (Nhu Su "Tien Ki 03": Tu hoa sao vinh vinh co dinh)
 // import { detectSelfSihua, getSiHuaByStem } from './sihua';
 
-// ─── 农历信息（兼容保留）────────────────────────────────────────
+// ─── Thong tin am lich (tuong thich giu lai) ────────────────────────
 export function getLunarInfo(year: number, month: number, day: number): LunarInfo {
   const solar = Solar.fromYmd(year, month, day);
   const lunar = solar.getLunar();
@@ -30,7 +30,7 @@ export function getLunarInfo(year: number, month: number, day: number): LunarInf
   };
 }
 
-// ─── 亮度映射 ────────────────────────────────────────────────────
+// ─── Anh xa do sang ─────────────────────────────────────────────────
 function mapBrightness(b?: string): 'bright' | 'normal' | 'dim' {
   if (!b) return 'normal';
   if (b === '庙' || b === '旺') return 'bright';
@@ -38,7 +38,7 @@ function mapBrightness(b?: string): 'bright' | 'normal' | 'dim' {
   return 'normal';
 }
 
-// ─── 星曜类型映射 ────────────────────────────────────────────────
+// ─── Anh xa loai sao ───────────────────────────────────────────────
 const SHA_STARS = new Set(['擎羊', '陀罗', '火星', '铃星', '地空', '地劫',
   '天空', '旬空', '截路', '大耗', '天使', '天伤']);
 const LUCKY_STARS = new Set(['文昌', '文曲', '左辅', '右弼', '天魁', '天钺',
@@ -55,7 +55,7 @@ function mapStarType(starName: string, iztroType: string): Star['type'] {
   return 'minor';
 }
 
-// ─── 五行局名称 → 数字 ──────────────────────────────────────────
+// ─── Ten cua tu hanh so thanh so ────────────────────────────────
 function parseWuxingJu(name: string): number {
   if (name.includes('二')) return 2;
   if (name.includes('三')) return 3;
@@ -65,21 +65,21 @@ function parseWuxingJu(name: string): number {
   return 3;
 }
 
-// ─── 主函数：生成命盘 ────────────────────────────────────────────
+// ─── Ham chinh: Tao ban do ──────────────────────────────────────────
 export function generateChart(birthInfo: BirthInfo): ZiweiChart {
   const { year, month, day, hour, gender } = birthInfo;
 
-  // 调用 iztro 排盘
+  // Goi iztro lap ban do
   const solarDate = `${year}-${month}-${day}`;
   const iztroGender = gender === 'male' ? '男' : '女';
   const astrolabe = astro.bySolar(solarDate, hour, iztroGender, true, 'zh-CN');
 
-  // ── 组装十二宫 ──
+  // ── Tao 12 cong ──
   const palaces: Palace[] = astrolabe.palaces.map(p => {
     const branch = BRANCHES.indexOf(p.earthlyBranch as string);
     const stem   = STEMS.indexOf(p.heavenlyStem as string);
 
-    // 合并所有星：主星 + 次星 + 杂耀
+    // Gop tat ca sao: chu sao + tri sao + tap yeu
     const allStars: Star[] = [
       ...(p.majorStars ?? []).map(s => ({
         name:       s.name as string,
@@ -112,7 +112,7 @@ export function generateChart(birthInfo: BirthInfo): ZiweiChart {
     };
   });
 
-  // ── 当前年龄 & 大限 ──
+  // ── Tuoi hien tai & Dai han ──
   const currentYear = new Date().getFullYear();
   const currentAge  = currentYear - year;
 
@@ -122,7 +122,7 @@ export function generateChart(birthInfo: BirthInfo): ZiweiChart {
     }
   });
 
-  // ── 借对宫结构化字段（codex P0：避免文案层从自然语言反查借宫信息）──
+  // ── Cau truc doi cung (tranh tra cuu tu van ban) ──
   palaces.forEach(p => {
     p.oppositeBranch = (p.branch + 6) % 12;
     const mainStars = p.stars.filter(s => s.type === 'major');
@@ -137,19 +137,19 @@ export function generateChart(birthInfo: BirthInfo): ZiweiChart {
     }
   });
 
-  // ── 关键宫支 ──
+  // ── Chi so cong chi ──
   const mingGongBranch = BRANCHES.indexOf(astrolabe.earthlyBranchOfSoulPalace as string);
   const shenGongBranch = BRANCHES.indexOf(astrolabe.earthlyBranchOfBodyPalace as string);
   const wuxingJuNameCN = astrolabe.fiveElementsClass as string;
   const wuxingJu       = parseWuxingJu(wuxingJuNameCN);
   const wuxingJuName   = JU_NAMES[wuxingJu] ?? wuxingJuNameCN;
 
-  // ── 紫微星位置 ──
+  // ── Vi tri Tu Vi ──
   const ziweiPalace = palaces.find(p => p.stars.some(s => s.name === '紫微' && s.type === 'major'));
   const ziweiPos    = ziweiPalace?.branch ?? 0;
 
-  // ── 大限数组（倪师《天纪》正统：四化永远固定，大限只看宫位移动）──
-  // 不再生成 daXians[].siHua / stemIndex / stemName（飞星派字段已下线）
+  // ── Mang dai han (Nhu Su chinh thong: Tu hoa vinh vinh co dinh, dai han chi nhin cong vi chuyen) ──
+  // Khong con tao daXians[].siHua / stemIndex / stemName (truong phai sanh da xuong)
   const daXians: DaXian[] = palaces
     .filter(p => p.daXianAge)
     .sort((a, b) => a.daXianAge![0] - b.daXianAge![0])
@@ -160,13 +160,13 @@ export function generateChart(birthInfo: BirthInfo): ZiweiChart {
       palaceName:   p.name,
     }));
 
-  // 宫干自化已下线（倪师不主张飞星派宫干自化论）
+  // Cong tu hoa da xuong (Nhu Su khong chu tri phai sanh cua cong tu hoa)
 
   const currentDaXianIndex = daXians.findIndex(
     dx => currentAge >= dx.startAge && currentAge <= dx.endAge,
   );
 
-  // ── 农历信息 ──
+  // ── Thong tin am lich ──
   const lunarInfo = getLunarInfo(year, month, day);
 
   return {

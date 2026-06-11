@@ -4,26 +4,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface ScrollIntroProps {
   onComplete: () => void;
-  /** 跳过按钮文案 */
+  /** Van ban nut bo qua */
   skipLabel?: string;
 }
 
 const BEIDOU = ['Bắc Đẩu', 'Thiên Tuyền', 'Thiên Cơ', 'Thiên Quyền', 'Ngọc Hành', 'Khai Dương', 'Dao Quang'];
 
 export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: ScrollIntroProps) {
-  // visible：整个 intro 是否在显示
-  // unrolled：卷轴是否已展开（控制内容浮现）
+  // visible: toan bo intro co hien thi khong
+  // unrolled: cuon co da duoc trien khai (dieu khien noi dung hien ra)
   const [visible, setVisible] = useState(true);
   const [unrolled, setUnrolled] = useState(false);
 
   useEffect(() => {
-    // 时间序列：
-    // 0.0s        : 卷轴杆在中央，纸卷起来（width: 0）
-    // 0.3-2.0s   : 卷轴往两侧展开（1.7s）
-    // 2.0s        : unrolled = true，内容浮现
-    // 2.0-3.5s   : 内容停留 1.5s 给用户欣赏
-    // 3.5s        : 整体开始淡出
-    // 4.2s        : visible = false，触发 onComplete
+    // Chuoi thoi gian:
+    // 0.0s        : Cot cuon o giua, giay cuon lai (width: 0)
+    // 0.3-2.0s   : Cuon bung ra hai ben (1.7s)
+    // 2.0s        : unrolled = true, noi dung hien ra
+    // 2.0-3.5s   : Noi dung dung 1.5s cho nguoi xem
+    // 3.5s        : Bat dau mo dan
+    // 4.2s        : visible = false, kich hoat onComplete
     const t1 = setTimeout(() => setUnrolled(true), 1900);
     const t2 = setTimeout(() => setVisible(false), 3500);
     const t3 = setTimeout(onComplete, 4200);
@@ -35,7 +35,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
     setTimeout(onComplete, 700);
   };
 
-  // 卷轴展开缓动：先快后慢（卷轴拉开的物理感）
+  // Cuon trien khai di uong: dau nhanh roi cham (cam giac vat ly cua cuon duoc mo ra)
   const easeUnroll = [0.32, 0.72, 0.36, 1.0] as const;
 
   return (
@@ -52,7 +52,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
             overflow: 'hidden',
           }}
         >
-          {/* 远景星点装饰 */}
+          {/* Trang tri sao xa */}
           <div style={{
             position: 'absolute', inset: 0,
             backgroundImage: `
@@ -65,13 +65,13 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
             `,
           }} />
 
-          {/* 卷轴主体（从右往左展开 — 右轴固定、纸向左铺、左轴向左移） */}
+          {/* Than chinh cuon (tung phai sang trai — truc phai co dinh, giay trai sang, truc trai sang trai) */}
           <div style={{
             position: 'relative',
             width: 'min(90vw, 1080px)',
             height: 'min(60vh, 480px)',
           }}>
-            {/* 宣纸（right 锚定在右轴内侧，width 从 0 → 100% - 左右两轴宽度） */}
+            {/* Giay truyen (right neo tai truc phai, width tu 0 → 100% - chieu rong hai truc) */}
             <motion.div
               initial={{ width: 0, opacity: 0.92 }}
               animate={{ width: 'calc(100% - 32px)', opacity: 1 }}
@@ -93,7 +93,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
                 overflow: 'hidden',
               }}
             >
-              {/* 上下卷边阴影（仿古卷轴的折痕） */}
+              {/* Bong cuon tu vi (mo phong net gap cua cuon cu) */}
               <div style={{
                 position: 'absolute', top: 0, left: 0, right: 0, height: '8px',
                 background: 'linear-gradient(180deg, rgba(80,50,20,0.35), transparent)',
@@ -103,7 +103,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
                 background: 'linear-gradient(0deg, rgba(80,50,20,0.35), transparent)',
               }} />
 
-              {/* 古纸纹理 */}
+              {/* Hoa cu thu co */}
               <div style={{
                 position: 'absolute', inset: 0,
                 background: `
@@ -114,7 +114,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
                 opacity: 0.7,
               }} />
 
-              {/* 卷轴内容（展开后浮现） */}
+              {/* Noi dung cuon (hien ra sau khi trien khai) */}
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={unrolled ? { opacity: 1, y: 0 } : {}}
@@ -128,7 +128,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
                   fontFamily: '"STSong", "Songti SC", "SimSun", serif',
                 }}
               >
-                {/* 顶部装饰：北斗七星名 */}
+                {/* Trang tri: Ten北斗七心 */}
                 <div style={{
                   fontSize: 'clamp(10px, 1.1vw, 12px)',
                   color: '#8b5d18',
@@ -141,7 +141,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
                   {BEIDOU.join(' · ')}
                 </div>
 
-                {/* 烫金细线 */}
+                {/* Duong kim tia */}
                 <div style={{
                   width: '60px', height: '1px',
                   background: 'linear-gradient(90deg, transparent, #a87a30, transparent)',
@@ -185,7 +185,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
                   Thầy Nhu Hải Hạ《Thiên Kỷ》hệ thống chính thống
                 </div>
 
-                {/* 朱砂方印 */}
+                {/* Dau that */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.6, rotate: -15 }}
                   animate={unrolled ? { opacity: 1, scale: 1, rotate: -4 } : {}}
@@ -212,7 +212,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
                   <div style={{ display: 'flex', gap: '0' }}><span>Ngư</span><span>Ấn</span></div>
                 </motion.div>
 
-                {/* 底部装饰：八卦 */}
+                {/* Trang tri: Quai bagua */}
                 <div style={{
                   marginTop: 'clamp(20px, 3vh, 32px)',
                   fontSize: 'clamp(13px, 1.4vw, 16px)',
@@ -226,7 +226,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
               </motion.div>
             </motion.div>
 
-            {/* 右卷轴杆（固定不动，是收纳卷轴的母轴） */}
+            {/* Cot cuon ben phai (co dinh, la truc chua cuon) */}
             <div
               style={{
                 position: 'absolute', top: 0, bottom: 0, right: 0,
@@ -237,7 +237,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
                 zIndex: 2,
               }}
             >
-              {/* 上端铜玉帽 */}
+              {/* Non dong ngoc tren */}
               <div style={{
                 position: 'absolute', top: '-14px', left: '-6px', right: '-6px',
                 height: '20px',
@@ -254,7 +254,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
               }} />
             </div>
 
-            {/* 左卷轴杆（从右轴位置出发，向左拉开 — 这是被「拉」的那根） */}
+            {/* Cot cuon ben trai (tu vi tri truc phai, mo sang trai — day la truc bi "keo") */}
             <motion.div
               initial={{ right: '0px' }}
               animate={{ right: 'calc(100% - 32px)' }}
@@ -285,7 +285,7 @@ export default function ScrollIntro({ onComplete, skipLabel = 'Bỏ Qua' }: Scro
             </motion.div>
           </div>
 
-          {/* 跳过按钮 */}
+          {/* Nut bo qua */}
           <button
             onClick={handleSkip}
             style={{

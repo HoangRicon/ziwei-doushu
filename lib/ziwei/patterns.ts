@@ -3,7 +3,7 @@
  *
  * Nguyên tắc thiết kế:
  * 1. Ưu tiên điều kiện sách cổ: Mỗi cục diện liệt kê cấu trúc ba tầng "Phải / Cộng điểm / Phá cục", có thể kiểm chứng nguồn gốc
- * 2. Lập trường Nhu Sư: Không sử dụng công cụ tự hóa cung cung, đại hạn tứ hóa, lai nhân cung等飞星派
+ * 2. Lập trường Nhu Sư: Không sử dụng cong cu tu hoa cong, dai han tu hoa, lai nhan cong (phai sanh cua cong)
  * 3. Miếu Vượng Lợi Nhập: Dùng trường brightness (bright=Miếu/Vượng, normal=Bình, dim=Nhập)
  * 4. Tam phương tứ chánh hội chiếu: Mệnh Cung + Tài Bạch + Quan Lộc + Di Quan
  * 5. Giá cung: Hai cung trước sau Mệnh Cung
@@ -158,7 +158,7 @@ function detectZiFu(chart: ZiweiChart, ming: Palace, patterns: Pattern[]) {
   });
 }
 
-/** Phủ Tương triều Viên: Thiên Phủ, Thiên Tương lần lượt thủ守 Mệnh Cung tam phương tứ chánh */
+/** Phủ Tương triều Viên: Thiên Phủ, Thiên Tương lần lượt thủ Mệnh Cung tam phương tứ chánh */
 function detectFuXiangChaoYuan(chart: ZiweiChart, ming: Palace, patterns: Pattern[]) {
   const tianfu = findStarPalace(chart, '天府');
   const tianxiang = findStarPalace(chart, '天相');
@@ -423,7 +423,7 @@ function detectRiYueTongGong(chart: ZiweiChart, patterns: Pattern[]) {
   patterns.push({
     name: 'Nhật Nguyệt Đồng Cung',
     level: breaking.length ? 'good' : (inMing ? 'excellent' : 'good'),
-    description: `Thái Dương Thái Âm tại ${BRANCH_NAMES[sun.branch]} cung đồng cung, âm dương bình hành, văn võ gồm đủ. Chủ duyên异性缘佳, sự nghiệp thuận thuận, danh vọng truyền xa.${sun.branch === 7 ? 'Mùi cung nhật nguyệt song mỹ đặc biệt tốt.' : 'Sửu cung nhật nguyệt đồng cung lực tương đối bình.'}`,
+    description: `Thái Dương Thái Âm tại ${BRANCH_NAMES[sun.branch]} cung đồng cung, âm dương bình hành, văn võ gồm đủ. Chủ duyên tinh duc tot, su nghiep thuan thuan, danh vong truyen xa.${sun.branch === 7 ? 'Mùi cung nhật nguyệt song mỹ đặc biệt tốt.' : 'Sửu cung nhật nguyệt đồng cung lực tương đối bình.'}`,
     palaces: [sun.name],
     conditions: { required, bonus, breaking },
     source: '《Tử Vi Đẩu Số Toàn Thư》',
@@ -698,7 +698,7 @@ function detectHuaJiRuMingQian(chart: ZiweiChart, patterns: Pattern[]) {
       level: 'caution',
       description: inMing
         ? `${jiStar.name} hóa Kỵ tọa Mệnh Cung, cần lưu ý bản thân cố chấp, trở ngại tâm lý hoặc tiềm ẩn sức khỏe, mọi việc lui một bước suy nghĩ. Hóa Kỵ không nhất định xấu, đại diện sao này năng lượng cần chú ý đặc biệt.`
-        : `${jiStar.name} hóa Kỵ tọa Di Quan Cung, ngoại出去, xa du, quan hệ nhân sự dễ có trồi sụm, nên thủ bất nên động.`,
+        : `${jiStar.name} hóa Kỵ tọa Di Quan Cung, di ra ngoài, du lich, quan hệ nhân sự dễ có trồi sụm, nên thủ bất nên động.`,
       palaces: [palace.name],
       conditions: { required: [`${jiStar.name}化忌坐${inMing ? '命' : '迁'}宫`] },
       source: '《Tử Vi Đẩu Số Toàn Thư》',
@@ -742,7 +742,7 @@ function detectHuoLingJiaMing(chart: ZiweiChart, patterns: Pattern[]) {
   patterns.push({
     name: 'Hỏa Linh Giá Mệnh',
     level: 'caution',
-    description: 'Hỏa Tinh Linh Tinh phân cư Mệnh Cung trước sau lưỡng cung giá mệnh, chủ tính c急, dễ xung động, đột ngột ngoài ý hoặc tranh chấp. Cần bồi dưỡng nhẫn nại, tránh quyết định xung động.',
+    description: 'Hỏa Tinh Linh Tinh phân cư Mệnh Cung trước sau lưỡng cung giá mệnh, chủ tính nóng vội, dễ xung động, đột ngột ngoài ý hoặc tranh chấp. Cần bồi dưỡng nhẫn nại, tránh quyết định xung động.',
     palaces: ['Mệnh Cung', prev.name, next.name],
     conditions: { required: ['火星铃星分居命宫前后两宫'] },
     source: '《Tử Vi Đẩu Số Toàn Thư》',
@@ -760,7 +760,7 @@ function detectKongJieJiaMing(chart: ZiweiChart, patterns: Pattern[]) {
   patterns.push({
     name: 'Không Hóa Giá Mệnh',
     level: 'caution',
-    description: 'Địa Không Địa Hóa giá mệnh, chủ tài lai tài khứ, tư tưởng tháo tuột, dễ遁入 tôn giáo triết học. Cổ thư vân "Không Hóa giá mệnh, tài bất tụ". Thích kỹ nghệ, tôn giáo, nghiên cứu v.v không trọng vật chất chi nghiệp.',
+    description: 'Địa Không Địa Hóa giá mệnh, chủ tài lai tài khứ, tư tưởng tháo tuột, dễ lún vào tôn giáo triết học. Cổ thư vân "Không Hóa giá mệnh, tài bất tụ". Thích kỹ nghệ, tôn giáo, nghiên cứu v.v không trọng vật chất chi nghiệp.',
     palaces: ['Mệnh Cung', prev.name, next.name],
     conditions: { required: ['地空地劫分居命宫前后两宫'] },
     source: '《Tử Vi Đẩu Số Toàn Thư》',
@@ -868,7 +868,7 @@ function detectTianMaRuMing(chart: ZiweiChart, patterns: Pattern[]) {
     level: 'neutral',
     description: inMing
       ? 'Thiên Mã tọa mệnh, chủ cả đời bôn tẩu, động trung đắc tài, thích đi thương lữ, ngoại cần, xuyên biên phát triển. Nhu Sư nói 「Thiên Mã nhập mệnh, vô Lộc bất phát」——nếu tái hội Lộc Tồn hoặc hóa Lộc tắc 「Lộc Mã giao trì」chi phú cục.'
-      : 'Thiên Mã tại Di Quan Cung, chủ ngoại出去 có lợi, viễn hành đắc tài, thích dị hương phát triển. Phối hóa Lộc chủ dị đới sinh tài, phối sát tinh tắc du lữ đa ba.',
+      : 'Thiên Mã tại Di Quan Cung, chủ di ra ngoài có lợi, viễn hành đắc tài, thích dị hương phát triển. Phối hóa Lộc chủ dị đới sinh tài, phối sát tinh tắc du lữ đa ba.',
     palaces: [tianMaPalace.name],
     conditions: { required: [inMing ? '天马入命宫' : '天马入迁移宫'] },
     source: '《Tử Vi Đẩu Số Toàn Thư · Thiên Mã Tinh》',
@@ -900,7 +900,7 @@ function detectHuaQuanRuGuan(chart: ZiweiChart, patterns: Pattern[]) {
   patterns.push({
     name: 'Hóa Quyền Nhập Quan',
     level: 'good',
-    description: `${quanStar.name} hóa Quyền nhập Quan Lộc Cung, chủ sự nghiệp có khống chế lực, năng đảm đương chức vụ độc đương nhất diện. Hóa Quyền đại biểu quyền lực dữ chấp hành lực——${quanStar.name} hóa Quyền giải thích ngươi tại sự nghiệp thượng năng thành quyết định giả hoặc trọng tâm chấp hành giả, thích đi quản lý hoặc kỹ thuật权威路线.`,
+    description: `${quanStar.name} hóa Quyền nhập Quan Lộc Cung, chủ sự nghiệp có khống chế lực, năng đảm đương chức vụ độc đương nhất diện. Hóa Quyền đại biểu quyền lực dữ chấp hành lực——${quanStar.name} hóa Quyền giải thích ngươi tại sự nghiệp thượng năng thành quyết định giả hoặc trọng tâm chấp hành giả, thích đi quản lý hoặc kỹ thuật uy quyền.`,
     palaces: ['Quan Lộc'],
     conditions: { required: [`${quanStar.name}化权入官禄宫`] },
     source: '《Tử Vi Đẩu Số Toàn Thư · Tứ Hóa Luận》',

@@ -6,7 +6,7 @@ const FOOTER_LINKS = [
   {
     title: 'Dịch vụ',
     links: [
-      { label: 'Lập bản đồ', href: '/chart' },
+      { label: 'Lập lá số', href: '/chart' },
       { label: 'Hằng sao', href: '/heming' },
       { label: 'Thư viện kinh điển', href: '/library' },
     ],
@@ -32,45 +32,51 @@ export default function Footer() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const goldSolid = isDark ? '#d4a843' : '#8b6410';
-  const textMuted = isDark ? '#6a7a96' : '#7a7368';
-  const textSecondary = isDark ? '#9db0d0' : '#4a4540';
-  const borderColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(160,120,30,0.15)';
+  const accent      = isDark ? '#D4A843' : '#9A7A1A';
+  const textMuted   = isDark ? '#6A6258' : '#8A8078';
+  const textBody     = isDark ? '#A09888' : '#5A5248';
+  const textHeading = isDark ? '#D8D0C0' : '#2D2820';
+  const borderColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(154,122,26,0.12)';
 
   return (
-    <footer
-      style={{
-        background: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(255,252,242,0.8)',
-        borderTop: `1px solid ${borderColor}`,
-      }}
-    >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+    <footer style={{
+      background: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(253,252,248,0.8)',
+      borderTop: `1px solid ${borderColor}`,
+    }}>
+      {/* Gold gradient line at top */}
+      <div className="h-px" style={{
+        background: `linear-gradient(to right, transparent, ${accent}, transparent)`,
+        opacity: 0.4,
+      }} />
+
+      <div className="max-w-page mx-auto px-6 py-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+
           {/* Brand column */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle cx="12" cy="12" r="10" stroke={goldSolid} strokeWidth="1.5" />
-                <circle cx="12" cy="12" r="4" fill={goldSolid} />
+            <div className="flex items-center gap-2.5 mb-4">
+              <svg width="26" height="26" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <circle cx="14" cy="14" r="12" stroke={accent} strokeWidth="1.5" />
+                <circle cx="14" cy="14" r="5" fill={accent} />
                 {[0,60,120,180,240,300].map((deg) => (
                   <circle
                     key={deg}
-                    cx={12 + 6.5 * Math.cos((deg - 90) * Math.PI / 180)}
-                    cy={12 + 6.5 * Math.sin((deg - 90) * Math.PI / 180)}
-                    r="1.2"
-                    fill={goldSolid}
+                    cx={14 + 8 * Math.cos((deg - 90) * Math.PI / 180)}
+                    cy={14 + 8 * Math.sin((deg - 90) * Math.PI / 180)}
+                    r="1.4"
+                    fill={accent}
                   />
                 ))}
               </svg>
-              <span className="font-semibold tracking-[0.2em]" style={{ color: goldSolid }}>
-                Tử Vi
+              <span className="text-base font-semibold tracking-[0.15em]" style={{ color: accent }}>
+                Tu Vi
               </span>
             </div>
-            <p className="text-xs leading-relaxed mb-4" style={{ color: textMuted }}>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: textBody }}>
               Hệ thống chính thống<br />
-              Tử Vi Đẩu Số Nị Hải Hạ
+              Tử Vi Đẩu Số Ni Hải Hạ
             </p>
-            <p className="text-xs" style={{ color: textMuted }}>
+            <p className="text-sm leading-relaxed" style={{ color: textMuted }}>
               Khoa học cổ đại,<br />
               hiểu biết hiện đại.
             </p>
@@ -79,15 +85,15 @@ export default function Footer() {
           {/* Link columns */}
           {FOOTER_LINKS.map((col) => (
             <div key={col.title}>
-              <h3 className="text-xs font-semibold tracking-[0.12em] uppercase mb-3" style={{ color: textSecondary }}>
+              <h3 className="text-sm font-semibold tracking-[0.08em] uppercase mb-4" style={{ color: textHeading }}>
                 {col.title}
               </h3>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {col.links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-xs transition-colors duration-150 hover:opacity-70"
+                      className="text-sm transition-colors duration-150 hover:opacity-70"
                       style={{ color: textMuted }}
                     >
                       {link.label}
@@ -101,14 +107,14 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div
-          className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3"
+          className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3"
           style={{ borderTop: `1px solid ${borderColor}` }}
         >
-          <p className="text-xs" style={{ color: textMuted }}>
-            © {new Date().getFullYear()} Tử Vi Đẩu Số · Hệ thống Nị Hải Hạ
+          <p className="text-sm" style={{ color: textMuted }}>
+            &copy; {new Date().getFullYear()} Bản đồ Tử Vi &middot; Hệ thống Ni Hải Hạ
           </p>
-          <p className="text-xs" style={{ color: textMuted }}>
-            Dựa trên hệ thống giảng dạy của thầy Nị Hải Hạ
+          <p className="text-sm" style={{ color: textMuted }}>
+            Dựa trên hệ thống giảng dạy của thầy Ni Hải Hạ
           </p>
         </div>
       </div>

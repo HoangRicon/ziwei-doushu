@@ -14,7 +14,7 @@ export function getSiHuaByStem(stemIndex: number): Record<SiHua, string> {
   return { 禄: arr[0], 权: arr[1], 科: arr[2], 忌: arr[3] };
 }
 
-/** 星名 → 四化类型（由某天干确定） */
+/** Ten sao → Loai tu hoa (do mot thien can xac dinh) */
 export function buildStarSiHuaMap(stemIndex: number): Record<string, SiHua> {
   const arr = SI_HUA_TABLE[stemIndex];
   if (!arr) return {};
@@ -75,16 +75,16 @@ export function getLiuNianSiHua(year: number): {
  * month: Tháng âm lịch 1-12
  */
 export function getLiuYueStemIndex(yearStem: number, month: number): number {
-  // 五虎遁：正月（寅月）天干
+  // Ngu Ho Don: Thang chinh (Dần) thien can
   const startStemOfYin: Record<number, number> = {
-    0: 2, 5: 2,  // 甲己 → 丙
-    1: 4, 6: 4,  // 乙庚 → 戊
-    2: 6, 7: 6,  // 丙辛 → 庚
-    3: 8, 8: 8,  // 丁壬 → 壬
-    4: 0, 9: 0,  // 戊癸 → 甲
+    0: 2, 5: 2,  // Giáp Kỷ → Bính
+    1: 4, 6: 4,  // Ất Canh → Mậu
+    2: 6, 7: 6,  // Bính Tân → Canh
+    3: 8, 8: 8,  // Đinh Nhâm → Nhâm
+    4: 0, 9: 0,  // Mậu Quý → Giáp
   };
   const yinStem = startStemOfYin[yearStem] ?? 0;
-  // 从寅（正月）到目标月（month 取 1-12）
+  // Tu Dần (thang chinh) den thang dich (month lay 1-12)
   return (yinStem + ((month - 1) % 12) + 10) % 10;
 }
 
@@ -107,8 +107,8 @@ export function getLiuYueSiHua(yearStem: number, month: number): {
  * Ví dụ: Cung cung là Giáp (Liêm Phá Võ Dương), nếu cung này chủ tinh có "Liêm Trung", thì cung đó có "tự hóa Lộc"
  */
 export interface SelfSihua {
-  siHua: SiHua;        // 禄/权/科/忌
-  starName: string;    // 被化的星
+  siHua: SiHua;        // Lộc/Quyền/Khoa/Kỵ
+  starName: string;    // Sao bi hóa
 }
 
 export function detectSelfSihua(palace: Palace): SelfSihua[] {
@@ -131,8 +131,8 @@ export function detectSelfSihua(palace: Palace): SelfSihua[] {
  * Hệ thống Nhu Sư thường dùng: Cung lai nhân của hóa Kỵ——hóa Kỵ do cung cung nào gây ra, cung đó chính là cung gốc của vấn đề
  *
  * @param chart Bản đồ tử vi
- * @param starName Sao bị hóa (ví dụ "太阴")
- * @param sihua  Loại tứ hóa (ví dụ "忌")
+ * @param starName Sao bi hóa (ví dụ "Thái Âm")
+ * @param sihua  Loại tứ hóa (ví dụ "Kỵ")
  * @returns Mảng cung vị gây ra hóa đó (thông thường chỉ một, nhưng nếu nhiều cung cung cùng thiên can có thể nhiều)
  */
 export function findIncomingPalaces(
@@ -169,10 +169,10 @@ export function buildAllSelfSihua(chart: ZiweiChart): Record<number, SelfSihua[]
  * Ưu tiên: Bản mệnh < Đại hạn < Lưu niên (nhưng đều đánh dấu ra)
  */
 export interface SiHuaOverlay {
-  native?: SiHua;    // 本命（年干）
-  daXian?: SiHua;    // 大限
-  liuNian?: SiHua;   // 流年
-  liuYue?: SiHua;    // 流月
+  native?: SiHua;    // Bản mệnh (năm can)
+  daXian?: SiHua;    // Đại hạn
+  liuNian?: SiHua;   // Lưu niên
+  liuYue?: SiHua;    // Lưu nguyệt
 }
 
 export function buildOverlayForStar(

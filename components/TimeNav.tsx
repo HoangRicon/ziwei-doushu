@@ -1,7 +1,8 @@
 'use client';
 import { motion } from 'framer-motion';
+import { useTheme } from '@/components/ThemeProvider';
 import { STEMS, SI_HUA_TABLE } from '@/lib/ziwei/constants';
-import { vnStar, vnBranch, vnSiHua, vnStem } from '@/lib/ziwei/starNames';
+import { vnStar, vnSiHua, vnStem } from '@/lib/ziwei/starNames';
 import type { ZiweiChart } from '@/lib/ziwei/types';
 
 export type TimeView = 'mingpan' | 'daxian' | 'liunian';
@@ -14,12 +15,12 @@ interface TimeNavProps {
   onYearChange: (year: number) => void;
 }
 
-/** 由年份计算天干索引 (0-9) */
+/** Tính chỉ số thiên can theo năm (0-9) */
 export function getYearStemIndex(year: number): number {
   return ((year - 4) % 10 + 10) % 10;
 }
 
-/** 根据天干索引返回四化映射：starName → SiHua */
+/** Trả về bảng tứ hóa theo chỉ số thiên can */
 export function buildSiHuaOverlay(stemIndex: number): Record<string, string> {
   const stars = SI_HUA_TABLE[stemIndex];
   if (!stars) return {};
@@ -38,6 +39,12 @@ const SIHUA_COLORS: Record<string, string> = {
   '忌': '#f87171',
 };
 
+const TABS: { value: TimeView; label: string }[] = [
+  { value: 'mingpan', label: 'Mệnh bản' },
+  { value: 'daxian', label: 'Đại hạn' },
+  { value: 'liunian', label: 'Lưu niên' },
+];
+
 export default function TimeNav({
   chart,
   view,
@@ -45,9 +52,17 @@ export default function TimeNav({
   onViewChange,
   onYearChange,
 }: TimeNavProps) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const currentDx = chart.daXians[chart.currentDaXianIndex];
 
-  // 计算当前叠加四化信息
+  const accentColor = isDark ? '#D4A843' : '#9A7A1A';
+  const activeBg = isDark ? 'rgba(212,168,67,0.12)' : 'rgba(154,122,26,0.08)';
+  const activeBorder = isDark ? 'rgba(212,168,67,0.25)' : 'rgba(154,122,26,0.20)';
+  const inactiveColor = isDark ? '#6A6258' : '#8A8078';
+
+  // Tính thông tin tứ hóa
   const getOverlayInfo = (): { stemName: string; overlay: Record<string, string> } | null => {
     if (view === 'mingpan') return null;
 
@@ -74,121 +89,117 @@ export default function TimeNav({
 
   const overlayInfo = getOverlayInfo();
 
+  const getTabLabel = (tab: typeof TABS[number]): string => {
+    if (tab.value === 'daxian' && currentDx) {
+      return `${tab.label} ${currentDx.startAge}–${currentDx.endAge}`;
+    }
+    return tab.label;
+  };
+
   return (
-    <div className="mb-3">
-      {/* Tab 行 */}
+    <div>
+      {/* Tab Navigation */}
       <div
-        className="flex items-center rounded-xl p-1 gap-1"
-        style={{ background: 'var(--color-bg-1)', border: '1px solid var(--color-border)' }}
+        className="tab-container"
+        style={{
+          background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.80)',
+          border: `1px solid ${isDark ? 'rgba(255,255,255,0.10)' : 'rgba(26,21,16,0.10)'}`,
+          backdropFilter: 'blur(12px)',
+        }}
       >
-        {/* Bản Mệnh */}
-        <TabButton
-          active={view === 'mingpan'}
-          onClick={() => onViewChange('mingpan')}
-        >
-          Bản Mệnh
-        </TabButton>
-
-        {/* Đại Hạn */}
-        <TabButton
-          active={view === 'daxian'}
-          onClick={() => onViewChange('daxian')}
-        >
-          {currentDx ? `Đại Hạn ${currentDx.startAge}–${currentDx.endAge}` : 'Đại Hạn'}
-        </TabButton>
-
-        {/* 流年 — 含年份切换 */}
-        <div
-          className="relative flex-1 flex items-center justify-center rounded-lg py-1.5 gap-1 transition-all duration-200"
-          style={{
-            background: view === 'liunian'
-              ? 'rgba(212,168,67,0.12)'
-              : 'transparent',
-            border: view === 'liunian'
-              ? '1px solid rgba(212,168,67,0.25)'
-              : '1px solid transparent',
-          }}
-        >
-          <button
-            onClick={() => onViewChange('liunian')}
-            className="text-[10px] font-medium flex-1 text-center"
-            style={{ color: view === 'liunian' ? 'var(--color-accent)' : 'var(--color-text-muted)' }}
-          >
-            Lưu Niên
-          </button>
-          {/* 年份 +/- */}
-          <div className="flex items-center gap-0.5">
+        {TABS.map((tab) => {
+          const isActive = view === tab.value;
+          return (
             <button
-              onClick={e => { e.stopPropagation(); onYearChange(liunianYear - 1); if (view !== 'liunian') onViewChange('liunian'); }}
-              className="text-[9px] w-4 h-4 flex items-center justify-center rounded"
-              style={{ color: 'var(--color-text-muted)' }}
+              key={tab.value}
+              onClick={() => onViewChange(tab.value)}
+              className={`tab-item ${isActive ? 'active' : ''}`}
+              style={{
+                padding: '10px 20px',
+                fontSize: '17px',
+                borderRadius: 'var(--radius-md)',
+                fontWeight: isActive ? 600 : 500,
+                background: isActive ? 'var(--color-bg-card)' : 'transparent',
+                color: isActive ? accentColor : inactiveColor,
+                border: isActive ? `1px solid ${activeBorder}` : '1px solid transparent',
+                boxShadow: isActive ? 'var(--shadow-xs)' : 'none',
+                transition: 'all var(--transition-base)',
+              }}
+            >
+              {getTabLabel(tab)}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Lưu niên: Year Selector */}
+      {view === 'liunian' && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="flex items-center gap-3 mt-4"
+        >
+          <label className="body" style={{ color: 'var(--color-text-secondary)', fontSize: '16px' }}>
+            Năm:
+          </label>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onYearChange(liunianYear - 1)}
+              className="btn-icon"
+              style={{ width: '36px', height: '36px', fontSize: '18px' }}
             >
               ‹
             </button>
-            <span
-              className="text-[10px] font-mono min-w-[28px] text-center cursor-pointer"
-              style={{ color: view === 'liunian' ? 'var(--color-accent)' : 'var(--color-text-muted)' }}
-              onClick={() => onViewChange('liunian')}
-            >
-              {liunianYear}
-            </span>
+            <input
+              type="number"
+              value={liunianYear}
+              onChange={(e) => onYearChange(parseInt(e.target.value) || new Date().getFullYear())}
+              className="input-base"
+              style={{
+                width: '100px',
+                padding: '10px 14px',
+                fontSize: '17px',
+                textAlign: 'center',
+                fontFamily: 'var(--primitive-font-mono)',
+              }}
+            />
             <button
-              onClick={e => { e.stopPropagation(); onYearChange(liunianYear + 1); if (view !== 'liunian') onViewChange('liunian'); }}
-              className="text-[9px] w-4 h-4 flex items-center justify-center rounded"
-              style={{ color: 'var(--color-text-muted)' }}
+              onClick={() => onYearChange(liunianYear + 1)}
+              className="btn-icon"
+              style={{ width: '36px', height: '36px', fontSize: '18px' }}
             >
               ›
             </button>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      )}
 
-      {/* 叠加四化说明行 */}
+      {/* Tứ hóa overlay info */}
       {overlayInfo && (
         <motion.div
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="flex items-center gap-2 mt-1.5 px-1 flex-wrap"
+          className="flex items-center gap-3 mt-3 flex-wrap"
+          style={{ padding: '12px 16px', background: 'var(--color-bg-1)', borderRadius: 'var(--radius-md)' }}
         >
-          <span className="text-[9px]" style={{ color: 'var(--color-text-muted)' }}>
-            {view === 'daxian' ? 'Đại Hạn' : `${liunianYear}`}·{vnStem(overlayInfo.stemName)} năm tứ hóa:
+          <span className="caption" style={{ fontSize: '14px' }}>
+            {view === 'daxian' ? 'Đại hạn' : `${liunianYear}`} · {vnStem(overlayInfo.stemName)} năm tứ hóa:
           </span>
-          {(['禄', '权', '科', '忌'] as const).map(sh => {
-            const starName = Object.keys(overlayInfo.overlay).find(k => overlayInfo.overlay[k] === sh);
-            if (!starName) return null;
-            return (
-              <span key={sh} className="text-[9px] font-medium" style={{ color: SIHUA_COLORS[sh] }}>
-                {vnStar(starName)}化{vnSiHua(sh)}
-              </span>
-            );
-          })}
+          <div className="flex items-center gap-4">
+            {(['禄', '权', '科', '忌'] as const).map((sh) => {
+              const starName = Object.keys(overlayInfo.overlay).find(k => overlayInfo.overlay[k] === sh);
+              if (!starName) return null;
+              return (
+                <span key={sh} style={{ fontSize: '14px', fontWeight: 600, color: SIHUA_COLORS[sh] }}>
+                  {vnStar(starName)}化{vnSiHua(sh)}
+                </span>
+              );
+            })}
+          </div>
         </motion.div>
       )}
     </div>
-  );
-}
-
-function TabButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex-1 py-1.5 text-[10px] font-medium rounded-lg transition-all duration-200"
-      style={{
-        background: active ? 'rgba(212,168,67,0.12)' : 'transparent',
-        color: active ? 'var(--color-accent)' : 'var(--color-text-muted)',
-        border: active ? '1px solid rgba(212,168,67,0.25)' : '1px solid transparent',
-      }}
-    >
-      {children}
-    </button>
   );
 }
