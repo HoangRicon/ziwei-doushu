@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { SessionProvider } from '@/components/auth/SessionProvider';
+import { AuthProvider } from '@/components/auth/AuthContext';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Header from '@/components/Header';
@@ -43,13 +45,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('ziwei-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();` }} />
       </head>
       <body className="min-h-screen">
-        <ThemeProvider>
-          <Header />
-          <main className="pt-16">
-            {children}
-          </main>
-          <Footer />
-        </ThemeProvider>
+        <SessionProvider>
+          <AuthProvider>
+            <ThemeProvider>
+              <Header />
+              <main className="pt-16">
+                {children}
+              </main>
+              <Footer />
+            </ThemeProvider>
+          </AuthProvider>
+        </SessionProvider>
         <Analytics />
         <SpeedInsights />
       </body>

@@ -2,13 +2,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from './ThemeProvider';
+import UserMenu from './auth/UserMenu';
+import GoogleSignIn from './auth/GoogleSignIn';
 
 const NAV_LINKS = [
   { href: '/',         label: 'Trang chủ' },
   { href: '/chart',    label: 'Lập lá số' },
   { href: '/library',  label: 'Thư viện' },
+  { href: '/gallery',  label: 'Thư viện công khai' },
   { href: '/knowledge',label: 'Kiến thức' },
   { href: '/heming',   label: 'Hằng sao' },
 ];
@@ -16,8 +20,10 @@ const NAV_LINKS = [
 export default function Header() {
   const pathname = usePathname();
   const { theme, toggle } = useTheme();
+  const { data: session } = useSession();
   const isDark = theme === 'dark';
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const accent       = isDark ? '#D4A843' : '#9A7A1A';
   const accentLight  = isDark ? '#F0C060' : '#C8A030';
@@ -26,6 +32,7 @@ export default function Header() {
   const navBg        = isDark ? 'rgba(12,10,8,0.85)' : 'rgba(253,252,248,0.85)';
   const borderColor  = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(154,122,26,0.12)';
   const borderGold   = isDark ? 'rgba(212,168,67,0.3)' : 'rgba(154,122,26,0.3)';
+  const bgCard       = isDark ? '#141210' : '#FFFFFF';
 
   return (
     <>
@@ -141,6 +148,18 @@ export default function Header() {
             >
               Lập lá số
             </Link>
+
+            {/* Auth: UserMenu or SignIn */}
+            {session?.user ? (
+              <UserMenu
+                accent={accent}
+                borderGold={borderGold}
+                textMuted={textMuted}
+                bgCard={bgCard}
+              />
+            ) : (
+              <GoogleSignIn size="sm" callbackUrl="/" />
+            )}
 
             {/* Hamburger (mobile) */}
             <button

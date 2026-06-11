@@ -1,10 +1,13 @@
 'use client';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import BirthForm from '@/components/BirthForm';
 import ChartBoard from '@/components/ChartBoard';
 import InsightPanel from '@/components/InsightPanel';
 import TimeNav, { type TimeView } from '@/components/TimeNav';
+import { useAuthPrompt } from '@/components/auth/AuthContext';
 import { generateChart } from '@/lib/ziwei/algorithm';
 import type { BirthInfo, ZiweiChart, Palace } from '@/lib/ziwei/types';
 
@@ -12,10 +15,15 @@ import type { BirthInfo, ZiweiChart, Palace } from '@/lib/ziwei/types';
  * Trang lá số Tử Vi - Demo công cụ sắp lá số nguồn mở
  */
 export default function ChartPage() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const { showLoginPrompt } = useAuthPrompt();
   const [chart, setChart] = useState<ZiweiChart | null>(null);
   const [selectedPalace, setSelectedPalace] = useState<Palace | null>(null);
   const [view, setView] = useState<TimeView>('mingpan');
   const [liunianYear, setLiunianYear] = useState(() => new Date().getFullYear());
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   // ── Chưa sắp lá số: Hiển thị biểu mẫu thông tin sinh ──
   if (!chart) {
@@ -51,13 +59,65 @@ export default function ChartPage() {
               Hệ thống chính thống Tử Vi Đẩu Số Ni Hải Hạ
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => { setChart(null); setSelectedPalace(null); }}
-            className="btn-ghost"
-          >
-            Sắp lá số mới
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => { setChart(null); setSelectedPalace(null); }}
+              className="btn-ghost"
+            >
+              Sắp lá số mới
+            </button>
+            <button
+              type="button"
+              disabled={saving || saved}
+              onClick={async () => {
+                if (!session?.user) {
+                  showLoginPrompt();
+                  return;
+                }
+                setSaving(true);
+                try {
+                  const res = await fetch('/api/charts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      birth_info: chart.birthInfo,
+                      lunar_info: chart.lunarInfo,
+                      chart_data: {
+                        birthInfo: chart.birthInfo,
+                        lunarInfo: chart.lunarInfo,
+                        mingGongBranch: chart.mingGongBranch,
+                        shenGongBranch: chart.shenGongBranch,
+                        wuxingJu: chart.wuxingJu,
+                        wuxingJuName: chart.wuxingJuName,
+                        ziweiPos: chart.ziweiPos,
+                        palaces: chart.palaces,
+                        daXians: chart.daXians,
+                        currentAge: chart.currentAge,
+                        currentDaXianIndex: chart.currentDaXianIndex,
+                      },
+                      is_public: false,
+                    }),
+                  });
+                  if (res.ok) {
+                    setSaved(true);
+                    router.push('/dashboard');
+                  }
+                } finally {
+                  setSaving(false);
+                }
+              }}
+              className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200"
+              style={{
+                background: saved ? '#22C55E' : 'var(--accent)',
+                color: '#fff',
+                opacity: saving ? 0.7 : 1,
+                boxShadow: saved ? 'none' : '0 2px 8px rgba(154,122,26,0.25)',
+              }}
+            >
+              {saving ? 'Đang lưu...' : saved ? 'Đã lưu!' : 'Lưu lá số'}
+            </button>
+          </div>
         </div>
 
         <div className="mt-6">
