@@ -4,17 +4,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from './ThemeProvider';
 import type { ZiweiChart, Palace, Star } from '@/lib/ziwei/types';
 import { BRANCHES, STEMS } from '@/lib/ziwei/constants';
-import { vnPalace, vnStar, vnBranch } from '@/lib/ziwei/starNames';
+import { vnPalace, vnStar, vnBranch, vnStem } from '@/lib/ziwei/starNames';
 import PalaceCell from './PalaceCell';
-import TimeNav, { type TimeView, getYearStemIndex, buildSiHuaOverlay } from './TimeNav';
+import type { TimeView } from './TimeNav';
+import { getYearStemIndex, buildSiHuaOverlay } from './TimeNav';
 
 interface ChartBoardProps {
   chart: ZiweiChart;
+  view: TimeView;
+  liunianYear: number;
   onStarSelect?: (star: Star, palace: Palace) => void;
   onPalaceSelect?: (palace: Palace) => void;
   onSiHuaClick?: (starName: string, siHua: string, view: TimeView) => void;
 }
 
+// Grid positions for the 4x4 layout (1-indexed grid row/col)
 const BRANCH_GRID_POS: Record<number, [number, number]> = {
   5: [1, 1], 6: [1, 2], 7: [1, 3], 8: [1, 4],
   4: [2, 1], 9: [2, 4],
@@ -22,6 +26,7 @@ const BRANCH_GRID_POS: Record<number, [number, number]> = {
   2: [4, 1], 1: [4, 2], 0: [4, 3], 11: [4, 4],
 };
 
+// SVG positions as percentages for diagonal lines
 const BRANCH_SVG_POS: Record<number, [number, number]> = {
   5: [12.5, 12.5], 6: [37.5, 12.5], 7: [62.5, 12.5], 8: [87.5, 12.5],
   4: [12.5, 37.5],                                      9: [87.5, 37.5],
@@ -51,15 +56,13 @@ function getSanFangSiZheng(branch: number): [number, number, number, number] {
 
 const ANIMATION_ORDER = [5, 6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4];
 
-export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHuaClick }: ChartBoardProps) {
+export default function ChartBoard({ chart, view, liunianYear, onStarSelect, onPalaceSelect, onSiHuaClick }: ChartBoardProps) {
   const { theme } = useTheme();
   const [selectedBranch, setSelectedBranch] = useState<number | null>(null);
-  const [timeView, setTimeView] = useState<TimeView>('mingpan');
-  const [liunianYear, setLiunianYear] = useState<number>(new Date().getFullYear());
 
   const isDark = theme === 'dark';
-  const bgPage = isDark ? '#0C0A08' : '#FDFCF8';
-  const bgCard = isDark ? 'rgba(255,255,255,0.04)' : '#FFFFFF';
+  const bgPage = isDark ? '#0C0A08' : '#FFFCF5';
+  const bgCard = isDark ? 'rgba(255,255,255,0.04)' : '#FFFCF5';
   const textPrimary = isDark ? '#F0EBE0' : '#1A1510';
   const textMuted = isDark ? '#6A6258' : '#8A8078';
   const accent = isDark ? '#D4A843' : '#9A7A1A';
@@ -71,16 +74,16 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
 
   const currentDx = chart.daXians[chart.currentDaXianIndex];
   const overlayData: Record<string, string> = (() => {
-    if (timeView === 'daxian' && currentDx) {
+    if (view === 'daxian' && currentDx) {
       const dxPalace = chart.palaces.find(p => p.branch === currentDx.palaceBranch);
       if (dxPalace) return buildSiHuaOverlay(dxPalace.stem);
     }
-    if (timeView === 'liunian') {
+    if (view === 'liunian') {
       return buildSiHuaOverlay(getYearStemIndex(liunianYear));
     }
     return {};
   })();
-  const overlayLabel = timeView === 'daxian' ? 'Hạn' : timeView === 'liunian' ? 'Niên' : undefined;
+  const overlayLabel = view === 'daxian' ? 'Hạn' : view === 'liunian' ? 'Niên' : undefined;
 
   const handlePalaceClick = (branch: number) => {
     const isDeselecting = selectedBranch === branch;
@@ -95,21 +98,23 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
   const sanFangSet = sanFangBranches ? new Set(sanFangBranches) : null;
 
   const chartTitle = (() => {
-    if (timeView === 'daxian') return 'Lá số Đại hạn';
-    if (timeView === 'liunian') return `Lá số Lưu niên ${liunianYear}`;
+    if (view === 'daxian') return 'Lá số Đại hạn';
+    if (view === 'liunian') return `Lá số Lưu niên ${liunianYear}`;
     return 'Lá số Mệnh bản';
+  })();
+
+  // Find special branch positions (Triệt and Tuần)
+  const trietBranch = (() => {
+    // Triệt is at Tý (0) — find the palace at branch 0
+    return 0;
+  })();
+  const tuanBranch = (() => {
+    // Tuần is at Dần (3) — find the palace at branch 3
+    return 3;
   })();
 
   return (
     <div className="w-full select-none">
-      <TimeNav
-        chart={chart}
-        view={timeView}
-        liunianYear={liunianYear}
-        onViewChange={setTimeView}
-        onYearChange={setLiunianYear}
-      />
-
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -126,21 +131,27 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
         </h2>
       </motion.div>
 
+      {/* Main chart container */}
       <div
-        className="grid rounded-xl overflow-hidden relative"
+        className="grid relative overflow-hidden"
         style={{
           gridTemplateColumns: 'repeat(4, 1fr)',
           gridTemplateRows: 'repeat(4, auto)',
-          gap: '1px',
-          background: borderColor,
-          border: `1px solid ${borderGold}`,
-          boxShadow: `0 0 40px ${isDark ? 'rgba(212,168,67,0.08)' : 'rgba(154,122,26,0.06)'}, 0 4px 20px rgba(0,0,0,0.08)`,
+          gap: '0px',
+          background: '#FFFCF5',
+          border: `0.5px solid rgba(26,21,16,0.08)`,
         }}
       >
+        {/* Palace cells */}
         {ANIMATION_ORDER.map((branch, i) => {
           const [row, col] = BRANCH_GRID_POS[branch];
           const palace = palaceMap[branch];
           if (!palace) return null;
+
+          // Determine if this is a special position (Tuần or Triệt)
+          const hasTuan = branch === tuanBranch;
+          const hasTriet = branch === trietBranch;
+
           return (
             <div
               key={branch}
@@ -148,7 +159,6 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
                 gridRow: row,
                 gridColumn: col,
                 background: bgCard,
-                transition: 'background 0.2s ease',
               }}
             >
               <PalaceCell
@@ -160,92 +170,129 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
                 delay={i * 0.04}
                 overlayStarSiHua={Object.keys(overlayData).length > 0 ? overlayData : undefined}
                 overlayLabel={overlayLabel}
-                onSiHuaClick={(starName, siHua) => onSiHuaClick?.(starName, siHua, timeView)}
+                onSiHuaClick={(starName, siHua) => onSiHuaClick?.(starName, siHua, view)}
               />
             </div>
           );
         })}
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-col items-center justify-center p-5 gap-3"
-          style={{
-            gridRow: '2 / 4',
-            gridColumn: '2 / 4',
-            background: bgCard,
-          }}
+        {/* Center panel — 2x2 spanning rows 2-3, cols 2-3 */}
+        <div
+          className="flex flex-col items-center justify-center p-3 gap-2 relative col-span-2 row-span-2 col-start-2 row-start-2"
+          style={{ background: bgCard }}
         >
-          <div
-            className="text-5xl select-none leading-none"
-            style={{
-              color: accent,
-              opacity: 0.12,
-              filter: `drop-shadow(0 0 12px ${isDark ? 'rgba(212,168,67,0.15)' : 'rgba(154,122,26,0.10)'})`,
-            }}
-          >
-            ☯
+          <p className="text-sm text-center text-gray-700">Chương trình luận giải Tử Vi bằng AI</p>
+          <a className="underline text-lg text-center text-blue-600">AItuvi.com</a>
+          <hr className="border-gray-800 w-1/2 my-1 mx-auto" />
+          <h1 className="uppercase text-gray-800 text-lg font-bold w-full text-center mb-1">Lá số tử vi</h1>
+
+          {/* Birth info grid */}
+          <div className="flex flex-col gap-2 w-full px-4">
+            <div className="grid grid-cols-3 gap-6">
+              <p className="text-sm font-normal text-gray-800">Họ tên</p>
+              <p className="text-gray-900 font-semibold text-sm col-span-2">{chart.birthInfo.name || '—'}</p>
+            </div>
+            <div className="grid grid-cols-3 gap-6">
+              <p className="text-sm font-normal text-gray-800">Năm</p>
+              <p className="text-gray-900 font-semibold text-sm">{chart.lunarInfo.lunarYear}</p>
+              <p className="text-gray-900 font-bold text-sm">
+                {vnStem(STEMS[chart.lunarInfo.yearStem])}{vnBranch(BRANCHES[chart.lunarInfo.yearBranch])}
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-6">
+              <p className="text-sm font-normal text-gray-800">Tháng</p>
+              <div className="flex">
+                <p className="text-gray-900 font-bold text-sm">{chart.lunarInfo.lunarMonth}</p>
+                <p className="text-gray-900 font-bold text-sm">({Math.abs(chart.lunarInfo.lunarMonth)})</p>
+              </div>
+              <p className="text-gray-900 font-bold text-sm">
+                {vnStem(STEMS[chart.lunarInfo.yearStem])}{vnBranch(BRANCHES[chart.lunarInfo.yearBranch])}
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-6">
+              <p className="text-sm font-normal text-gray-800">Ngày</p>
+              <div className="flex">
+                <p className="text-gray-900 font-bold text-sm">{chart.lunarInfo.lunarDay}</p>
+              </div>
+              <p className="text-gray-900 font-bold text-sm">
+                {vnStem(STEMS[chart.lunarInfo.yearStem])}{vnBranch(BRANCHES[chart.lunarInfo.yearBranch])}
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-6">
+              <p className="text-sm font-normal text-gray-800">Giờ</p>
+              <p className="text-gray-900 font-semibold text-sm col-span-1">—</p>
+              <p className="text-gray-900 font-bold text-sm">—</p>
+            </div>
           </div>
 
-          <div className="text-center space-y-1.5">
-            <div
-              className="text-[10px] tracking-[0.25em] font-semibold"
-              style={{ color: accent }}
+          {/* Divider */}
+          <hr className="border-gray-800 w-1/2 my-1 mx-auto" />
+
+          {/* Fate info */}
+          <div className="flex flex-col gap-2 w-full px-4">
+            <div className="grid grid-cols-3 gap-6">
+              <p className="text-sm font-normal text-gray-800">Mệnh</p>
+              <p className="text-gray-900 font-bold text-sm col-span-2 uppercase">{chart.wuxingJuName}</p>
+            </div>
+            <div className="grid grid-cols-3 gap-6">
+              <p className="text-sm font-normal text-gray-800">Cục</p>
+              <div className="flex flex-col">
+                <p className="text-gray-900 font-bold text-sm">{chart.wuxingJuName}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-6">
+              <p className="text-sm font-normal text-gray-800">Mệnh chủ</p>
+              <p className="text-gray-900 font-bold text-sm col-span-2 lowercase capitalize">
+                {chart.palaces.find(p => p.branch === chart.mingGongBranch)?.stars.find(s => s.type === 'major')?.name ?? '—'}
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-6">
+              <p className="text-sm font-normal text-gray-800">Thân chủ</p>
+              <p className="text-gray-900 font-bold text-sm col-span-2 lowercase capitalize">
+                {chart.palaces.find(p => p.branch === chart.shenGongBranch)?.stars.find(s => s.type === 'major')?.name ?? '—'}
+              </p>
+            </div>
+          </div>
+
+          {/* Diagonal SVG lines overlay */}
+          <div className="absolute inset-0 pointer-events-none">
+            <svg
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              className="w-full h-full"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              Tử Vi Đấu Số
-            </div>
-            <div className="text-[11px] space-y-0.5" style={{ color: textMuted }}>
-              <div>
-                Mệnh Cung{' '}
-                <span style={{ color: accent, opacity: 0.75 }}>
-                  {vnBranch(BRANCHES[chart.mingGongBranch])}
-                </span>
-              </div>
-              <div>
-                Thân Cung{' '}
-                <span style={{ color: accent, opacity: 0.75 }}>
-                  {vnBranch(BRANCHES[chart.shenGongBranch])}
-                </span>
-              </div>
-              <div className="text-[10px]" style={{ color: accent, opacity: 0.8 }}>
-                {chart.wuxingJuName}
-              </div>
-            </div>
+              {/* Top-left to bottom-right diagonal */}
+              <line
+                x1="12.5" y1="12.5"
+                x2="87.5" y2="87.5"
+                stroke="#9A7A1A"
+                style={{ strokeWidth: '0.3', opacity: 0.25 }}
+              />
+              {/* Top-right to bottom-left diagonal */}
+              <line
+                x1="87.5" y1="12.5"
+                x2="12.5" y2="87.5"
+                stroke="#9A7A1A"
+                style={{ strokeWidth: '0.3', opacity: 0.25 }}
+              />
+            </svg>
           </div>
 
-          {chart.currentDaXianIndex >= 0 && (() => {
-            const dx = chart.daXians[chart.currentDaXianIndex];
-            return (
-              <div
-                className="rounded-lg px-3 py-2 text-center"
-                style={{
-                  background: isDark ? 'rgba(147,51,234,0.08)' : 'rgba(147,51,234,0.05)',
-                  border: `1px solid ${isDark ? 'rgba(147,51,234,0.25)' : 'rgba(147,51,234,0.15)'}`,
-                }}
-              >
-                <div className="text-[9px] mb-0.5 tracking-wider font-medium" style={{ color: '#A855F7' }}>
-                  Đại Hạn Hiện Tại
-                </div>
-                <div className="text-[13px] font-semibold tabular-nums" style={{ color: '#C084FC' }}>
-                  {dx.startAge}–{dx.endAge} tuổi
-                </div>
-                <div className="text-[10px]" style={{ color: '#A855F7', opacity: 0.7 }}>
-                  {vnPalace(dx.palaceName)}
-                </div>
-              </div>
-            );
-          })()}
-
-          <div
-            className="text-[9px] text-center leading-relaxed font-mono"
-            style={{ color: textMuted, opacity: 0.75 }}
-          >
-            {chart.lunarInfo.lunarYear} · {chart.lunarInfo.isLeapMonth ? 'Nhuận ' : ''}
-            {chart.lunarInfo.lunarMonth} · {chart.lunarInfo.lunarDay}
+          {/* Bottom-right corner icons */}
+          <div className="absolute bottom-0 right-0 flex flex-col gap-2.5 mr-2.5 mb-2.5">
+            <img alt="triet_icon" loading="lazy" width="36" height="36" decoding="async"
+              className="object-contain ml-3"
+              src="/_next/static/media/triet-icon.91cd7d72.svg"
+            />
+            <img alt="icon_spells" loading="lazy" width="56" height="56" decoding="async"
+              className="object-contain"
+              src="/_next/static/media/spells.27ff54b6.svg"
+            />
           </div>
-        </motion.div>
+        </div>
 
+        {/* San fang SVG overlay */}
         <AnimatePresence>
           {sanFangBranches !== null && (
             <motion.div
@@ -318,6 +365,7 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
         </AnimatePresence>
       </div>
 
+      {/* Legend bar */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -325,29 +373,41 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
         className="mt-4 flex items-center justify-center gap-3 text-[10px] flex-wrap"
       >
         {[
-          { h: 'Hóa Lộc', c: 'text-emerald-400 border-emerald-500/30' },
-          { h: 'Hóa Quyền', c: 'text-blue-400 border-blue-500/30' },
-          { h: 'Hóa Khoa', c: 'text-yellow-400 border-yellow-500/30' },
-          { h: 'Hóa Kỵ', c: 'text-red-400 border-red-500/30' },
-        ].map(({ h, c }) => (
+          { h: 'M: Miếu', c: 'text-gray-900' },
+          { h: 'V: Vượng', c: 'text-gray-900' },
+          { h: 'Đ: Đắc', c: 'text-gray-900' },
+          { h: 'B: Bình hòa', c: 'text-gray-900' },
+          { h: 'H: Hãm', c: 'text-gray-900' },
+        ].map(({ h }) => (
           <span
             key={h}
-            className={`border px-2 py-1 rounded-full font-medium ${c}`}
-            style={{ background: 'rgba(0,0,0,0.2)' }}
+            className="text-sm text-gray-900"
           >
             {h}
           </span>
         ))}
-        <span
-          className="px-2 py-1 rounded-full"
-          style={{
-            color: textMuted,
-            border: `1px solid ${borderColor}`,
-            background: 'rgba(0,0,0,0.2)',
-          }}
-        >
-          Bấm vào cung xem tam phương tứ chính
-        </span>
+        <div className="flex items-center gap-2 ml-4">
+          <div className="flex h-full items-center gap-1">
+            <span className="bg-gray-400 aspect-square h-[14px] block" />
+            <span className="text-sm text-gray-900">Kim</span>
+          </div>
+          <div className="flex h-full items-center gap-1">
+            <span className="bg-green-500 aspect-square h-[14px] block" />
+            <span className="text-sm text-gray-900">Mộc</span>
+          </div>
+          <div className="flex h-full items-center gap-1">
+            <span className="bg-gray-900 aspect-square h-[14px] block" />
+            <span className="text-sm text-gray-900">Thủy</span>
+          </div>
+          <div className="flex h-full items-center gap-1">
+            <span className="bg-red-500 aspect-square h-[14px] block" />
+            <span className="text-sm text-gray-900">Hỏa</span>
+          </div>
+          <div className="flex h-full items-center gap-1">
+            <span className="bg-yellow-500 aspect-square h-[14px] block" />
+            <span className="text-sm text-gray-900">Thổ</span>
+          </div>
+        </div>
       </motion.div>
     </div>
   );

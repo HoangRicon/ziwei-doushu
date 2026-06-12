@@ -75,6 +75,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
   const d = parseInt(form.day) || 0;
 
   const errors = {
+    name: !form.name.trim() ? 'Vui lòng nhập họ và tên' : '',
     year: !form.year ? 'Vui lòng chọn năm sinh'
       : y < 1900 || y > 2026 ? 'Phạm vi năm: 1900–2026'
       : '',
@@ -106,10 +107,10 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitAttempted(true);
-    setTouched({ year: true, month: true, day: true });
+    setTouched({ name: true, year: true, month: true, day: true });
     if (hasError) return;
     onFormSave?.({ ...form });
-    onSubmit({ year: y, month: m, day: d, hour: form.unknownTime ? 0 : form.shichen, gender: form.gender, name: form.name || undefined });
+    onSubmit({ year: y, month: m, day: d, hour: form.unknownTime ? 0 : form.shichen, gender: form.gender, name: form.name });
   };
 
   const inputStyle: React.CSSProperties = {
@@ -197,17 +198,18 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
           color: textPrimary,
           marginBottom: '8px',
         }}>
-          Họ tên (tùy chọn)
+          Họ và tên (*)
         </label>
         <input
           type="text"
-          placeholder="Nhập họ tên của bạn"
+          placeholder="Nhập họ và tên người xem lá số"
           value={form.name}
           onChange={e => setForm({ ...form, name: e.target.value })}
           style={inputStyle}
           onFocus={e => { Object.assign(e.target.style, inputFocusStyle); }}
           onBlur={e => { e.target.style.borderColor = borderColor; e.target.style.boxShadow = 'none'; }}
         />
+        <FieldError msg={showErr('name') ? errors.name : ''} />
       </div>
 
       {/* ── Ngày sinh ── */}

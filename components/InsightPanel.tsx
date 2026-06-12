@@ -489,27 +489,6 @@ Những lời khuyên có thể thực hiện được cụ thể dựa trên t�
                   className="flex gap-3"
                 >
                   <div
-                    className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center mt-0.5"
-                    style={{
-                      background: isDark ? 'rgba(255,255,255,0.04)' : '#FFFFFF',
-                      border: `1px solid ${borderColor}`,
-                    }}
-                  >
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke={accent}
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                    </svg>
-                  </div>
-
-                  <div
                     className="flex-1 rounded-2xl rounded-tl-sm px-5 py-4"
                     style={{
                       background: isDark ? 'rgba(255,255,255,0.04)' : '#FFFFFF',
@@ -545,7 +524,7 @@ Những lời khuyên có thể thực hiện được cụ thể dựa trên t�
                 handleSend();
               }
             }}
-            placeholder="Hỏi về bản đồ của bạn..."
+            placeholder="Hỏi về lá số của bạn..."
             disabled={loading}
             rows={1}
             className="flex-1 rounded-xl px-4 py-3 text-[15px] resize-none focus:outline-none transition-colors"

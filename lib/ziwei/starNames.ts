@@ -111,3 +111,20 @@ export const STEM_VN: Record<string, string> = {
 export function vnStem(s: string): string {
   return STEM_VN[s] ?? s;
 }
+
+export const LIFE_PHASE_VN: Record<number, string> = {
+  0: 'Tràng sinh',
+  1: 'Mộc dục',
+  2: 'Duyệt',
+  3: 'Thai',
+  4: 'Suy',
+  5: 'Bệnh',
+  6: 'Tử',
+  7: 'Mộ',
+  8: 'Tuyệt',
+  9: 'Đế vượng',
+};
+
+export function vnLifePhase(stemIndex: number): string {
+  return LIFE_PHASE_VN[stemIndex] ?? '';
+}

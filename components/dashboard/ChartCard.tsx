@@ -12,6 +12,7 @@ interface ChartCardProps {
   viewCount: number;
   createdAt: string;
   shareToken?: string | null;
+  overviewInterpretation?: string | null;
   onDelete: (id: string) => void;
   onShare: (id: string) => void;
 }
@@ -28,6 +29,8 @@ function getGenderLabel(g: string) {
   return g === 'male' ? 'Nam' : 'Nữ';
 }
 
+const SHICHEN_SHORT = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+
 export default function ChartCard({
   id,
   name,
@@ -35,13 +38,16 @@ export default function ChartCard({
   isPublic,
   viewCount,
   createdAt,
+  shareToken: _shareToken,
+  overviewInterpretation,
   onDelete,
   onShare,
 }: ChartCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const displayName = name || birthInfo.name || `Lá số ${formatDate(createdAt)}`;
+  const displayName = name ?? 'Không tên';
+  const displayHour = birthInfo.hour >= 0 ? SHICHEN_SHORT[birthInfo.hour] : '?';
 
   return (
     <div
@@ -69,6 +75,26 @@ export default function ChartCard({
           }}
         >
           Công khai
+        </div>
+      )}
+
+      {/* Interpreted badge */}
+      {overviewInterpretation && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 12,
+            left: 12,
+            fontSize: '11px',
+            fontWeight: 600,
+            padding: '2px 8px',
+            borderRadius: '999px',
+            background: 'rgba(34,197,94,0.08)',
+            color: '#22C55E',
+            border: '1px solid rgba(34,197,94,0.2)',
+          }}
+        >
+          Đã luận giải
         </div>
       )}
 
@@ -110,11 +136,7 @@ export default function ChartCard({
         </h3>
       </Link>
       <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-        {birthInfo.year}/{String(birthInfo.month).padStart(2, '0')}/{String(birthInfo.day).padStart(2, '0')} · {getGenderLabel(birthInfo.gender)}
-      </p>
-      <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
-        {formatDate(createdAt)}
-        {isPublic && <span> · {viewCount} lượt xem</span>}
+        {birthInfo.year}/{String(birthInfo.month).padStart(2, '0')}/{String(birthInfo.day).padStart(2, '0')} · {displayHour} · {getGenderLabel(birthInfo.gender)}
       </p>
 
       {/* Actions */}

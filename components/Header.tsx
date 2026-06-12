@@ -10,11 +10,11 @@ import GoogleSignIn from './auth/GoogleSignIn';
 
 const NAV_LINKS = [
   { href: '/',         label: 'Trang chủ' },
-  { href: '/chart',    label: 'Lập lá số' },
+  { href: '/chart',    label: 'Lá số' },
   { href: '/library',  label: 'Thư viện' },
   { href: '/gallery',  label: 'Thư viện công khai' },
   { href: '/knowledge',label: 'Kiến thức' },
-  { href: '/heming',   label: 'Hằng sao' },
+  { href: '/heming',   label: 'Bản đồ hợp' },
 ];
 
 export default function Header() {

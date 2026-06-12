@@ -12,7 +12,7 @@ export function formToBirthInfo(form: BirthFormState): BirthInfo {
     day: parseInt(form.day) || 0,
     hour: form.unknownTime ? 0 : form.shichen,
     gender: form.gender,
-    name: form.name || undefined,
+    name: form.name || '',
   };
 }
 

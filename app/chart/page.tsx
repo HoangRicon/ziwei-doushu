@@ -5,7 +5,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import BirthForm from '@/components/BirthForm';
 import ChartBoard from '@/components/ChartBoard';
-import InsightPanel from '@/components/InsightPanel';
 import TimeNav, { type TimeView } from '@/components/TimeNav';
 import { useAuthPrompt } from '@/components/auth/AuthContext';
 import { generateChart } from '@/lib/ziwei/algorithm';
@@ -51,7 +50,7 @@ export default function ChartPage() {
   return (
     <main className="min-h-screen px-4 py-6" style={{ background: 'var(--color-bg-page)' }}>
       {/* Header */}
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[800px] mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="heading-2">Lá số Tử Vi</h1>
@@ -130,9 +129,8 @@ export default function ChartPage() {
           />
         </div>
 
-        <div className="grid gap-6 mt-6 lg:grid-cols-[1fr_380px] grid-cols-1">
-          <ChartBoard chart={chart} onPalaceSelect={setSelectedPalace} />
-          <InsightPanel chart={chart} selectedPalace={selectedPalace} />
+        <div className="mt-6">
+          <ChartBoard chart={chart} view={view} liunianYear={liunianYear} onPalaceSelect={setSelectedPalace} />
         </div>
       </div>
     </main>

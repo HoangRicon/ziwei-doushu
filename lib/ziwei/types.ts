@@ -9,7 +9,7 @@ export interface BirthInfo {
   day: number;       // Ngày dương lịch
   hour: number;      // Chỉ số thập nhị thì (0=Tử, 1=Sửu, ... 11=Hợi)
   gender: 'male' | 'female';
-  name?: string;
+  name: string;       // bắt buộc khi tạo mới
 }
 
 export interface LunarInfo {

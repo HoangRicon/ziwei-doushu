@@ -33,6 +33,7 @@ export async function GET(req: NextRequest) {
         shareToken: true,
         viewCount: true,
         birthInfo: true,
+        overviewInterpretation: true,
         createdAt: true,
         updatedAt: true,
       },

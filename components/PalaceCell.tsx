@@ -1,9 +1,9 @@
 'use client';
-import { motion } from 'framer-motion';
 import { useTheme } from './ThemeProvider';
 import type { Palace, Star } from '@/lib/ziwei/types';
+import type { TimeView } from './TimeNav';
 import { STEMS, BRANCHES } from '@/lib/ziwei/constants';
-import { vnStar, vnPalace, vnStem, vnBranch, vnSiHua } from '@/lib/ziwei/starNames';
+import { vnStar, vnPalace, vnStem, vnBranch, vnLifePhase } from '@/lib/ziwei/starNames';
 import clsx from 'clsx';
 
 interface PalaceCellProps {
@@ -15,58 +15,25 @@ interface PalaceCellProps {
   delay?: number;
   overlayStarSiHua?: Record<string, string>;
   overlayLabel?: string;
-  onSiHuaClick?: (starName: string, siHua: string) => void;
+  onSiHuaClick?: (starName: string, siHua: string, view: TimeView) => void;
 }
 
-const STAR_COLORS: Record<string, string> = {
-  'Tử Vi':       'text-pink-400',
-  'Tử Bồng':     'text-pink-300',
-  'Vũ Khúc':     'text-orange-400',
-  'Thái Dương':  'text-yellow-300',
-  'Xương Khúc':  'text-yellow-400',
-  'Liêm Trinh':  'text-green-400',
-  'Tham Lang':   'text-emerald-400',
-  'Cự Môn':      'text-purple-400',
-  'Phá Quân':    'text-red-400',
-  'Thiên Tướng': 'text-slate-300',
-  'Thiên Thọ':   'text-amber-300',
-  'Thái Âm':     'text-cyan-300',
-  'Thiên Cơ':    'text-indigo-300',
+const SIHUA_COLORS: Record<string, { text: string; label: string }> = {
+  '禄': { text: 'text-green-600', label: 'Khoa' },
+  '权': { text: 'text-green-600', label: 'Quyền' },
+  '科': { text: 'text-yellow-500', label: 'Khoa' },
+  '忌': { text: 'text-red-500', label: 'Kỵ' },
 };
 
-const SIHUA_STYLES: Record<string, string> = {
-  '禄': 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
-  '权': 'text-blue-400 bg-blue-500/10 border-blue-500/30',
-  '科': 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
-  '忌': 'text-red-400 bg-red-500/10 border-red-500/30',
-};
-
-const SiHuaBadge = ({
-  siHua,
-  overlay,
-  label,
-  onClick,
-}: {
-  siHua: string;
-  overlay?: boolean;
-  label?: string;
-  onClick?: (e: React.MouseEvent) => void;
-}) => {
+function SiHuaChip({ siHua, overlay, overlayLabel }: { siHua: string; overlay?: boolean; overlayLabel?: string }) {
+  const style = SIHUA_COLORS[siHua] ?? { text: 'text-gray-400', label: '' };
   return (
-    <span
-      className={clsx(
-        'inline-flex items-center text-[9px] px-1.5 rounded-full border leading-none py-px font-bold ml-1 flex-shrink-0',
-        SIHUA_STYLES[siHua],
-        overlay && 'border-dashed opacity-80',
-        onClick && 'cursor-pointer hover:opacity-100',
-      )}
-      onClick={onClick}
-    >
-      {overlay && label && <span className="mr-px opacity-70">{label}</span>}
-      {vnSiHua(siHua)}
+    <span className={clsx('text-xs capitalize', style.text, overlay && 'font-normal')}>
+      {overlay && overlayLabel ? `${style.label} ` : ''}
+      {siHua}
     </span>
   );
-};
+}
 
 export default function PalaceCell({
   palace, onClick, onStarClick, isSelected, isSanFang, delay = 0,
@@ -74,7 +41,6 @@ export default function PalaceCell({
 }: PalaceCellProps) {
   const { theme } = useTheme();
   const { branch, stem, name, stars, daXianAge, isCurrentDaXian, isMingGong, isShenGong } = palace;
-  const ganzhi = `${vnStem(STEMS[stem])}${vnBranch(BRANCHES[branch])}`;
 
   const majorStars = stars.filter(s => s.type === 'major');
   const luckyStars = stars.filter(s => s.type === 'lucky');
@@ -82,198 +48,160 @@ export default function PalaceCell({
 
   const isDark = theme === 'dark';
   const accent = isDark ? '#D4A843' : '#9A7A1A';
-  const accentLight = isDark ? '#F0C060' : '#C8A030';
-  const textPrimary = isDark ? '#F0EBE0' : '#1A1510';
+  const textPrimary = isDark ? '#1A1510' : '#1A1510';
   const textMuted = isDark ? '#6A6258' : '#8A8078';
   const borderColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(26,21,16,0.08)';
   const borderMed = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(26,21,16,0.14)';
-  const borderGold = isDark ? 'rgba(212,168,67,0.25)' : 'rgba(154,122,26,0.20)';
 
   const cellBg = (() => {
-    if (isCurrentDaXian) return isDark ? 'rgba(147,51,234,0.08)' : 'rgba(147,51,234,0.05)';
-    if (isSelected) return isDark ? 'rgba(212,168,67,0.08)' : 'rgba(154,122,26,0.06)';
-    if (isSanFang) return isDark ? 'rgba(212,168,67,0.04)' : 'rgba(154,122,26,0.03)';
-    return isDark ? 'rgba(255,255,255,0.02)' : '#FAFAF8';
+    if (isCurrentDaXian) return '#FFF9E6';
+    if (isSelected) return 'rgba(154,122,26,0.05)';
+    if (isSanFang) return 'rgba(154,122,26,0.02)';
+    return isDark ? 'rgba(255,255,255,0.02)' : '#FFFCF5';
   })();
 
-  const cellBorder = (() => {
-    if (isSelected) return `1px solid ${borderGold}`;
-    if (isSanFang) return `1px solid ${isDark ? 'rgba(212,168,67,0.15)' : 'rgba(154,122,26,0.12)'}`;
-    if (isMingGong) return `2px solid ${isDark ? 'rgba(212,168,67,0.4)' : 'rgba(154,122,26,0.35)'}`;
-    if (isShenGong) return `2px solid ${isDark ? 'rgba(59,130,246,0.4)' : 'rgba(59,130,246,0.3)'}`;
-    if (isCurrentDaXian) return `1px solid ${isDark ? 'rgba(147,51,234,0.3)' : 'rgba(147,51,234,0.2)'}`;
-    return `1px solid ${borderColor}`;
+  const headerBg = (() => {
+    if (isMingGong) return 'rgba(154,122,26,0.06)';
+    if (isShenGong) return 'rgba(59,130,246,0.05)';
+    return cellBg;
   })();
+
+  const getStarColor = (star: Star): string => {
+    const n = star.name;
+    if (n === 'Tử Vi') return 'text-red-500';
+    if (n === 'Thiên Cơ') return 'text-green-600';
+    if (n === 'Thái Dương') return 'text-yellow-500';
+    if (n === 'Võ Khúc') return 'text-red-500';
+    if (n === 'Thiên Đồng') return 'text-gray-900';
+    if (n === 'Liêm Truyền') return 'text-red-500';
+    if (n === 'Thiên Phủ') return 'text-yellow-500';
+    if (n === 'Thái Âm') return 'text-gray-900';
+    if (n === 'Đam Lang') return 'text-red-500';
+    if (n === 'Cử Môn') return 'text-gray-900';
+    if (n === 'Thiên Tương') return 'text-gray-900';
+    if (n === 'Thiên Lương') return 'text-yellow-500';
+    if (n === 'Thất Sát') return 'text-gray-600';
+    if (n === 'Phá Quân') return 'text-gray-900';
+    if (star.brightness === 'bright') return 'text-yellow-600';
+    if (star.brightness === 'dim') return 'text-red-500';
+    return 'text-gray-900';
+  };
+
+  const lifePhaseText = vnLifePhase(stem);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.92 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.35, delay, ease: 'easeOut' }}
+    <div
       onClick={onClick}
       className="relative flex flex-col cursor-pointer transition-all duration-150 h-full"
       style={{
-        minHeight: '100px',
-        padding: '10px 12px',
+        minHeight: '140px',
         background: cellBg,
-        border: cellBorder,
-        borderRadius: '8px',
+        border: `0.5px solid ${borderMed}`,
       }}
     >
-      {/* DaXian age badge */}
-      {daXianAge && (
-        <div
+      {/* Header row: palace name + optional badge */}
+      <div
+        className="grid grid-cols-5 justify-between relative px-1 py-1"
+        style={{ background: headerBg }}
+      >
+        <p
           className={clsx(
-            'absolute top-2 right-2 text-[10px] font-mono tabular-nums font-medium',
+            'text-xs font-semibold col-span-2',
+            isMingGong ? 'text-red-500' : isShenGong ? 'text-yellow-500' : 'text-gray-600'
           )}
-          style={{
-            color: isCurrentDaXian ? '#A855F7' : textMuted,
-            opacity: isCurrentDaXian ? 1 : 0.7,
-          }}
-        >
-          {daXianAge[0]}–{daXianAge[1]}
-        </div>
-      )}
-
-      {/* Palace name row */}
-      <div className="flex items-center gap-1.5 mb-1 pr-10">
-        <span
-          className="text-[15px] font-semibold tracking-wide"
-          style={{
-            color: isMingGong ? accentLight : isShenGong ? '#60A5FA' : textPrimary,
-          }}
         >
           {vnPalace(name)}
-        </span>
-        {isMingGong && (
-          <span
-            className="text-[9px] px-1 rounded leading-tight font-semibold"
-            style={{
-              color: accent,
-              border: `1px solid ${borderGold}`,
-              background: isDark ? 'rgba(212,168,67,0.08)' : 'rgba(154,122,26,0.06)',
-            }}
-          >
-            命
-          </span>
-        )}
-        {isShenGong && (
-          <span
-            className="text-[9px] px-1 rounded leading-tight font-semibold"
-            style={{
-              color: '#60A5FA',
-              border: `1px solid ${isDark ? 'rgba(59,130,246,0.3)' : 'rgba(59,130,246,0.25)'}`,
-              background: isDark ? 'rgba(59,130,246,0.06)' : 'rgba(59,130,246,0.05)',
-            }}
-          >
-            身
-          </span>
-        )}
-      </div>
-
-      {/* GanZhi */}
-      <div
-        className="text-[11px] font-mono mb-1.5 font-medium"
-        style={{ color: accent, opacity: 0.85 }}
-      >
-        {ganzhi}
-      </div>
-
-      {/* Major stars */}
-      <div className="flex flex-col gap-1 flex-1">
-        {majorStars.length === 0 && (
-          <span
-            className="text-[12px] italic"
-            style={{ color: textMuted, opacity: 0.5 }}
-          >
-            Không cung
-          </span>
-        )}
-        {majorStars.map((star) => {
-          const overlaySiHua = overlayStarSiHua?.[star.name];
-          const colorClass = STAR_COLORS[star.name] ?? (
-            star.brightness === 'bright'
-              ? 'text-amber-300'
-              : star.brightness === 'dim'
-              ? 'text-amber-600'
-              : 'text-amber-400'
-          );
-          return (
-            <div
-              key={star.name}
-              className="flex items-center"
-              onClick={e => { e.stopPropagation(); onStarClick?.(star); }}
-            >
-              <span
-                className={clsx(
-                  'text-[15px] leading-tight font-semibold tracking-tight cursor-pointer hover:opacity-80 transition-opacity',
-                  colorClass,
-                )}
-              >
-                {vnStar(star.name)}
-              </span>
-              {star.siHua && <SiHuaBadge siHua={star.siHua} />}
-              {overlaySiHua && (
-                <SiHuaBadge
-                  siHua={overlaySiHua}
-                  overlay
-                  label={overlayLabel}
-                  onClick={e => {
-                    e.stopPropagation();
-                    onSiHuaClick?.(star.name, overlaySiHua);
-                  }}
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Lucky stars */}
-      {luckyStars.length > 0 && (
-        <div className="flex flex-wrap gap-x-1.5 mt-1">
-          {luckyStars.map(s => {
-            const overlaySiHua = overlayStarSiHua?.[s.name];
-            return (
-              <span
-                key={s.name}
-                className="inline-flex items-center text-[13px] leading-tight"
-                style={{ color: '#7DD3FC', opacity: 0.75 }}
-              >
-                {vnStar(s.name)}
-                {s.siHua && <SiHuaBadge siHua={s.siHua} />}
-                {overlaySiHua && (
-                  <SiHuaBadge
-                    siHua={overlaySiHua}
-                    overlay
-                    label={overlayLabel}
-                    onClick={e => {
-                      e.stopPropagation();
-                      onSiHuaClick?.(s.name, overlaySiHua);
-                    }}
-                  />
-                )}
-              </span>
-            );
-          })}
+        </p>
+        <div className="flex items-center gap-1 col-span-3 justify-center">
+          <p className="uppercase font-bold text-black text-xs mx-0">
+            {name}
+          </p>
         </div>
-      )}
+        <p className="font-semibold text-xs text-right col-span-1">
+          {daXianAge ? `${daXianAge[0]}${daXianAge[1]}` : ''}
+        </p>
+      </div>
 
-      {/* Sha stars */}
-      {shaStars.length > 0 && (
-        <div className="flex flex-wrap gap-x-1.5 mt-0.5">
-          {shaStars.map(s => (
-            <span
-              key={s.name}
-              className="text-[13px] leading-tight"
-              style={{ color: '#F87171', opacity: 0.65 }}
-            >
-              {vnStar(s.name)}
-              {s.siHua && <SiHuaBadge siHua={s.siHua} />}
-            </span>
-          ))}
+      {/* Center area: major stars + star lists */}
+      <div className="flex flex-col gap-1 flex-1 px-1 py-1.5">
+        {/* Major stars — centered, stacked if multiple */}
+        <div className="flex flex-col items-center justify-center" style={{ minHeight: '28px' }}>
+          {majorStars.length === 0 ? (
+            <span className="text-gray-400 text-xs italic">-</span>
+          ) : (
+            majorStars.map(star => {
+              const colorClass = getStarColor(star);
+              return (
+                <div key={star.name} className="flex items-center gap-1">
+                  <p className={clsx('text-sm font-semibold capitalize leading-[18px]', colorClass)}>
+                    {star.name} ({star.brightness === 'bright' ? 'Đ' : star.brightness === 'dim' ? 'N' : 'B'})
+                  </p>
+                  {star.siHua && (
+                    <span className={clsx('text-xs capitalize', SIHUA_COLORS[star.siHua]?.text ?? 'text-gray-400')}>
+                      {star.siHua}
+                    </span>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
-      )}
-    </motion.div>
+
+        {/* Two-column star lists */}
+        <div className="flex flex-1 justify-between gap-1">
+          {/* Left column: lucky + some sha */}
+          <div className="flex flex-col items-start" style={{ minHeight: '64px' }}>
+            {[...luckyStars, ...shaStars].slice(0, 7).map(s => {
+              const colorClass = s.type === 'lucky' ? 'text-green-600' : 'text-red-500';
+              return (
+                <p
+                  key={s.name}
+                  className={clsx('text-xs capitalize', colorClass, s.type === 'lucky' ? 'font-normal' : 'font-bold')}
+                  onClick={e => { e.stopPropagation(); onStarClick?.(s); }}
+                >
+                  {s.name}
+                </p>
+              );
+            })}
+          </div>
+          {/* Right column: remaining sha */}
+          <div className="flex flex-col items-start" style={{ minHeight: '64px' }}>
+            {[...luckyStars, ...shaStars].slice(7).map(s => {
+              const colorClass = s.type === 'lucky' ? 'text-green-600' : 'text-red-500';
+              return (
+                <p
+                  key={s.name}
+                  className={clsx('text-xs capitalize', colorClass, s.type === 'lucky' ? 'font-normal' : 'font-semibold')}
+                  onClick={e => { e.stopPropagation(); onStarClick?.(s); }}
+                >
+                  {s.name}
+                </p>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer row: branch name + life phase + daXian age */}
+      <div className="grid grid-cols-5 px-1 py-0.5" style={{ background: headerBg }}>
+        <p className="text-xs text-gray-600">{vnBranch(BRANCHES[branch])}</p>
+        <div className="col-span-3">
+          <p
+            className={clsx(
+              'capitalize text-sm leading-5 font-semibold text-center',
+              stem >= 0 && stem <= 2 ? 'text-green-600' :
+              stem >= 3 && stem <= 5 ? 'text-gray-600' :
+              stem >= 6 && stem <= 8 ? 'text-yellow-500' :
+              'text-red-500'
+            )}
+          >
+            {lifePhaseText}
+          </p>
+        </div>
+        <p className="text-xs font-semibold text-right">
+          T.{daXianAge ? daXianAge[0] : ''}
+        </p>
+      </div>
+    </div>
   );
 }

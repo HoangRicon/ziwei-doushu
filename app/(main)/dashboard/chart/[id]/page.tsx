@@ -34,5 +34,25 @@ export default async function SavedChartPage({ params }: Props) {
     return notFound();
   }
 
-  return <ChartViewer chart={chart} />;
+  // Cast JSON fields to match ChartViewer interface
+  const viewerChart = {
+    ...chart,
+    birthInfo: chart.birthInfo as { name?: string; year: number; month: number; day: number; hour: number; gender: string },
+    lunarInfo: chart.lunarInfo as unknown,
+    chartData: chart.chartData as {
+      mingGongBranch: number;
+      shenGongBranch: number;
+      wuxingJu: number;
+      wuxingJuName: string;
+      ziweiPos: number;
+      palaces: unknown[];
+      daXians: unknown[];
+      currentAge: number;
+      currentDaXianIndex: number;
+    },
+    overviewInterpretation: chart.overviewInterpretation,
+    chatHistory: (chart.chatHistory as { role: 'user' | 'assistant'; content: string }[]) ?? [],
+  };
+
+  return <ChartViewer chart={viewerChart} />;
 }

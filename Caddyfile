@@ -1,0 +1,9 @@
+choacc.id.vn {
+    reverse_proxy localhost:3000
+
+    encode gzip zstd
+
+    log {
+        output file /var/log/caddy/choacc.id.vn.log
+    }
+}

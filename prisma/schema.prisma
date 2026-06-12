@@ -91,12 +91,16 @@ model ZiweiChart {
   viewCount   Int      @default(0)
 
   // Chart Data (JSONB)
-  birthInfo   Json
-  lunarInfo   Json
-  chartData   Json
+  birthInfo               Json
+  lunarInfo               Json
+  chartData               Json
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  // AI Interpretation
+  overviewInterpretation  String?   @db.Text
+  chatHistory             Json      @default("[]")
+
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 
   @@index([userId])
   @@index([shareToken])

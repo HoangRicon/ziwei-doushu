@@ -12,6 +12,7 @@ interface ChartSummary {
   isPublic: boolean;
   viewCount: number;
   shareToken?: string | null;
+  overviewInterpretation?: string | null;
   createdAt: string;
 }
 

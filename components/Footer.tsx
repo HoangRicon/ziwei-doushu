@@ -6,17 +6,8 @@ const FOOTER_LINKS = [
   {
     title: 'Dịch vụ',
     links: [
-      { label: 'Lập lá số', href: '/chart' },
-      { label: 'Hằng sao', href: '/heming' },
-      { label: 'Thư viện kinh điển', href: '/library' },
-    ],
-  },
-  {
-    title: 'Tài nguyên',
-    links: [
-      { label: 'Kiến thức Tử Vi', href: '/knowledge' },
-      { label: '14 Chính tinh', href: '/knowledge' },
-      { label: 'Cổ thư học thuật', href: '/library' },
+      { label: 'Lá số', href: '/chart' },
+      { label: 'Bản đồ hợp', href: '/heming' },
     ],
   },
   {
