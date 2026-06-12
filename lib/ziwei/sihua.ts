@@ -1,24 +1,43 @@
 /**
- * Công cụ chia sẻ bản đồ Tử Vi
- * Bao gồm tính toán giờ mặt trời thực, chuyển đổi form → BirthInfo, URL params
+ * Công cụ Tứ Hóa - Phiên bản đã chuẩn hóa tên sao sang tiếng Việt
  */
 
 import type { ZiweiChart, Palace, SiHua } from './types';
 import { SI_HUA_TABLE, STEMS } from './constants';
+import { STAR_NAME_VN } from './starNames';
+
+// Bảng Tứ Hóa đã phiên Việt: chỉ số Thiên Can → [Hóa Lộc, Hóa Quyền, Hóa Khoa, Hóa Kỵ]
+const SI_HUA_TABLE_VN: Record<number, [string, string, string, string]> = {
+  0: ['Liêm Trinh', 'Phá Quân', 'Vũ Khúc', 'Thái Dương'],   // Giáp
+  1: ['Thiên Cơ', 'Thiên Lương', 'Tử Vi', 'Thái Âm'],        // Ất
+  2: ['Thiên Đồng', 'Thiên Cơ', 'Văn Xương', 'Liêm Trinh'],  // Bính
+  3: ['Thái Âm', 'Thiên Đồng', 'Thiên Cơ', 'Cự Môn'],         // Đinh
+  4: ['Tham Lang', 'Thái Âm', 'Hữu Bật', 'Thiên Cơ'],          // Mậu
+  5: ['Vũ Khúc', 'Tham Lang', 'Thiên Lương', 'Văn Khúc'],     // Kỷ
+  6: ['Thái Dương', 'Vũ Khúc', 'Thái Âm', 'Thiên Đồng'],     // Canh
+  7: ['Cự Môn', 'Thái Dương', 'Văn Khúc', 'Văn Xương'],       // Tân
+  8: ['Thiên Lương', 'Tử Vi', 'Tả Phụ', 'Vũ Khúc'],          // Nhâm
+  9: ['Phá Quân', 'Cự Môn', 'Thái Âm', 'Tham Lang'],           // Quý
+};
 
 // ─── 1) Từ chỉ số Thiên Can lấy Tứ Hóa tứ sao ───────────────────────────────────
 /** Chỉ số Thiên Can 0-9 → { Lộc, Quyền, Khoa, Kỵ } tương ứng tên sao */
 export function getSiHuaByStem(stemIndex: number): Record<SiHua, string> {
-  const arr = SI_HUA_TABLE[stemIndex];
-  if (!arr) return { 禄: '', 权: '', 科: '', 忌: '' };
-  return { 禄: arr[0], 权: arr[1], 科: arr[2], 忌: arr[3] };
+  const arr = SI_HUA_TABLE_VN[stemIndex];
+  if (!arr) return { Lộc: '', Quyền: '', Khoa: '', Kỵ: '' };
+  return { Lộc: arr[0], Quyền: arr[1], Khoa: arr[2], Kỵ: arr[3] };
 }
 
 /** Ten sao → Loai tu hoa (do mot thien can xac dinh) */
 export function buildStarSiHuaMap(stemIndex: number): Record<string, SiHua> {
-  const arr = SI_HUA_TABLE[stemIndex];
+  const arr = SI_HUA_TABLE_VN[stemIndex];
   if (!arr) return {};
-  return { [arr[0]]: '禄', [arr[1]]: '权', [arr[2]]: '科', [arr[3]]: '忌' };
+  return {
+    [arr[0]]: arr[0] as SiHua,
+    [arr[1]]: arr[1] as SiHua,
+    [arr[2]]: arr[2] as SiHua,
+    [arr[3]]: arr[3] as SiHua,
+  };
 }
 
 // ─── 2) Từ năm dương lịch → chỉ số Thiên Can năm ──────────────────────────────────
@@ -104,18 +123,18 @@ export function getLiuYueSiHua(yearStem: number, month: number): {
 // ─── 6) Kiểm tra tự hóa cung ──────────────────────────────────────────
 /**
  * Tự hóa: Tứ hóa do cung cung gây ra, sao bị hóa vừa đúng tại cung này
- * Ví dụ: Cung cung là Giáp (Liêm Phá Võ Dương), nếu cung này chủ tinh có "Liêm Trung", thì cung đó có "tự hóa Lộc"
+ * Ví dụ: Cung cung là Giáp (Liêm Phá Võ Dương), nếu cung này chủ tinh có "Liêm Trinh", thì cung đó có "tự hóa Lộc"
  */
 export interface SelfSihua {
   siHua: SiHua;        // Lộc/Quyền/Khoa/Kỵ
-  starName: string;    // Sao bi hóa
+  starName: string;    // Sao bị hóa
 }
 
 export function detectSelfSihua(palace: Palace): SelfSihua[] {
   const transforms = getSiHuaByStem(palace.stem);
   const found: SelfSihua[] = [];
   const palaceStarNames = new Set(palace.stars.map(s => s.name));
-  (['禄', '权', '科', '忌'] as SiHua[]).forEach(sh => {
+  (['Lộc', 'Quyền', 'Khoa', 'Kỵ'] as const).forEach(sh => {
     const starName = transforms[sh];
     if (starName && palaceStarNames.has(starName)) {
       found.push({ siHua: sh, starName });
@@ -131,7 +150,7 @@ export function detectSelfSihua(palace: Palace): SelfSihua[] {
  * Hệ thống Nhu Sư thường dùng: Cung lai nhân của hóa Kỵ——hóa Kỵ do cung cung nào gây ra, cung đó chính là cung gốc của vấn đề
  *
  * @param chart Bản đồ tử vi
- * @param starName Sao bi hóa (ví dụ "Thái Âm")
+ * @param starName Sao bị hóa (ví dụ "Thái Âm")
  * @param sihua  Loại tứ hóa (ví dụ "Kỵ")
  * @returns Mảng cung vị gây ra hóa đó (thông thường chỉ một, nhưng nếu nhiều cung cung cùng thiên can có thể nhiều)
  */

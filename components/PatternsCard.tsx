@@ -2,7 +2,6 @@
 import { motion } from 'framer-motion';
 import type { ZiweiChart } from '@/lib/ziwei/types';
 import { detectPatterns } from '@/lib/ziwei/patterns';
-import { translateConditions, translateCondition } from '@/lib/ziwei/patternUtils';
 import { vnPalace } from '@/lib/ziwei/starNames';
 
 const LevelStyle = {
@@ -41,7 +40,7 @@ export default function PatternsCard({ chart }: { chart: ZiweiChart }) {
             >
               <div className="flex items-center gap-2 mb-1.5">
                 <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${st.dot}`} />
-                <span className={`text-[11px] font-medium ${st.label}`}>{translateCondition(p.name)}</span>
+                <span className={`text-[11px] font-medium ${st.label}`}>{p.name}</span>
                 <div className="flex gap-1 ml-auto">
                   {p.palaces.slice(0, 2).map(pa => (
                     <span key={pa} className={`text-[8px] px-1.5 py-px rounded-full border ${st.badge}`}>
@@ -52,7 +51,7 @@ export default function PatternsCard({ chart }: { chart: ZiweiChart }) {
               </div>
 
                 <p className="text-[10px] leading-relaxed pl-3.5" style={{ color: 'var(--color-text-body)' }}>
-                {translateCondition(p.description)}
+                {p.description}
               </p>
 
               {p.conditions && (
@@ -61,21 +60,21 @@ export default function PatternsCard({ chart }: { chart: ZiweiChart }) {
                         <div className="text-[9px] leading-relaxed" style={{ color: 'var(--color-text-body)', opacity: 0.85 }}>
                           <span className="font-medium" style={{ color: 'var(--color-accent)' }}>Bắt buộc</span>
                           <span style={{ opacity: 0.6 }}> · </span>
-                          {translateConditions(p.conditions.required).join(' · ')}
+                          {p.conditions.required.join(' · ')}
                         </div>
                       )}
                       {p.conditions.bonus && p.conditions.bonus.length > 0 && (
                         <div className="text-[9px] leading-relaxed" style={{ color: 'var(--color-text-body)', opacity: 0.85 }}>
                           <span className="font-medium text-emerald-500">Cộng điểm</span>
                           <span style={{ opacity: 0.6 }}> · </span>
-                          {translateConditions(p.conditions.bonus).join(' · ')}
+                          {p.conditions.bonus.join(' · ')}
                         </div>
                       )}
                       {p.conditions.breaking && p.conditions.breaking.length > 0 && (
                         <div className="text-[9px] leading-relaxed" style={{ color: 'var(--color-text-body)', opacity: 0.85 }}>
                           <span className="font-medium text-orange-500">Phá cươc</span>
                           <span style={{ opacity: 0.6 }}> · </span>
-                          {translateConditions(p.conditions.breaking).join(' · ')}
+                          {p.conditions.breaking.join(' · ')}
                         </div>
                       )}
                 </div>

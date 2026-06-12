@@ -44,7 +44,7 @@ Khi phân tích, bạn TUYỆT ĐỐI tuân theo cấu trúc phản hồi bằng
 
 2. **Ghép Tử Vi (Ghép cung)**: Đối chiếu các cung tương ứng giữa hai người:
    - Mệnh Cung ↔ Mệnh Cung: tương hợp tính cách
-   - Phu Tân Cung ↔ Phu Tân Cung: tương hợp tình cảm
+   - Phu Thê Cung ↔ Phu Thê Cung: tương hợp tình cảm
    - Quan Lộc Cung ↔ Quan Lộc Cung: tương hợp sự nghiệp
    - Tài Bạch Cung ↔ Tài Bạch Cung: tương hợp tài vận
 

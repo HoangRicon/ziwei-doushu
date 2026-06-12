@@ -7,8 +7,8 @@ import FadeIn from '@/components/FadeIn';
 const STARS = [
   'Tử Vi', 'Thiên Cơ', 'Thái Dương', 'Vũ Khúc',
   'Thiên Đồng', 'Liêm Trinh', 'Thiên Phủ', 'Thái Âm',
-  'Đam Lang', 'Cử Môn', 'Thiên Xương', 'Thiên Lương',
-  'Thập Sát', 'Phá Quân',
+  'Tham Lang', 'Cự Môn', 'Thiên Lương', 'Thất Sát',
+  'Phá Quân',
 ];
 
 const STAR_BRIEF: Record<string, { attr: string; brief: string }> = {
@@ -44,23 +44,19 @@ const STAR_BRIEF: Record<string, { attr: string; brief: string }> = {
     attr: 'Thủy · Chủ điền trạch',
     brief: 'Tinh chủ điền trạch, chủ tài vận và âm nhu. Tinh tế nhuyễn nhiệt, năng lực cảm nhận mạnh.',
   },
-  'Đam Lang': {
+  'Tham Lang': {
     attr: 'Mộc Thủy · Hoa đào',
     brief: 'Tinh hoa đào, chủ dục vọng và tài năng. Đa tài đa nghệ, giao tiếp sôi nổi.',
   },
-  'Cử Môn': {
+  'Cự Môn': {
     attr: 'Thủy · Tinh thị phi',
     brief: 'Tinh ám, chủ khẩu tài và thị phi. Khẩu tài xuất chúng, tư duy biện luận mạnh.',
-  },
-  'Thiên Xương': {
-    attr: 'Thủy · Tinh ấn',
-    brief: 'Tinh ấn, chủ phụ giúp và ấn nã. Giỏi điều hòa, coi trọng lễ tiết, chính trực tuân pháp.',
   },
   'Thiên Lương': {
     attr: 'Thổ · Tinh ấm',
     brief: 'Tinh ấm, chủ lão thành và che chở. Chính trực ổn định, từ bi, Trời sẽ phù hộ.',
   },
-  'Thập Sát': {
+  'Thất Sát': {
     attr: 'Kim Hỏa · Tinh tướng',
     brief: 'Tinh tướng, chủ cương liệt và sáng tạo. Tính cách cương nghị, hành động mạnh mẽ, dũng cảm thử thách.',
   },

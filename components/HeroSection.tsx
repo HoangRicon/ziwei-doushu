@@ -9,8 +9,8 @@ import AnnouncementModal from '@/components/AnnouncementModal';
 const STARS = [
   { name: 'Tử Vi' }, { name: 'Thiên Cơ' }, { name: 'Thái Dương' }, { name: 'Vũ Khúc' },
   { name: 'Thiên Đồng' }, { name: 'Liêm Trinh' }, { name: 'Thiên Phủ' }, { name: 'Thái Âm' },
-  { name: 'Đam Lang' }, { name: 'Cử Môn' }, { name: 'Thiên Xương' }, { name: 'Thiên Lương' },
-  { name: 'Thập Sát' }, { name: 'Phá Quân' },
+  { name: 'Tham Lang' }, { name: 'Cự Môn' }, { name: 'Thiên Lương' }, { name: 'Thất Sát' },
+  { name: 'Phá Quân' },
 ];
 
 export default function HeroSection() {

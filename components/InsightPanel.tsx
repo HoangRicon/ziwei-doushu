@@ -55,8 +55,8 @@ Thế mạnh bẩm sinh của lá số, cũng như những rủi ro hoặc bài 
 **【Cục diện tình cảm】**
 Một câu định tính lá số tình cảm.
 
-**【Phân tích Phu Tân Cung】**
-Chủ tinh của Phu Tân Cung, tứ hóa, và giải đoán cụ thể theo hệ thống Thầy Ni Hải Hạ.
+**【Phân tích Phu Thê Cung】**
+Chủ tinh của Phu Thê Cung, tứ hóa, và giải đoán cụ thể theo hệ thống Thầy Ni Hải Hạ.
 
 **【Liên động tam phương】**
 Ảnh hưởng của các cung liên quan đến tình cảm.
@@ -133,15 +133,15 @@ Thế mạnh bẩm sinh, cũng như bài học cuộc đời cần đối mặt.
 const PALACE_ROLES: Record<string, string> = {
   'Mệnh Cung':   'Bản thân, tính cách, mệnh cách thiên bẩm',
   'Huynh Đệ Cung': 'Quan hệ huynh đệ, đối tác',
-  'Phu Tân Cung': 'Quan hệ tình cảm, tình trạng hôn nhân',
+  'Phu Thê Cung': 'Quan hệ tình cảm, tình trạng hôn nhân',
   'Tử Nữ Cung': 'Duyên con cái, quan hệ cấp dưới',
   'Tài Bạch Cung': 'Nguồn tài vận, cách thu nhập',
   'Tật Ách Cung': 'Sức khỏe thể chất, tai nạn',
   'Thiên Di Cung': 'Cơ hội xuất ngoại, tinh thần nhân duyên',
-  'Cát Diêu Cung': 'Bạn bè, quý nhân, tiểu nhân',
+  'Nô Bộc Cung': 'Bạn bè, quý nhân, tiểu nhân',
   'Quan Lộc Cung': 'Sự nghiệp thành tựu, địa vị xã hội',
   'Điền Trạch Cung': 'Bất động sản, môi trường gia đình',
-  'Phước Đức Cung': 'Hưởng thụ tinh thần, phúc đức nội tâm',
+  'Phúc Đức Cung': 'Hưởng thụ tinh thần, phúc đức nội tâm',
   'Phụ Mẫu Cung': 'Quan hệ cha mẹ, văn thư hợp đồng',
 };
 

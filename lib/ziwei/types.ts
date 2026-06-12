@@ -22,7 +22,7 @@ export interface LunarInfo {
 }
 
 // ─── Loại Tứ Hóa ─────────────────────────
-export type SiHua = '禄' | '权' | '科' | '忌';
+export type SiHua = 'Lộc' | 'Quyền' | 'Khoa' | 'Kỵ';
 
 // ─── Sao ─────────────────────────
 export interface Star {

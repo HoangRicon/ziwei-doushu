@@ -8,14 +8,14 @@ export const STAR_NAME_VN: Record<string, string> = {
   '紫微': 'Tử Vi',
   '天机': 'Thiên Cơ',
   '太阳': 'Thái Dương',
-  '武曲': 'Võ Khúc',
+  '武曲': 'Vũ Khúc',
   '天同': 'Thiên Đồng',
-  '廉贞': 'Liêm Truyền',
+  '廉贞': 'Liêm Trinh',
   '天府': 'Thiên Phủ',
   '太阴': 'Thái Âm',
-  '贪狼': 'Đam Lang',
-  '巨门': 'Cử Môn',
-  '天相': 'Thiên Tương',
+  '贪狼': 'Tham Lang',
+  '巨门': 'Cự Môn',
+  '天相': 'Thiên Tướng',
   '天梁': 'Thiên Lương',
   '七杀': 'Thất Sát',
   '破军': 'Phá Quân',
@@ -23,9 +23,9 @@ export const STAR_NAME_VN: Record<string, string> = {
   '文昌': 'Văn Xương',
   '文曲': 'Văn Khúc',
   '左辅': 'Tả Phụ',
-  '右弼': 'Hữu Phụ',
+  '右弼': 'Hữu Bật',
   '天魁': 'Thiên Khôi',
-  '天钺': 'Thiên Võ',
+  '天钺': 'Thiên Việt',
   '禄存': 'Lộc Tồn',
   '天马': 'Thiên Mã',
   '天官': 'Thiên Quan',
@@ -42,7 +42,7 @@ export const STAR_NAME_VN: Record<string, string> = {
   '红鸾': 'Hồng Loan',
   '天喜': 'Thiên Hỷ',
   '孤辰': 'Cô Thần',
-  '寡宿': 'Quả Túc',
+  '寡宿': 'Quả Tú',
   // Sát Tinh
   '擎羊': 'Kình Dương',
   '陀罗': 'Đà La',
@@ -61,15 +61,15 @@ export const STAR_NAME_VN: Record<string, string> = {
 export const PALACE_NAME_VN: Record<string, string> = {
   '命宫': 'Mệnh Cung',
   '兄弟宫': 'Huynh Đệ Cung',
-  '夫妻宫': 'Phu Tân Cung',
+  '夫妻宫': 'Phu Thê Cung',
   '子女宫': 'Tử Nữ Cung',
   '财帛宫': 'Tài Bạch Cung',
   '疾厄宫': 'Tật Ách Cung',
   '迁移宫': 'Thiên Di Cung',
-  '交友宫': 'Cát Diêu Cung',
+  '交友宫': 'Nô Bộc Cung',
   '官禄宫': 'Quan Lộc Cung',
   '田宅宫': 'Điền Trạch Cung',
-  '福德宫': 'Phước Đức Cung',
+  '福德宫': 'Phúc Đức Cung',
   '父母宫': 'Phụ Mẫu Cung',
 };
 
@@ -93,7 +93,7 @@ export function vnSiHua(s: string): string {
 }
 
 export const BRANCH_VN: Record<string, string> = {
-  '子': 'Tử', '丑': 'Sửu', '寅': 'Dần', '卯': 'Mão',
+  '子': 'Tý', '丑': 'Sửu', '寅': 'Dần', '卯': 'Mão',
   '辰': 'Thìn', '巳': 'Tỵ', '午': 'Ngọ', '未': 'Mùi',
   '申': 'Thân', '酉': 'Dậu', '戌': 'Tuất', '亥': 'Hợi',
 };

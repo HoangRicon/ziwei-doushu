@@ -8,10 +8,50 @@
 
 import { astro } from 'iztro';
 import { Solar } from 'lunar-javascript';
-import type { BirthInfo, LunarInfo, Star, Palace, DaXian, DaXianSiHua, ZiweiChart } from './types';
+import type { BirthInfo, LunarInfo, Star, Palace, DaXian, DaXianSiHua, ZiweiChart, SiHua } from './types';
 import { BRANCHES, STEMS, JU_NAMES } from './constants';
-// Cong cu phat tinh bay chi la export, khong con goi khi lap ban do (Nhu Su "Tien Ki 03": Tu hoa sao vinh vinh co dinh)
-// import { detectSelfSihua, getSiHuaByStem } from './sihua';
+
+// ─── Bản đồ ngược: Tên Trung → Việt (dùng cho iztro output) ────────────────
+const STAR_CN_TO_VN: Record<string, string> = {
+  '紫微': 'Tử Vi', '天机': 'Thiên Cơ', '太阳': 'Thái Dương',
+  '武曲': 'Vũ Khúc', '天同': 'Thiên Đồng', '廉贞': 'Liêm Trinh',
+  '天府': 'Thiên Phủ', '太阴': 'Thái Âm', '贪狼': 'Tham Lang',
+  '巨门': 'Cự Môn', '天相': 'Thiên Tướng', '天梁': 'Thiên Lương',
+  '七杀': 'Thất Sát', '破军': 'Phá Quân',
+  '文昌': 'Văn Xương', '文曲': 'Văn Khúc',
+  '左辅': 'Tả Phụ', '右弼': 'Hữu Bật',
+  '天魁': 'Thiên Khôi', '天钺': 'Thiên Việt',
+  '禄存': 'Lộc Tồn', '天马': 'Thiên Mã',
+  '擎羊': 'Kình Dương', '陀罗': 'Đà La',
+  '火星': 'Hỏa Tinh', '铃星': 'Linh Tinh',
+  '地空': 'Địa Không', '地劫': 'Địa Kiếp',
+  '天空': 'Thiên Không', '旬空': 'Tuần Không',
+  '截路': 'Tiết Lộ', '大耗': 'Đại Hao',
+  '天使': 'Thiên Sứ', '天伤': 'Thiên Thương',
+  '天官': 'Thiên Quan', '天福': 'Thiên Phúc',
+  '天才': 'Thiên Tài', '天寿': 'Thiên Thọ',
+  '三台': 'Tam Đài', '八座': 'Bát Tọa',
+  '恩光': 'Ân Quang', '天贵': 'Thiên Quý',
+  '台辅': 'Đài Phụ', '龙池': 'Long Trì',
+  '凤阁': 'Phượng Các', '红鸾': 'Hồng Loan',
+  '天喜': 'Thiên Hỷ', '孤辰': 'Cô Thần', '寡宿': 'Quả Tú',
+};
+
+const PALACE_CN_TO_VN: Record<string, string> = {
+  '命宫': 'Mệnh Cung', '兄弟宫': 'Huynh Đệ Cung',
+  '夫妻宫': 'Phu Thê Cung', '子女宫': 'Tử Nữ Cung',
+  '财帛宫': 'Tài Bạch Cung', '疾厄宫': 'Tật Ách Cung',
+  '迁移宫': 'Thiên Di Cung', '交友宫': 'Nô Bộc Cung',
+  '官禄宫': 'Quan Lộc Cung', '田宅宫': 'Điền Trạch Cung',
+  '福德宫': 'Phúc Đức Cung', '父母宫': 'Phụ Mẫu Cung',
+};
+
+function vn(name: string): string {
+  return STAR_CN_TO_VN[name] ?? name;
+}
+function vnPalace(name: string): string {
+  return PALACE_CN_TO_VN[name] ?? name;
+}
 
 // ─── Thong tin am lich (tuong thich giu lai) ────────────────────────
 export function getLunarInfo(year: number, month: number, day: number): LunarInfo {
@@ -38,12 +78,16 @@ function mapBrightness(b?: string): 'bright' | 'normal' | 'dim' {
   return 'normal';
 }
 
+const SIHUA_CN_TO_VN: Record<string, SiHua> = {
+  '禄': 'Lộc', '权': 'Quyền', '科': 'Khoa', '忌': 'Kỵ',
+};
+
 // ─── Anh xa loai sao ───────────────────────────────────────────────
-const SHA_STARS = new Set(['擎羊', '陀罗', '火星', '铃星', '地空', '地劫',
-  '天空', '旬空', '截路', '大耗', '天使', '天伤']);
-const LUCKY_STARS = new Set(['文昌', '文曲', '左辅', '右弼', '天魁', '天钺',
-  '禄存', '天马', '天官', '天福', '天才', '天寿', '三台', '八座', '恩光',
-  '天贵', '台辅', '龙池', '凤阁', '红鸾', '天喜', '孤辰', '寡宿']);
+const SHA_STARS = new Set(['Kình Dương', 'Đà La', 'Hỏa Tinh', 'Linh Tinh', 'Địa Không', 'Địa Kiếp',
+  'Thiên Không', 'Tuần Không', 'Tiết Lộ', 'Đại Hao', 'Thiên Sứ', 'Thiên Thương']);
+const LUCKY_STARS = new Set(['Văn Xương', 'Văn Khúc', 'Tả Phụ', 'Hữu Bật', 'Thiên Khôi', 'Thiên Việt',
+  'Lộc Tồn', 'Thiên Mã', 'Thiên Quan', 'Thiên Phúc', 'Thiên Tài', 'Thiên Thọ', 'Tam Đài', 'Bát Tọa',
+  'Ân Quang', 'Thiên Quý', 'Đài Phụ', 'Long Trì', 'Phượng Các', 'Hồng Loan', 'Thiên Hỷ', 'Cô Thần', 'Quả Tú']);
 
 function mapStarType(starName: string, iztroType: string): Star['type'] {
   if (SHA_STARS.has(starName)) return 'sha';
@@ -51,7 +95,7 @@ function mapStarType(starName: string, iztroType: string): Star['type'] {
   const t = (iztroType ?? '').toLowerCase();
   if (t === '主星' || t === 'major') return 'major';
   if (t === '煞星' || t === 'tough') return 'sha';
-  if (t === '吉星' || t === 'soft' || t === '禄存' || t === '天马') return 'lucky';
+  if (t === '吉星' || t === 'soft' || starName === 'Lộc Tồn' || starName === 'Thiên Mã') return 'lucky';
   return 'minor';
 }
 
@@ -82,20 +126,20 @@ export function generateChart(birthInfo: BirthInfo): ZiweiChart {
     // Gop tat ca sao: chu sao + tri sao + tap yeu
     const allStars: Star[] = [
       ...(p.majorStars ?? []).map(s => ({
-        name:       s.name as string,
+        name:       vn(s.name as string),
         type:       'major' as const,
         brightness: mapBrightness(s.brightness as string),
-        siHua:      s.mutagen as Star['siHua'],
+        siHua:      (s.mutagen ? SIHUA_CN_TO_VN[s.mutagen] : undefined) as Star['siHua'],
       })),
       ...(p.minorStars ?? []).map(s => ({
-        name:  s.name as string,
-        type:  mapStarType(s.name as string, s.type as string),
-        siHua: s.mutagen as Star['siHua'],
+        name:  vn(s.name as string),
+        type:  mapStarType(vn(s.name as string), s.type as string),
+        siHua: (s.mutagen ? SIHUA_CN_TO_VN[s.mutagen] : undefined) as Star['siHua'],
       })),
       ...(p.adjectiveStars ?? []).map(s => ({
-        name:  s.name as string,
+        name:  vn(s.name as string),
         type:  'minor' as const,
-        siHua: s.mutagen as Star['siHua'],
+        siHua: (s.mutagen ? SIHUA_CN_TO_VN[s.mutagen] : undefined) as Star['siHua'],
       })),
     ];
 
@@ -103,10 +147,10 @@ export function generateChart(birthInfo: BirthInfo): ZiweiChart {
     return {
       branch:        branch >= 0 ? branch : 0,
       stem:          stem >= 0 ? stem : 0,
-      name:          p.name as string,
+      name:          vnPalace(p.name as string),
       stars:         allStars,
       daXianAge:     range ? [range[0], range[1]] as [number, number] : undefined,
-      isMingGong:    p.name === '命宫',
+      isMingGong:    vnPalace(p.name as string) === 'Mệnh Cung',
       isShenGong:    p.isBodyPalace ?? false,
       isCurrentDaXian: false,
     };
@@ -145,11 +189,10 @@ export function generateChart(birthInfo: BirthInfo): ZiweiChart {
   const wuxingJuName   = JU_NAMES[wuxingJu] ?? wuxingJuNameCN;
 
   // ── Vi tri Tu Vi ──
-  const ziweiPalace = palaces.find(p => p.stars.some(s => s.name === '紫微' && s.type === 'major'));
+  const ziweiPalace = palaces.find(p => p.stars.some(s => s.name === 'Tử Vi' && s.type === 'major'));
   const ziweiPos    = ziweiPalace?.branch ?? 0;
 
   // ── Mang dai han (Nhu Su chinh thong: Tu hoa vinh vinh co dinh, dai han chi nhin cong vi chuyen) ──
-  // Khong con tao daXians[].siHua / stemIndex / stemName (truong phai sanh da xuong)
   const daXians: DaXian[] = palaces
     .filter(p => p.daXianAge)
     .sort((a, b) => a.daXianAge![0] - b.daXianAge![0])
@@ -159,8 +202,6 @@ export function generateChart(birthInfo: BirthInfo): ZiweiChart {
       palaceBranch: p.branch,
       palaceName:   p.name,
     }));
-
-  // Cong tu hoa da xuong (Nhu Su khong chu tri phai sanh cua cong tu hoa)
 
   const currentDaXianIndex = daXians.findIndex(
     dx => currentAge >= dx.startAge && currentAge <= dx.endAge,

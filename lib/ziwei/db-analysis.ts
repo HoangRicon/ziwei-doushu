@@ -46,7 +46,7 @@ export const TOPIC_LABEL: Record<TopicKey, string> = {
   move:        'Di Quan Ngoại',
   friends:     'Nhân Tài Quý Nhân',
   home:        'Điền Trạch Bất Động Sản',
-  spirit:      'Tinh Thần Phước Đức',
+  spirit:      'Tinh Thần Phúc Đức',
   parents:     'Phụ Mẫu Trưởng Bối',
 };
 
